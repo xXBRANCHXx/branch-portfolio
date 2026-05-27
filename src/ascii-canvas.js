@@ -1,5 +1,5 @@
 // ================================================================
-// ASCII Portrait Engine – High-Res & Native Crisp Vector Zoom
+// ASCII Portrait Engine – Ultra-High-Res & Crisp Vector Zoom
 // ================================================================
 
 const CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdef@#$%&*';
@@ -9,10 +9,10 @@ export class AsciiPortrait {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d', { alpha: false });
 
-    // Higher resolution typography
-    this.baseFontSize = 5.5; 
-    this.cellW = 3.5;
-    this.cellH = 6.5;
+    // Ultra-High Resolution typography
+    this.baseFontSize = 3; 
+    this.cellW = 1.9;
+    this.cellH = 3.6;
 
     // Grid
     this.cols = 0;
@@ -25,7 +25,7 @@ export class AsciiPortrait {
     this.imgH = 0;
 
     // Entrance
-    this.entranceDuration = 3800;
+    this.entranceDuration = 2500; // Faster entrance
     this.entranceDone = false;
     this.startTime = 0;
 
@@ -39,7 +39,7 @@ export class AsciiPortrait {
     // Hover
     this.mouseX = -200;
     this.mouseY = -200;
-    this.hoverRadius = 15;
+    this.hoverRadius = 25; // slightly larger radius for tiny pixels
 
     // Ambient
     this.cyclingRows = new Set();
@@ -51,7 +51,7 @@ export class AsciiPortrait {
     await document.fonts.ready;
     this.ctx.font = `${this.baseFontSize}px 'JetBrains Mono', monospace`;
     const m = this.ctx.measureText('M');
-    this.cellW = Math.max(3, m.width);
+    this.cellW = Math.max(1.5, m.width);
 
     const img = new Image();
     img.src = '/portrait.png';
@@ -75,11 +75,14 @@ export class AsciiPortrait {
     this.startTime = performance.now();
     this._tick();
 
-    setTimeout(() => {
-      this.entranceDone = true;
-      this._startAmbientCycling();
-      if (this.onEntranceDone) this.onEntranceDone();
-    }, this.entranceDuration + 700);
+    return new Promise(resolve => {
+      setTimeout(() => {
+        this.entranceDone = true;
+        this._startAmbientCycling();
+        if (this.onEntranceDone) this.onEntranceDone();
+        resolve();
+      }, this.entranceDuration + 200);
+    });
   }
 
   resize() {
@@ -92,7 +95,6 @@ export class AsciiPortrait {
     this.canvas.style.width = w + 'px';
     this.canvas.style.height = h + 'px';
     
-    // We handle DPR manually in the render loop for crispness
     this.dpr = dpr;
 
     this.cols = Math.ceil(w / this.cellW);
@@ -127,9 +129,13 @@ export class AsciiPortrait {
 
         if (ix >= 0 && ix < this.imgW && iy >= 0 && iy < this.imgH) {
           const idx = (iy * this.imgW + ix) << 2;
-          cr = d[idx]; cg = d[idx+1]; cb = d[idx+2];
+          // Gamma Boost: lighten the image so it's not too dark
+          cr = Math.min(255, d[idx] * 1.5);
+          cg = Math.min(255, d[idx+1] * 1.5);
+          cb = Math.min(255, d[idx+2] * 1.5);
+          
           bri = (cr*0.299 + cg*0.587 + cb*0.114) / 255;
-          if (bri > 0.04) {
+          if (bri > 0.02) {
             const seed = ((c * 7 + r * 13 + (c ^ r) * 5) & 0x7FFFFFFF) % CHARS.length;
             char = CHARS[seed];
           }
@@ -158,11 +164,11 @@ export class AsciiPortrait {
   _startAmbientCycling() {
     const cycle = () => {
       if (!this.running) { setTimeout(cycle, 300); return; }
-      if (this.zoomScale > 2) { setTimeout(cycle, 100); return; } // Pause cycle if zoomed in
+      if (this.zoomScale > 2) { setTimeout(cycle, 100); return; } 
       
-      if (this.cyclingRows.size < 12) {
+      if (this.cyclingRows.size < 16) {
         const start = Math.floor(Math.random() * this.rows);
-        const count = 2 + Math.floor(Math.random() * 4);
+        const count = 2 + Math.floor(Math.random() * 6);
         const rows = [];
         for (let i = 0; i < count; i++) {
           if (start + i < this.rows) {
@@ -170,9 +176,9 @@ export class AsciiPortrait {
             rows.push(start + i);
           }
         }
-        setTimeout(() => rows.forEach(r => this.cyclingRows.delete(r)), 150 + Math.random() * 200);
+        setTimeout(() => rows.forEach(r => this.cyclingRows.delete(r)), 100 + Math.random() * 200);
       }
-      setTimeout(cycle, 60 + Math.random() * 200);
+      setTimeout(cycle, 40 + Math.random() * 200);
     };
     cycle();
   }
@@ -184,8 +190,7 @@ export class AsciiPortrait {
 
   setZoom(progress) {
     this.zoomProgress = progress;
-    // Exponential scale
-    this.zoomScale = 1 + (Math.pow(progress, 3) * 60); 
+    this.zoomScale = 1 + (Math.pow(progress, 3) * 120); 
     this.opacity = Math.max(0, 1 - Math.pow(progress, 2.5));
   }
 
@@ -195,14 +200,12 @@ export class AsciiPortrait {
     const h = window.innerHeight;
     const dpr = this.dpr;
     
-    // Clear
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.fillStyle = '#0a0a0a';
     ctx.fillRect(0, 0, w * dpr, h * dpr);
     
     if (!this.grid || this.opacity <= 0.01) return;
 
-    // Apply native zoom variables
     const fontSize = this.baseFontSize * this.zoomScale * dpr;
     const cw = this.cellW * this.zoomScale * dpr;
     const ch = this.cellH * this.zoomScale * dpr;
@@ -228,14 +231,12 @@ export class AsciiPortrait {
         const cell = this.grid[r * this.cols + c];
         if (!cell) continue;
 
-        // Calculate native drawing coordinates with zoom scaling and eye offset
         const rawX = c * this.cellW;
         const rawY = r * this.cellH;
         
         const x = ((rawX - eyePxX) * this.zoomScale) + centerX;
         const y = ((rawY - eyePxY) * this.zoomScale) + centerY;
         
-        // Frustum culling (don't draw characters outside the screen)
         if (x * dpr < -cw*2 || x * dpr > w * dpr + cw || y * dpr < -ch*2 || y * dpr > h * dpr + ch) {
           continue; 
         }
@@ -251,27 +252,29 @@ export class AsciiPortrait {
             dChar = CHARS[(Math.random() * CHARS.length) | 0];
             const fade = Math.max(0.12, 1 - eT * 0.55);
             dr=0; dg=Math.floor((15 + Math.random()*150)*fade); db=0;
-          } else if (dist > revealR - 10 && cell.bri > 0.04) {
+          } else if (dist > revealR - 10 && cell.bri > 0.02) {
             if (Math.random() > 0.4) {
               dChar = CHARS[(Math.random() * CHARS.length) | 0];
               dg = Math.min(255, dg + 50);
             }
-          } else if (cell.bri < 0.04) continue;
+          } else if (cell.bri < 0.02) continue;
         }
 
         // Ambient Cycle
-        if (this.entranceDone && this.cyclingRows.has(r) && cell.bri > 0.04) {
+        if (this.entranceDone && this.cyclingRows.has(r) && cell.bri > 0.02) {
           dChar = CHARS[(Math.random() * CHARS.length) | 0];
         }
 
-        // Hover
-        if (showHover && cell.bri >= 0.04) {
+        // Hover Effect: Raised without color change
+        if (showHover && cell.bri >= 0.02) {
           const hd = Math.sqrt((c - mCol)**2 + (r - mRow)**2);
           if (hd < this.hoverRadius) {
             const hiSq = Math.pow(1 - hd/this.hoverRadius, 2);
-            if (Math.random() < hiSq * 0.6) dChar = CHARS[(Math.random() * CHARS.length) | 0];
-            dg = Math.min(255, dg + (hiSq * 150) | 0);
-            charScale = 1 + hiSq * 0.5;
+            if (Math.random() < hiSq * 0.8) dChar = CHARS[(Math.random() * CHARS.length) | 0];
+            // No color modification (dr, dg, db remain unchanged)
+            charScale = 1 + hiSq * 1.5; // Scale up to 2.5x
+            // Slightly brighter purely by making the canvas alpha artificially higher or drawing multiple times
+            // but for performance, just scale is fine.
           }
         }
 
@@ -284,6 +287,9 @@ export class AsciiPortrait {
           ctx.save();
           ctx.translate(x * dpr + cw/2, y * dpr + ch/2);
           ctx.scale(charScale, charScale);
+          // Drop shadow for raised effect
+          ctx.shadowColor = 'rgba(0,0,0,0.8)';
+          ctx.shadowBlur = 4;
           ctx.fillText(dChar, -cw/2, -ch/2);
           ctx.restore();
         } else {
