@@ -15,6 +15,7 @@ uniform vec3 color1;
 uniform vec3 color2;
 varying vec2 vUv;
 
+// Classic liquid noise
 vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
 vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
 vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); }
@@ -43,30 +44,27 @@ float snoise(vec2 v) {
 void main() {
   vec2 uv = vUv;
   
-  // Chromatic Aberration Warp based on progress (0 to 1 back to 0)
-  float noise = snoise(uv * 2.0 + time * 0.15) * 0.5;
+  // Noomo-style liquid plane warping
+  // Progress determines the amplitude of the liquid displacement
+  float dist = snoise(uv * 3.0 + time * 0.2) * 0.5;
   
-  // Progress determines how separated and warped the light is
-  float intensity = sin(progress * 3.14159);
-  float warpDist = intensity * 0.2 * noise;
-  float chromaDist = intensity * 0.03; // Distance to separate RGB
-
-  // Calculate separate UVs for Red, Green, Blue
-  vec2 uvR = uv + vec2(warpDist + chromaDist, warpDist);
-  vec2 uvG = uv + vec2(warpDist, warpDist);
-  vec2 uvB = uv + vec2(warpDist - chromaDist, warpDist);
-
-  // Background ambient gradients for each channel to simulate refraction
-  float r = mix(color1.r, color2.r, uvR.y + noise*0.2);
-  float g = mix(color1.g, color2.g, uvG.y + noise*0.2);
-  float b = mix(color1.b, color2.b, uvB.y + noise*0.2);
+  // Create a wave effect across the Y axis driven by progress
+  float wave = sin(uv.y * 10.0 + time) * 0.05 * progress;
   
-  // Brightness flash at the peak of the scroll transition
-  float flash = intensity * 0.15;
+  // Warp UVs
+  vec2 warpedUv = uv + vec2(dist * progress, dist * progress + wave);
 
-  vec3 finalColor = vec3(r, g, b) * 0.15 + vec3(flash);
+  // Background ambient gradient transition
+  vec3 col = mix(color1, color2, warpedUv.y + dist * 0.2);
+  
+  // Highlight edge on liquid tears
+  float edge = smoothstep(0.4, 0.5, dist) * progress * 0.2;
+  col += vec3(edge);
 
-  gl_FragColor = vec4(finalColor, 1.0);
+  // Deep dark base
+  col *= 0.12; 
+
+  gl_FragColor = vec4(col, 1.0);
 }
 `;
 
@@ -85,7 +83,7 @@ export class WebGLTransition {
       time: { value: 0 },
       progress: { value: 0 },
       color1: { value: new THREE.Color('#050505') }, // Black
-      color2: { value: new THREE.Color('#1a1f1c') }  // Very dark subtle green/grey
+      color2: { value: new THREE.Color('#101814') }  // Deep premium green/grey
     };
 
     const geometry = new THREE.PlaneGeometry(2, 2);
@@ -117,7 +115,6 @@ export class WebGLTransition {
   }
 
   setTransitionProgress(p) {
-    // p is 0 to 1 based on how close we are to the boundary between two slides
     this.uniforms.progress.value = p;
   }
 

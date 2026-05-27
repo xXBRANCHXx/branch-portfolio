@@ -1,5 +1,5 @@
 // ================================================================
-// ASCII Portrait Engine – Ultra-High-Res & Crisp Vector Zoom
+// ASCII Portrait Engine – Balanced Res & Fixed Hover Math
 // ================================================================
 
 const CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdef@#$%&*';
@@ -9,39 +9,33 @@ export class AsciiPortrait {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d', { alpha: false });
 
-    // Ultra-High Resolution typography
-    this.baseFontSize = 3; 
-    this.cellW = 1.9;
-    this.cellH = 3.6;
+    // Balanced resolution (smooth zoom, still dense)
+    this.baseFontSize = 4.5; 
+    this.cellW = 2.8;
+    this.cellH = 5.2;
 
-    // Grid
     this.cols = 0;
     this.rows = 0;
     this.grid = null;
 
-    // Image
     this.imgData = null;
     this.imgW = 0;
     this.imgH = 0;
 
-    // Entrance
-    this.entranceDuration = 2500; // Faster entrance
+    this.entranceDuration = 2500;
     this.entranceDone = false;
     this.startTime = 0;
 
-    // Zoom state
     this.zoomScale = 1;
     this.zoomProgress = 0;
     this.opacity = 1;
     this.eyeCol = 0;
     this.eyeRow = 0;
 
-    // Hover
-    this.mouseX = -200;
-    this.mouseY = -200;
-    this.hoverRadius = 25; // slightly larger radius for tiny pixels
+    this.mouseX = -2000;
+    this.mouseY = -2000;
+    this.hoverRadius = 18; 
 
-    // Ambient
     this.cyclingRows = new Set();
     this.running = true;
     this.onEntranceDone = null;
@@ -51,7 +45,7 @@ export class AsciiPortrait {
     await document.fonts.ready;
     this.ctx.font = `${this.baseFontSize}px 'JetBrains Mono', monospace`;
     const m = this.ctx.measureText('M');
-    this.cellW = Math.max(1.5, m.width);
+    this.cellW = Math.max(2.0, m.width);
 
     const img = new Image();
     img.src = '/portrait.png';
@@ -96,10 +90,8 @@ export class AsciiPortrait {
     this.canvas.style.height = h + 'px';
     
     this.dpr = dpr;
-
     this.cols = Math.ceil(w / this.cellW);
     this.rows = Math.ceil(h / this.cellH);
-
     this._buildGrid(w, h);
   }
 
@@ -129,7 +121,6 @@ export class AsciiPortrait {
 
         if (ix >= 0 && ix < this.imgW && iy >= 0 && iy < this.imgH) {
           const idx = (iy * this.imgW + ix) << 2;
-          // Gamma Boost: lighten the image so it's not too dark
           cr = Math.min(255, d[idx] * 1.5);
           cg = Math.min(255, d[idx+1] * 1.5);
           cb = Math.min(255, d[idx+2] * 1.5);
@@ -155,8 +146,8 @@ export class AsciiPortrait {
       this.mouseY = e.clientY;
     });
     this.canvas.addEventListener('mouseleave', () => {
-      this.mouseX = -200;
-      this.mouseY = -200;
+      this.mouseX = -2000;
+      this.mouseY = -2000;
     });
     window.addEventListener('resize', () => this.resize());
   }
@@ -166,9 +157,9 @@ export class AsciiPortrait {
       if (!this.running) { setTimeout(cycle, 300); return; }
       if (this.zoomScale > 2) { setTimeout(cycle, 100); return; } 
       
-      if (this.cyclingRows.size < 16) {
+      if (this.cyclingRows.size < 12) {
         const start = Math.floor(Math.random() * this.rows);
-        const count = 2 + Math.floor(Math.random() * 6);
+        const count = 2 + Math.floor(Math.random() * 4);
         const rows = [];
         for (let i = 0; i < count; i++) {
           if (start + i < this.rows) {
@@ -178,7 +169,7 @@ export class AsciiPortrait {
         }
         setTimeout(() => rows.forEach(r => this.cyclingRows.delete(r)), 100 + Math.random() * 200);
       }
-      setTimeout(cycle, 40 + Math.random() * 200);
+      setTimeout(cycle, 50 + Math.random() * 200);
     };
     cycle();
   }
@@ -190,7 +181,7 @@ export class AsciiPortrait {
 
   setZoom(progress) {
     this.zoomProgress = progress;
-    this.zoomScale = 1 + (Math.pow(progress, 3) * 120); 
+    this.zoomScale = 1 + (Math.pow(progress, 3) * 60); 
     this.opacity = Math.max(0, 1 - Math.pow(progress, 2.5));
   }
 
@@ -222,9 +213,13 @@ export class AsciiPortrait {
     const centerX = w / 2;
     const centerY = h / 2;
 
-    const mCol = Math.floor(this.mouseX / this.cellW);
-    const mRow = Math.floor(this.mouseY / this.cellH);
-    const showHover = this.entranceDone && this.zoomScale < 1.5;
+    // FIX HOVER MATH: Map raw mouse coordinates inversely through the zoom transform
+    const rawMouseX = ((this.mouseX - centerX) / this.zoomScale) + eyePxX;
+    const rawMouseY = ((this.mouseY - centerY) / this.zoomScale) + eyePxY;
+    const mCol = Math.floor(rawMouseX / this.cellW);
+    const mRow = Math.floor(rawMouseY / this.cellH);
+    
+    const showHover = this.entranceDone; // Hover always works, even when zoomed
 
     for (let r = 0; r < this.rows; r++) {
       for (let c = 0; c < this.cols; c++) {
@@ -245,7 +240,6 @@ export class AsciiPortrait {
         let dr = cell.r, dg = cell.g, db = cell.b;
         let charScale = 1;
 
-        // Entrance
         if (eT < 1) {
           const dist = Math.sqrt((c - this.eyeCol)**2 + ((r - this.eyeRow)*1.35)**2);
           if (dist > revealR) {
@@ -260,21 +254,17 @@ export class AsciiPortrait {
           } else if (cell.bri < 0.02) continue;
         }
 
-        // Ambient Cycle
         if (this.entranceDone && this.cyclingRows.has(r) && cell.bri > 0.02) {
           dChar = CHARS[(Math.random() * CHARS.length) | 0];
         }
 
-        // Hover Effect: Raised without color change
+        // Apply corrected hover logic
         if (showHover && cell.bri >= 0.02) {
           const hd = Math.sqrt((c - mCol)**2 + (r - mRow)**2);
           if (hd < this.hoverRadius) {
             const hiSq = Math.pow(1 - hd/this.hoverRadius, 2);
             if (Math.random() < hiSq * 0.8) dChar = CHARS[(Math.random() * CHARS.length) | 0];
-            // No color modification (dr, dg, db remain unchanged)
-            charScale = 1 + hiSq * 1.5; // Scale up to 2.5x
-            // Slightly brighter purely by making the canvas alpha artificially higher or drawing multiple times
-            // but for performance, just scale is fine.
+            charScale = 1 + hiSq * 1.5;
           }
         }
 
@@ -287,7 +277,6 @@ export class AsciiPortrait {
           ctx.save();
           ctx.translate(x * dpr + cw/2, y * dpr + ch/2);
           ctx.scale(charScale, charScale);
-          // Drop shadow for raised effect
           ctx.shadowColor = 'rgba(0,0,0,0.8)';
           ctx.shadowBlur = 4;
           ctx.fillText(dChar, -cw/2, -ch/2);
