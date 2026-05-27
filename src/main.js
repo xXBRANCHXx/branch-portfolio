@@ -112,7 +112,7 @@ window.addEventListener('wheel', (e) => {
   if (currentSlide === 0) {
     if (e.deltaY > 0) {
       // Zoom in chunks for a satisfying dive
-      asciiZoom += 0.20; 
+      asciiZoom += 0.03; 
       
       heroNameL.style.opacity = '0';
       heroNameR.style.opacity = '0';
@@ -126,7 +126,7 @@ window.addEventListener('wheel', (e) => {
         portrait.setZoom(asciiZoom);
       }
     } else {
-      asciiZoom = Math.max(0, asciiZoom - 0.20);
+      asciiZoom = Math.max(0, asciiZoom - 0.03);
       portrait.setZoom(asciiZoom);
       if (asciiZoom === 0 && portrait.entranceDone) {
         heroNameL.style.opacity = '1';

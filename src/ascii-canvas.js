@@ -277,8 +277,12 @@ export class AsciiPortrait {
           ctx.save();
           ctx.translate(x * dpr + cw/2, y * dpr + ch/2);
           ctx.scale(charScale, charScale);
-          ctx.shadowColor = 'rgba(0,0,0,0.8)';
-          ctx.shadowBlur = 4;
+          
+          // Draw solid background to prevent seeing adjacent characters underneath (fixes 'multiple layers' look)
+          ctx.fillStyle = '#0a0a0a';
+          ctx.fillRect(-cw/2, -ch/2, cw, ch);
+          
+          ctx.fillStyle = `rgb(${dr},${dg},${db})`;
           ctx.fillText(dChar, -cw/2, -ch/2);
           ctx.restore();
         } else {
