@@ -39,10 +39,41 @@ portrait.init().then(() => {
 }).catch(err => console.error('Portrait init failed:', err));
 
 
-// ── TRIGGER-BASED SCROLL JACKING (NOOMO STYLE) ───────────────────
+// ── TRIGGER-BASED SCROLL JACKING WITH VELOCITY ZOOM ─────────────
 let currentSlide = 0;
 let isAnimating = false;
-let asciiZoom = 0;
+let targetAsciiZoom = 0;
+let currentAsciiZoom = 0;
+
+function zoomLerpLoop() {
+  if (currentSlide === 0 && !isAnimating) {
+    if (Math.abs(targetAsciiZoom - currentAsciiZoom) > 0.001) {
+      currentAsciiZoom += (targetAsciiZoom - currentAsciiZoom) * 0.08; // Lerp factor
+      
+      if (currentAsciiZoom >= 0.98) {
+        currentAsciiZoom = 1;
+        targetAsciiZoom = 1;
+        portrait.setZoom(1);
+        doLiquidTransition(1); // Proceed to About slide
+      } else {
+        portrait.setZoom(currentAsciiZoom);
+        
+        // Handle text fade based on zoom depth
+        if (currentAsciiZoom > 0.05) {
+          heroNameL.style.opacity = '0';
+          heroNameR.style.opacity = '0';
+          scrollCta.style.opacity = '0';
+        } else if (portrait.entranceDone) {
+          heroNameL.style.opacity = '1';
+          heroNameR.style.opacity = '1';
+          scrollCta.style.opacity = '1';
+        }
+      }
+    }
+  }
+  requestAnimationFrame(zoomLerpLoop);
+}
+zoomLerpLoop();
 
 function setSlideActive(index) {
   slides.forEach((s, i) => {
@@ -58,7 +89,6 @@ function doLiquidTransition(targetIndex, isBackToHero = false) {
   if (isAnimating) return;
   isAnimating = true;
   
-  // Transition duration (smooth liquid warp)
   const dur = 1400; 
   const startTime = performance.now();
   
@@ -66,23 +96,19 @@ function doLiquidTransition(targetIndex, isBackToHero = false) {
     const elapsed = time - startTime;
     let t = Math.min(1, Math.max(0, elapsed / dur));
     
-    // Liquid easing (fast start, slow end)
     const ease = 1 - Math.pow(1 - t, 3);
-    
-    // Shader progress peaks in the middle
     const shaderProg = Math.sin(ease * Math.PI);
     webgl.setTransitionProgress(shaderProg);
     
-    // Swap slides near the peak of the liquid warp
     if (t >= 0.5 && currentSlide !== targetIndex) {
       currentSlide = targetIndex;
       setSlideActive(currentSlide);
       
       if (isBackToHero) {
-        asciiZoom = 0;
+        targetAsciiZoom = 0;
+        currentAsciiZoom = 0;
         portrait.setZoom(0);
         
-        // Re-show text once we land back
         setTimeout(() => {
           heroNameL.style.opacity = '1';
           heroNameR.style.opacity = '1';
@@ -104,35 +130,16 @@ function doLiquidTransition(targetIndex, isBackToHero = false) {
 
 window.addEventListener('wheel', (e) => {
   if (isAnimating) return;
-  
-  // Prevent tiny trackpad scrolls from triggering wildly
   if (Math.abs(e.deltaY) < 15) return;
 
   // ── ON SLIDE 0 (ASCII HERO)
   if (currentSlide === 0) {
     if (e.deltaY > 0) {
-      // Zoom in chunks for a satisfying dive
-      asciiZoom += 0.03; 
-      
-      heroNameL.style.opacity = '0';
-      heroNameR.style.opacity = '0';
-      scrollCta.style.opacity = '0';
-
-      if (asciiZoom >= 1) {
-        asciiZoom = 1;
-        portrait.setZoom(1);
-        doLiquidTransition(1); // Proceed to About slide
-      } else {
-        portrait.setZoom(asciiZoom);
-      }
+      // Add velocity/momentum downwards
+      targetAsciiZoom = Math.min(1.05, targetAsciiZoom + 0.15); 
     } else {
-      asciiZoom = Math.max(0, asciiZoom - 0.03);
-      portrait.setZoom(asciiZoom);
-      if (asciiZoom === 0 && portrait.entranceDone) {
-        heroNameL.style.opacity = '1';
-        heroNameR.style.opacity = '1';
-        scrollCta.style.opacity = '1';
-      }
+      // Add velocity/momentum upwards
+      targetAsciiZoom = Math.max(0, targetAsciiZoom - 0.15);
     }
     return;
   }

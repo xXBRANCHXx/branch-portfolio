@@ -213,16 +213,27 @@ export class AsciiPortrait {
     const centerX = w / 2;
     const centerY = h / 2;
 
-    // FIX HOVER MATH: Map raw mouse coordinates inversely through the zoom transform
     const rawMouseX = ((this.mouseX - centerX) / this.zoomScale) + eyePxX;
     const rawMouseY = ((this.mouseY - centerY) / this.zoomScale) + eyePxY;
     const mCol = Math.floor(rawMouseX / this.cellW);
     const mRow = Math.floor(rawMouseY / this.cellH);
     
-    const showHover = this.entranceDone; // Hover always works, even when zoomed
+    const showHover = this.entranceDone;
 
-    for (let r = 0; r < this.rows; r++) {
-      for (let c = 0; c < this.cols; c++) {
+    // O(1) Viewport Bounds Culling Math
+    const overscan = 2;
+    const minC = Math.floor(((-centerX) / this.zoomScale + eyePxX) / this.cellW) - overscan;
+    const maxC = Math.ceil(((w - centerX) / this.zoomScale + eyePxX) / this.cellW) + overscan;
+    const minR = Math.floor(((-centerY) / this.zoomScale + eyePxY) / this.cellH) - overscan;
+    const maxR = Math.ceil(((h - centerY) / this.zoomScale + eyePxY) / this.cellH) + overscan;
+
+    const startR = Math.max(0, minR);
+    const endR = Math.min(this.rows, maxR);
+    const startC = Math.max(0, minC);
+    const endC = Math.min(this.cols, maxC);
+
+    for (let r = startR; r < endR; r++) {
+      for (let c = startC; c < endC; c++) {
         const cell = this.grid[r * this.cols + c];
         if (!cell) continue;
 
@@ -232,10 +243,6 @@ export class AsciiPortrait {
         const x = ((rawX - eyePxX) * this.zoomScale) + centerX;
         const y = ((rawY - eyePxY) * this.zoomScale) + centerY;
         
-        if (x * dpr < -cw*2 || x * dpr > w * dpr + cw || y * dpr < -ch*2 || y * dpr > h * dpr + ch) {
-          continue; 
-        }
-
         let dChar = cell.char;
         let dr = cell.r, dg = cell.g, db = cell.b;
         let charScale = 1;
