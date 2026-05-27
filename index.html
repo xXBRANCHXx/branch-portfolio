@@ -3,182 +3,153 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Branch Vincent | AI-Native Web Designer &amp; Creative Strategist</title>
-  <meta name="description" content="Branch Vincent is an AI-native web designer and creative strategist building modern websites, brand visuals, and digital experiences for ambitious small businesses.">
+  <title>Branch Vincent | AI-Native Web Designer</title>
+  <meta name="description" content="AI-native web designer and creative strategist building modern websites, brand visuals, and digital experiences for ambitious small businesses.">
   <meta name="theme-color" content="#0a0a0a">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-  <!-- ===== GLOBAL OVERLAYS ===== -->
-  <div class="scanlines" aria-hidden="true"></div>
+
+  <!-- WebGL Transition Canvas -->
+  <canvas id="webgl-canvas"></canvas>
   <div class="vignette" aria-hidden="true"></div>
+  <div class="scanlines" aria-hidden="true"></div>
 
-  <!-- ===== HERO: ASCII PORTRAIT ===== -->
-  <section id="hero" class="hero">
-    <canvas id="ascii-canvas"></canvas>
+  <!-- SLIDER CONTAINER -->
+  <main id="slider">
 
-    <div id="hero-name-left" class="hero-name hero-name--left" aria-hidden="true">
-      <span>B</span><span>R</span><span>A</span><span>N</span><span>C</span><span>H</span>
-    </div>
-    <div id="hero-name-right" class="hero-name hero-name--right" aria-hidden="true">
-      <span>V</span><span>I</span><span>N</span><span>C</span><span>E</span><span>N</span><span>T</span>
-    </div>
+    <!-- SLIDE 0: ASCII PORTRAIT -->
+    <section class="slide slide--active" id="slide-0" data-theme="dark">
+      <canvas id="ascii-canvas"></canvas>
+      
+      <div id="hero-name-left" class="hero-name hero-name--left" aria-hidden="true">
+        <span>B</span><span>R</span><span>A</span><span>N</span><span>C</span><span>H</span>
+      </div>
+      <div id="hero-name-right" class="hero-name hero-name--right" aria-hidden="true">
+        <span>V</span><span>I</span><span>N</span><span>C</span><span>E</span><span>N</span><span>T</span>
+      </div>
 
-    <div id="scroll-cta" class="scroll-cta">
-      <span class="scroll-cta__text">scroll to enter</span>
-      <svg class="scroll-cta__arrow" width="20" height="30" viewBox="0 0 20 30">
-        <path d="M10 0 L10 25 M3 18 L10 25 L17 18" stroke="currentColor" stroke-width="1.5" fill="none"/>
-      </svg>
-    </div>
-  </section>
+      <div class="scroll-cta">
+        <span class="scroll-cta__text">scroll</span>
+        <div class="scroll-cta__line"></div>
+      </div>
+    </section>
 
-  <!-- ===== SCROLL SPACER (drives zoom transition) ===== -->
-  <div id="scroll-spacer" class="scroll-spacer" aria-hidden="true"></div>
-
-  <!-- ===== BLACK TRANSITION OVERLAY ===== -->
-  <div id="overlay" class="overlay" aria-hidden="true"></div>
-
-  <!-- ===== PAGE TWO: CONTENT ===== -->
-  <main id="content">
-
-    <!-- ABOUT -->
-    <section id="about" class="section section--about">
-      <div class="section__inner">
-        <h1 class="glitch" data-text="I am Branch Vincent.">I am Branch Vincent.</h1>
-        <p class="tagline">AI-native web designer &nbsp;&middot;&nbsp; Creative strategist &nbsp;&middot;&nbsp; Visual builder</p>
-        <div class="about__body">
-          <p>I combine design, AI-assisted development, and practical marketing experience to create modern websites, brand visuals, and digital assets that help small brands look sharper and more professional.</p>
-          <p>My work blends artistic direction, practical marketing, and AI-assisted development. The result is fast execution, strong visual presentation, and websites that help businesses look more serious online.</p>
-          <p class="accent-text">Websites that make small brands look impossible to ignore.</p>
+    <!-- SLIDE 1: ABOUT -->
+    <section class="slide" id="slide-1" data-theme="premium">
+      <div class="slide__inner">
+        <h1 class="premium-heading">I am Branch Vincent.</h1>
+        <p class="premium-tagline">AI-Native Web Designer &bull; Creative Strategist</p>
+        <div class="premium-body">
+          <p>I build websites that make small brands look impossible to ignore.</p>
+          <p>By combining design taste, AI-assisted development, and practical marketing strategy, I create modern websites, brand visuals, and digital assets that turn raw ideas into polished online realities.</p>
         </div>
       </div>
     </section>
 
-    <div class="ascii-divider" aria-hidden="true"></div>
-
-    <!-- SERVICES -->
-    <section id="services" class="section section--services">
-      <div class="section__inner">
-        <h2 class="section__heading">Capabilities</h2>
-        <div class="services-grid">
-          <article class="card" id="card-web">
-            <div class="card__icon">&#9672;</div>
-            <h3 class="card__title">Website Design</h3>
-            <p class="card__desc">Clean, modern websites for businesses that need to look professional, credible, and ready for customers.</p>
-          </article>
-          <article class="card" id="card-landing">
-            <div class="card__icon">&#9635;</div>
-            <h3 class="card__title">Landing Pages</h3>
-            <p class="card__desc">Focused pages for products, campaigns, lead generation, launches, and business offers.</p>
-          </article>
-          <article class="card" id="card-ai">
-            <div class="card__icon">&#11041;</div>
-            <h3 class="card__title">AI-Assisted Builds</h3>
-            <p class="card__desc">AI-powered workflows for ideation, code acceleration, copy refinement, and rapid prototyping.</p>
-          </article>
-          <article class="card" id="card-brand">
-            <div class="card__icon">&#9678;</div>
-            <h3 class="card__title">Brand Visuals</h3>
-            <p class="card__desc">Visual direction, layouts, graphics, and digital assets that make a business feel more polished.</p>
-          </article>
-          <article class="card" id="card-marketing">
-            <div class="card__icon">&#9041;</div>
-            <h3 class="card__title">Marketing Perspective</h3>
-            <p class="card__desc">Practical messaging and presentation shaped by real work inside a growing product business.</p>
-          </article>
-          <article class="card" id="card-art">
-            <div class="card__icon">&#10022;</div>
-            <h3 class="card__title">AI Art &amp; Creative</h3>
-            <p class="card__desc">AI-assisted visuals, concept art, and experimental creative direction for web and social use.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <div class="ascii-divider" aria-hidden="true"></div>
-
-    <!-- EXPERIENCE -->
-    <section id="experience" class="section section--experience">
-      <div class="section__inner">
-        <h2 class="section__heading">Experience</h2>
-        <div class="exp-layout">
-          <div class="exp-content">
-            <h3 class="exp-role">CMO &mdash; Zero Foods Indonesia</h3>
-            <p>Helping shape the brand's online presence through website direction, visuals, content, product presentation, and growth strategy.</p>
-            <p>The work includes visual direction, web design planning, marketing messaging, product positioning, AI-assisted creative development, and digital brand presentation.</p>
-            <p class="accent-text">Making the brand look more premium, credible, and competitive in Indonesia's health food market.</p>
+    <!-- SLIDE 2: CAPABILITIES -->
+    <section class="slide" id="slide-2" data-theme="premium">
+      <div class="slide__inner">
+        <h2 class="premium-heading-sm">Capabilities</h2>
+        <div class="premium-grid">
+          <div class="premium-card">
+            <i data-lucide="layout-template"></i>
+            <h3>Website Design</h3>
+            <p>Clean, modern websites that build immediate credibility.</p>
           </div>
-          <div class="exp-stats">
-            <div class="stat" id="stat-projects">
-              <span class="stat__number">6</span>
-              <span class="stat__label">Website Projects</span>
-            </div>
-            <div class="stat" id="stat-years">
-              <span class="stat__number">2+</span>
-              <span class="stat__label">Years Experience</span>
-            </div>
-            <div class="stat" id="stat-iterations">
-              <span class="stat__number">&infin;</span>
-              <span class="stat__label">AI Iterations</span>
-            </div>
+          <div class="premium-card">
+            <i data-lucide="mouse-pointer-click"></i>
+            <h3>Landing Pages</h3>
+            <p>Focused, high-conversion pages for products and campaigns.</p>
+          </div>
+          <div class="premium-card">
+            <i data-lucide="cpu"></i>
+            <h3>AI-Assisted Builds</h3>
+            <p>Rapid prototyping, code acceleration, and smart refinement.</p>
+          </div>
+          <div class="premium-card">
+            <i data-lucide="gem"></i>
+            <h3>Brand Visuals</h3>
+            <p>Premium layouts and graphics that elevate brand perception.</p>
+          </div>
+          <div class="premium-card">
+            <i data-lucide="trending-up"></i>
+            <h3>Marketing Insight</h3>
+            <p>Messaging shaped by real-world product business experience.</p>
+          </div>
+          <div class="premium-card">
+            <i data-lucide="palette"></i>
+            <h3>AI Creative Art</h3>
+            <p>Experimental visual direction and concept generation.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <div class="ascii-divider" aria-hidden="true"></div>
-
-    <!-- WORKFLOW -->
-    <section id="workflow" class="section section--workflow">
-      <div class="section__inner">
-        <h2 class="section__heading">How I Work</h2>
-        <p class="workflow-intro">Human taste plus AI leverage. Modern tools, strong visual direction, faster iteration.</p>
-        <div class="pipeline">
-          <div class="pipeline__node" id="node-ideation"><span>Ideation</span></div>
-          <div class="pipeline__line"></div>
-          <div class="pipeline__node" id="node-ai"><span>AI Acceleration</span></div>
-          <div class="pipeline__line"></div>
-          <div class="pipeline__node" id="node-design"><span>Design Refinement</span></div>
-          <div class="pipeline__line"></div>
-          <div class="pipeline__node" id="node-proto"><span>Rapid Prototype</span></div>
-          <div class="pipeline__line"></div>
-          <div class="pipeline__node" id="node-build"><span>Final Build</span></div>
+    <!-- SLIDE 3: EXPERIENCE -->
+    <section class="slide" id="slide-3" data-theme="premium">
+      <div class="slide__inner exp-layout">
+        <div class="exp-left">
+          <h2 class="premium-heading-sm">Experience</h2>
+          <div class="exp-block">
+            <h3>CMO &mdash; Zero Foods Indonesia</h3>
+            <p>Directing digital design, website architecture, and online growth strategy.</p>
+            <p>I blend visual direction, marketing messaging, and AI-assisted development to make the brand look premium, credible, and competitive in Indonesia's health food market.</p>
+          </div>
+        </div>
+        <div class="exp-right">
+          <div class="glass-stat">
+            <span class="stat-num">6</span>
+            <span class="stat-label">Website Projects</span>
+          </div>
+          <div class="glass-stat">
+            <span class="stat-num">2+</span>
+            <span class="stat-label">Years Hands-on</span>
+          </div>
         </div>
       </div>
     </section>
 
-    <div class="ascii-divider" aria-hidden="true"></div>
-
-    <!-- CONTACT -->
-    <section id="contact" class="section section--contact">
-      <div class="section__inner">
-        <h2 class="section__heading">Get In Touch</h2>
-        <p class="contact-intro">For websites, landing pages, brand visuals, or AI-assisted creative work.</p>
-        <nav class="contact-links" aria-label="Contact methods">
-          <a href="mailto:vincentbranch23@gmail.com" class="contact-link" id="link-email">
-            <span class="contact-link__icon">&#9993;</span>
-            <span class="contact-link__text">vincentbranch23@gmail.com</span>
-          </a>
-          <a href="https://wa.me/628957108605022" class="contact-link" id="link-whatsapp">
-            <span class="contact-link__icon">&#9654;</span>
-            <span class="contact-link__text">WhatsApp</span>
-          </a>
-          <a href="https://tiktok.com/@branch.vincent" class="contact-link" id="link-tiktok" target="_blank" rel="noopener">
-            <span class="contact-link__icon">&#9830;</span>
-            <span class="contact-link__text">@branch.vincent</span>
-          </a>
-        </nav>
+    <!-- SLIDE 4: WORKFLOW -->
+    <section class="slide" id="slide-4" data-theme="premium">
+      <div class="slide__inner">
+        <h2 class="premium-heading-sm">Workflow</h2>
+        <p class="premium-sub">Human taste plus AI leverage.</p>
+        <div class="sleek-pipeline">
+          <div class="pipe-node">Ideation</div>
+          <div class="pipe-line"></div>
+          <div class="pipe-node">AI Acceleration</div>
+          <div class="pipe-line"></div>
+          <div class="pipe-node">Refinement</div>
+          <div class="pipe-line"></div>
+          <div class="pipe-node">Production</div>
+        </div>
       </div>
     </section>
 
-    <!-- FOOTER -->
-    <footer class="footer" id="footer">
-      <p class="footer__copy">&copy; 2026 Branch Vincent</p>
-      <p class="footer__tagline">Better design. Faster execution. Sharper presence.</p>
-    </footer>
+    <!-- SLIDE 5: CONTACT -->
+    <section class="slide" id="slide-5" data-theme="premium">
+      <div class="slide__inner align-center">
+        <h2 class="premium-heading-lg">Let's Build.</h2>
+        <p class="premium-body mb-lg">Better design. Faster execution. Sharper presence.</p>
+        
+        <div class="contact-links">
+          <a href="mailto:vincentbranch23@gmail.com" class="btn-premium">
+            <i data-lucide="mail"></i> Email
+          </a>
+          <a href="https://wa.me/628957108605022" class="btn-premium">
+            <i data-lucide="message-circle"></i> WhatsApp
+          </a>
+          <a href="https://tiktok.com/@branch.vincent" class="btn-premium" target="_blank">
+            <i data-lucide="video"></i> TikTok
+          </a>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <script type="module" src="/src/main.js"></script>

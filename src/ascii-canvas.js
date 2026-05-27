@@ -1,6 +1,5 @@
 // ================================================================
-// ASCII Portrait Rendering Engine
-// Renders a portrait image as a living field of characters
+// ASCII Portrait Engine – High-Res & Native Crisp Vector Zoom
 // ================================================================
 
 const CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdef@#$%&*';
@@ -10,65 +9,59 @@ export class AsciiPortrait {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d', { alpha: false });
 
-    // Typography / grid
-    this.fontSize = 10;
-    this.cellW = 6;   // measured at init
-    this.cellH = 12;
+    // Higher resolution typography
+    this.baseFontSize = 5.5; 
+    this.cellW = 3.5;
+    this.cellH = 6.5;
 
-    // Grid data
+    // Grid
     this.cols = 0;
     this.rows = 0;
-    this.grid = null;       // [{char, r, g, b, bri}, ...]
+    this.grid = null;
 
-    // Image source
+    // Image
     this.imgData = null;
     this.imgW = 0;
     this.imgH = 0;
 
-    // Entrance animation
-    this.entranceDuration = 3800; // ms
+    // Entrance
+    this.entranceDuration = 3800;
     this.entranceDone = false;
     this.startTime = 0;
 
-    // Reveal origin (eye area)
+    // Zoom state
+    this.zoomScale = 1;
+    this.zoomProgress = 0;
+    this.opacity = 1;
     this.eyeCol = 0;
     this.eyeRow = 0;
-    this.maxDist = 1;
 
     // Hover
     this.mouseX = -200;
     this.mouseY = -200;
-    this.hoverRadius = 10; // grid cells
+    this.hoverRadius = 15;
 
-    // Ambient cycling
+    // Ambient
     this.cyclingRows = new Set();
-
-    // State
     this.running = true;
     this.onEntranceDone = null;
   }
 
-  /* ── INIT ────────────────────────────────────────────────────── */
   async init() {
-    // Wait for the monospace font to be ready
     await document.fonts.ready;
-
-    // Measure true character width
-    this.ctx.font = `${this.fontSize}px 'JetBrains Mono', monospace`;
+    this.ctx.font = `${this.baseFontSize}px 'JetBrains Mono', monospace`;
     const m = this.ctx.measureText('M');
-    this.cellW = Math.ceil(m.width) || 6;
+    this.cellW = Math.max(3, m.width);
 
-    // Load portrait image
     const img = new Image();
     img.src = '/portrait.png';
     await new Promise((res, rej) => {
       img.onload = res;
-      img.onerror = () => { console.error('Portrait load failed'); rej(); };
+      img.onerror = rej;
     });
 
-    // Extract pixel data via offscreen canvas
     const oc = document.createElement('canvas');
-    oc.width  = img.width;
+    oc.width = img.width;
     oc.height = img.height;
     const octx = oc.getContext('2d');
     octx.drawImage(img, 0, 0);
@@ -76,15 +69,12 @@ export class AsciiPortrait {
     this.imgW = img.width;
     this.imgH = img.height;
 
-    // Build initial grid + size canvas
     this.resize();
     this.bindEvents();
-
-    // Start render loop
+    
     this.startTime = performance.now();
     this._tick();
 
-    // Entrance completion
     setTimeout(() => {
       this.entranceDone = true;
       this._startAmbientCycling();
@@ -92,21 +82,18 @@ export class AsciiPortrait {
     }, this.entranceDuration + 700);
   }
 
-  /* ── RESIZE ──────────────────────────────────────────────────── */
   resize() {
     const dpr = window.devicePixelRatio || 1;
     const w = window.innerWidth;
     const h = window.innerHeight;
 
-    this.canvas.width  = w * dpr;
+    this.canvas.width = w * dpr;
     this.canvas.height = h * dpr;
-    this.canvas.style.width  = w + 'px';
+    this.canvas.style.width = w + 'px';
     this.canvas.style.height = h + 'px';
-    this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-    // Reset font after transform change
-    this.ctx.font = `${this.fontSize}px 'JetBrains Mono', monospace`;
-    this.ctx.textBaseline = 'top';
+    
+    // We handle DPR manually in the render loop for crispness
+    this.dpr = dpr;
 
     this.cols = Math.ceil(w / this.cellW);
     this.rows = Math.ceil(h / this.cellH);
@@ -114,16 +101,14 @@ export class AsciiPortrait {
     this._buildGrid(w, h);
   }
 
-  /* ── BUILD GRID ──────────────────────────────────────────────── */
   _buildGrid(vw, vh) {
     if (!this.imgData) return;
 
-    // Scale image to fit viewport (cover ~88% width or ~94% height)
     const imgAsp = this.imgW / this.imgH;
-    const vAsp   = vw / vh;
+    const vAsp = vw / vh;
     let rw, rh;
-    if (imgAsp > vAsp) { rw = vw * 0.88; rh = rw / imgAsp; }
-    else               { rh = vh * 0.94; rw = rh * imgAsp; }
+    if (imgAsp > vAsp) { rw = vw * 0.95; rh = rw / imgAsp; }
+    else               { rh = vh * 0.95; rw = rh * imgAsp; }
     const ox = (vw - rw) / 2;
     const oy = (vh - rh) / 2;
 
@@ -131,47 +116,35 @@ export class AsciiPortrait {
     this.grid = new Array(total);
 
     const d = this.imgData.data;
-    const imgW = this.imgW;
-    const imgH = this.imgH;
-
     for (let r = 0; r < this.rows; r++) {
       for (let c = 0; c < this.cols; c++) {
         const px = c * this.cellW;
         const py = r * this.cellH;
-
-        // Map to image coordinates
-        const ix = Math.floor(((px - ox) / rw) * imgW);
-        const iy = Math.floor(((py - oy) / rh) * imgH);
+        const ix = Math.floor(((px - ox) / rw) * this.imgW);
+        const iy = Math.floor(((py - oy) / rh) * this.imgH);
 
         let char = ' ', cr = 0, cg = 0, cb = 0, bri = 0;
 
-        if (ix >= 0 && ix < imgW && iy >= 0 && iy < imgH) {
-          const idx = (iy * imgW + ix) << 2; // * 4
-          cr  = d[idx];
-          cg  = d[idx + 1];
-          cb  = d[idx + 2];
-          bri = (cr * 0.299 + cg * 0.587 + cb * 0.114) / 255;
-
+        if (ix >= 0 && ix < this.imgW && iy >= 0 && iy < this.imgH) {
+          const idx = (iy * this.imgW + ix) << 2;
+          cr = d[idx]; cg = d[idx+1]; cb = d[idx+2];
+          bri = (cr*0.299 + cg*0.587 + cb*0.114) / 255;
           if (bri > 0.04) {
-            // Stable character via position hash
             const seed = ((c * 7 + r * 13 + (c ^ r) * 5) & 0x7FFFFFFF) % CHARS.length;
             char = CHARS[seed];
           }
         }
-
         this.grid[r * this.cols + c] = { char, r: cr, g: cg, b: cb, bri };
       }
     }
 
-    // Reveal origin at eye area
-    this.eyeCol  = Math.floor(this.cols * 0.50);
-    this.eyeRow  = Math.floor(this.rows * 0.37);
-    this.maxDist = Math.sqrt(this.cols * this.cols + this.rows * this.rows);
+    this.eyeCol = Math.floor(this.cols * 0.50);
+    this.eyeRow = Math.floor(this.rows * 0.37);
+    this.maxDist = Math.sqrt(this.cols*this.cols + this.rows*this.rows);
   }
 
-  /* ── EVENTS ──────────────────────────────────────────────────── */
   bindEvents() {
-    this.canvas.addEventListener('mousemove', (e) => {
+    this.canvas.addEventListener('mousemove', e => {
       this.mouseX = e.clientX;
       this.mouseY = e.clientY;
     });
@@ -179,187 +152,145 @@ export class AsciiPortrait {
       this.mouseX = -200;
       this.mouseY = -200;
     });
-
-    let rt;
-    window.addEventListener('resize', () => {
-      clearTimeout(rt);
-      rt = setTimeout(() => this.resize(), 120);
-    });
+    window.addEventListener('resize', () => this.resize());
   }
 
-  /* ── AMBIENT CYCLING ─────────────────────────────────────────── */
   _startAmbientCycling() {
     const cycle = () => {
       if (!this.running) { setTimeout(cycle, 300); return; }
-
-      if (this.cyclingRows.size < 8) {
+      if (this.zoomScale > 2) { setTimeout(cycle, 100); return; } // Pause cycle if zoomed in
+      
+      if (this.cyclingRows.size < 12) {
         const start = Math.floor(Math.random() * this.rows);
-        const count = 2 + Math.floor(Math.random() * 3);
-        const rows  = [];
+        const count = 2 + Math.floor(Math.random() * 4);
+        const rows = [];
         for (let i = 0; i < count; i++) {
-          const row = start + i;
-          if (row < this.rows) { this.cyclingRows.add(row); rows.push(row); }
+          if (start + i < this.rows) {
+            this.cyclingRows.add(start + i);
+            rows.push(start + i);
+          }
         }
-        setTimeout(() => rows.forEach(r => this.cyclingRows.delete(r)),
-                   140 + Math.random() * 180);
+        setTimeout(() => rows.forEach(r => this.cyclingRows.delete(r)), 150 + Math.random() * 200);
       }
-
-      setTimeout(cycle, 70 + Math.random() * 260);
+      setTimeout(cycle, 60 + Math.random() * 200);
     };
     cycle();
   }
 
-  /* ── RENDER LOOP ─────────────────────────────────────────────── */
   _tick() {
-    if (!this.running) return;
-    this._render();
+    if (this.running) this._render();
     requestAnimationFrame(() => this._tick());
   }
 
-  pause()  { this.running = false; }
-  resume() { if (!this.running) { this.running = true; this._tick(); } }
+  setZoom(progress) {
+    this.zoomProgress = progress;
+    // Exponential scale
+    this.zoomScale = 1 + (Math.pow(progress, 3) * 60); 
+    this.opacity = Math.max(0, 1 - Math.pow(progress, 2.5));
+  }
 
-  /* ── CORE RENDER ─────────────────────────────────────────────── */
   _render() {
     const ctx = this.ctx;
     const w = window.innerWidth;
     const h = window.innerHeight;
-    const now = performance.now();
-    const elapsed = now - this.startTime;
-
+    const dpr = this.dpr;
+    
     // Clear
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.fillStyle = '#0a0a0a';
-    ctx.fillRect(0, 0, w, h);
-    ctx.font = `${this.fontSize}px 'JetBrains Mono', monospace`;
+    ctx.fillRect(0, 0, w * dpr, h * dpr);
+    
+    if (!this.grid || this.opacity <= 0.01) return;
+
+    // Apply native zoom variables
+    const fontSize = this.baseFontSize * this.zoomScale * dpr;
+    const cw = this.cellW * this.zoomScale * dpr;
+    const ch = this.cellH * this.zoomScale * dpr;
+    
+    ctx.font = `${fontSize}px 'JetBrains Mono', monospace`;
     ctx.textBaseline = 'top';
+    ctx.globalAlpha = this.opacity;
 
-    if (!this.grid) return;
-
-    // Entrance progress
-    const eT = this.entranceDone ? 1 : Math.min(1, elapsed / this.entranceDuration);
+    const eT = this.entranceDone ? 1 : Math.min(1, (performance.now() - this.startTime) / this.entranceDuration);
     const revealR = eT * this.maxDist * 0.85;
 
-    // Mouse → grid coords
+    const eyePxX = this.eyeCol * this.cellW;
+    const eyePxY = this.eyeRow * this.cellH;
+    const centerX = w / 2;
+    const centerY = h / 2;
+
     const mCol = Math.floor(this.mouseX / this.cellW);
     const mRow = Math.floor(this.mouseY / this.cellH);
-    const showHover = this.entranceDone && this.mouseX >= 0;
+    const showHover = this.entranceDone && this.zoomScale < 1.5;
 
-    const cols  = this.cols;
-    const rows  = this.rows;
-    const cellW = this.cellW;
-    const cellH = this.cellH;
-    const eyeC  = this.eyeCol;
-    const eyeR  = this.eyeRow;
-    const grid  = this.grid;
-    const hRad  = this.hoverRadius;
+    for (let r = 0; r < this.rows; r++) {
+      for (let c = 0; c < this.cols; c++) {
+        const cell = this.grid[r * this.cols + c];
+        if (!cell) continue;
 
-    for (let r = 0; r < rows; r++) {
-      const rowBase = r * cols;
-
-      for (let c = 0; c < cols; c++) {
-        const cell = grid[rowBase + c];
-        const px = c * cellW;
-        const py = r * cellH;
+        // Calculate native drawing coordinates with zoom scaling and eye offset
+        const rawX = c * this.cellW;
+        const rawY = r * this.cellH;
+        
+        const x = ((rawX - eyePxX) * this.zoomScale) + centerX;
+        const y = ((rawY - eyePxY) * this.zoomScale) + centerY;
+        
+        // Frustum culling (don't draw characters outside the screen)
+        if (x * dpr < -cw*2 || x * dpr > w * dpr + cw || y * dpr < -ch*2 || y * dpr > h * dpr + ch) {
+          continue; 
+        }
 
         let dChar = cell.char;
         let dr = cell.r, dg = cell.g, db = cell.b;
-        let scale = 1;
+        let charScale = 1;
 
-        // ─── ENTRANCE ───────────────────────────────────────
+        // Entrance
         if (eT < 1) {
-          const dc = c - eyeC;
-          const drr = (r - eyeR) * 1.35;
-          const dist = Math.sqrt(dc * dc + drr * drr);
-
+          const dist = Math.sqrt((c - this.eyeCol)**2 + ((r - this.eyeRow)*1.35)**2);
           if (dist > revealR) {
-            // Chaos zone – random chars EVERYWHERE
             dChar = CHARS[(Math.random() * CHARS.length) | 0];
-            const ni  = 0.06 + Math.random() * 0.24;
             const fade = Math.max(0.12, 1 - eT * 0.55);
-            dr = 0;
-            dg = (175 * ni * fade) | 0;
-            db = (35 * ni * fade) | 0;
-          } else if (dist > revealR - 7) {
-            // Transition edge – flicker
-            if (cell.bri > 0.04) {
-              if (Math.random() > 0.4) {
-                dChar = CHARS[(Math.random() * CHARS.length) | 0];
-                dg = Math.min(255, dg + 35);
-              }
-            } else {
-              // Empty cell at transition edge: fading random
+            dr=0; dg=Math.floor((15 + Math.random()*150)*fade); db=0;
+          } else if (dist > revealR - 10 && cell.bri > 0.04) {
+            if (Math.random() > 0.4) {
               dChar = CHARS[(Math.random() * CHARS.length) | 0];
-              const ef = (dist - (revealR - 7)) / 7;
-              dr = 0;
-              dg = (70 * ef) | 0;
-              db = 0;
+              dg = Math.min(255, dg + 50);
             }
-          } else {
-            // Inside reveal radius
-            if (cell.bri < 0.04) continue;
-          }
-        } else {
-          // ─── POST-ENTRANCE ──────────────────────────────────
-          if (cell.bri < 0.04) {
-            // Even after entrance, show hover glow in dark areas
-            if (!showHover) continue;
-            const hdc = c - mCol;
-            const hdr = r - mRow;
-            const hd = Math.sqrt(hdc * hdc + hdr * hdr);
-            if (hd >= hRad) continue;
-            const hi = 1 - hd / hRad;
-            if (hi < 0.25) continue;
-            dChar = CHARS[(Math.random() * CHARS.length) | 0];
-            dr = 0;
-            dg = (65 * hi * hi) | 0;
-            db = (15 * hi * hi) | 0;
-            scale = 1 + hi * 0.4;
-          }
+          } else if (cell.bri < 0.04) continue;
         }
 
-        // ─── AMBIENT CYCLING ────────────────────────────────
+        // Ambient Cycle
         if (this.entranceDone && this.cyclingRows.has(r) && cell.bri > 0.04) {
           dChar = CHARS[(Math.random() * CHARS.length) | 0];
         }
 
-        // ─── HOVER EFFECTS (on visible portrait cells) ──────
+        // Hover
         if (showHover && cell.bri >= 0.04) {
-          const hdc = c - mCol;
-          const hdr = r - mRow;
-          const hd = Math.sqrt(hdc * hdc + hdr * hdr);
-          if (hd < hRad) {
-            const hi = 1 - hd / hRad;
-            const hiSq = hi * hi;
-
-            // Scramble
-            if (Math.random() < hiSq * 0.65) {
-              dChar = CHARS[(Math.random() * CHARS.length) | 0];
-            }
-            // Glow
-            dg = Math.min(255, dg + (hiSq * 130) | 0);
-            dr = Math.min(255, dr + (hiSq * 15) | 0);
-            // Scale warp
-            scale = 1 + hiSq * 0.55;
+          const hd = Math.sqrt((c - mCol)**2 + (r - mRow)**2);
+          if (hd < this.hoverRadius) {
+            const hiSq = Math.pow(1 - hd/this.hoverRadius, 2);
+            if (Math.random() < hiSq * 0.6) dChar = CHARS[(Math.random() * CHARS.length) | 0];
+            dg = Math.min(255, dg + (hiSq * 150) | 0);
+            charScale = 1 + hiSq * 0.5;
           }
         }
 
-        // ─── SKIP INVISIBLE ─────────────────────────────────
         if (dChar === ' ') continue;
-        if (dr === 0 && dg === 0 && db === 0) continue;
+        if (dr===0 && dg===0 && db===0) continue;
 
-        // ─── DRAW ───────────────────────────────────────────
         ctx.fillStyle = `rgb(${dr},${dg},${db})`;
-
-        if (scale > 1.03) {
+        
+        if (charScale > 1.01) {
           ctx.save();
-          ctx.translate(px + cellW * 0.5, py + cellH * 0.5);
-          ctx.scale(scale, scale);
-          ctx.fillText(dChar, -cellW * 0.5, -cellH * 0.5);
+          ctx.translate(x * dpr + cw/2, y * dpr + ch/2);
+          ctx.scale(charScale, charScale);
+          ctx.fillText(dChar, -cw/2, -ch/2);
           ctx.restore();
         } else {
-          ctx.fillText(dChar, px, py);
+          ctx.fillText(dChar, x * dpr, y * dpr);
         }
       }
     }
+    ctx.globalAlpha = 1;
   }
 }
