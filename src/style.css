@@ -143,7 +143,7 @@ html:not(.has-js) .site-header { position: absolute; } /* without the script not
 .paper { max-width: calc(var(--max) - 128px); margin-inline: auto; background: var(--paper); color: var(--paper-ink); display: flex; flex-wrap: wrap; align-items: center; gap: 24px clamp(24px, 4vw, 64px); padding: clamp(28px, 5vw, 72px); clip-path: inset(var(--clip, 0%) var(--clip, 0%) var(--clip, 0%) var(--clip, 0%)); }
 .paper a { color: var(--paper-ink); }
 .paper-media { flex: 1 1 300px; min-width: 0; }
-.paper-media img { width: 100%; mix-blend-mode: multiply; }
+.paper-media img { width: 100%; } /* the image already sits on the paper colour, so it needs no blending */
 .paper-body { flex: 1.2 1 400px; min-width: 0; display: flex; flex-direction: column; gap: 28px; }
 .paper-body h2 { font-size: clamp(88px, 9vw, 140px); }
 .steps { list-style: none; display: flex; flex-direction: column; gap: 28px; }
