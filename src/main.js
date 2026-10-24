@@ -4,7 +4,7 @@ import { scramble } from './modules/scramble.js';
 import { initWave } from './modules/wave.js';
 import { runIntro } from './modules/intro.js';
 import { initScrollEffects } from './modules/scroll-effects.js';
-import { initCursor, initMagnetic, initMarquee } from './modules/interactions.js';
+import { initCursor, initMagnetic, initFilmStrip } from './modules/interactions.js';
 import { reducedMotion } from './modules/util.js';
 
 const root = document.documentElement;
@@ -13,7 +13,7 @@ if (year) year.textContent = String(new Date().getFullYear());
 
 initMenu();
 
-const motion = !reducedMotion() && 'IntersectionObserver' in window && 'animate' in Element.prototype;
+const motion = !root.classList.contains('no-motion') && !reducedMotion() && 'IntersectionObserver' in window && 'animate' in Element.prototype;
 root.classList.add('js-live');
 
 try {
@@ -40,7 +40,7 @@ try {
     });
 
     root.classList.add('motion');
-    initMarquee();
+    initFilmStrip();
     initCursor();
     initMagnetic();
     runIntro();

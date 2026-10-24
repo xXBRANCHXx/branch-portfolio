@@ -46,9 +46,13 @@ export function initWave(container, { animate = true } = {}) {
   function draw(now) {
     const t = now / 1000;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.globalAlpha = 1;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     if (!width || !height) return;
     const radius = Math.max(70, width * 0.12);
+    // Set the font once per frame and scale each glyph with the transform: changing ctx.font
+    // and building a new colour string for every one of the 660 glyphs is the expensive part.
+    ctx.font = '500 20px ui-monospace, Menlo, Consolas, monospace';
 
     for (let c = 0; c < COLS; c++) {
       const u = c / (COLS - 1);
@@ -84,10 +88,11 @@ export function initWave(container, { animate = true } = {}) {
         const alpha = clamp((0.18 + 0.7 * edge) * (0.55 + 0.45 * (1 - u)) + heat[idx] * 0.8, 0, 1);
         const s = size * (0.8 + 0.4 * v) * (1 + heat[idx] * 0.35);
 
-        ctx.setTransform(dpr, 0, 0, dpr, x * dpr, y * dpr);
+        const k = (dpr * s) / 20;
+        ctx.setTransform(k, 0, 0, k, x * dpr, y * dpr);
         ctx.rotate(slope + 0.35);
-        ctx.font = `500 ${s.toFixed(1)}px ui-monospace, Menlo, Consolas, monospace`;
-        ctx.fillStyle = heat[idx] > 0.05 ? `rgba(143, 169, 255, ${alpha})` : `rgba(242, 241, 238, ${alpha})`;
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = heat[idx] > 0.05 ? '#8fa9ff' : '#f2f1ee';
         ctx.fillText(bits[idx], 0, 0);
       }
     }

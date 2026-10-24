@@ -68,7 +68,7 @@ ul, ol { padding: 0; }
 .menu-toggle { display: none; background: none; border: 1px solid var(--text); border-radius: 999px; color: var(--text); font: inherit; font-size: 14px; font-weight: 500; letter-spacing: .08em; padding: 11px 18px; cursor: pointer; min-height: 44px; }
 
 /* Hero */
-.hero { position: relative; min-height: clamp(640px, 100svh, 960px); display: flex; flex-direction: column; justify-content: flex-end; padding-top: 110px; overflow: hidden; isolation: isolate; }
+.hero { position: relative; min-height: clamp(640px, 100vh, 960px); min-height: clamp(640px, 100svh, 960px); display: flex; flex-direction: column; justify-content: flex-end; padding-top: 110px; overflow: hidden; isolation: isolate; }
 .hero-photo { position: absolute; right: 0; top: 0; height: 100%; aspect-ratio: 4 / 5; z-index: -1; overflow: hidden;
   /* Fade the photo into the page on the left and bottom so there is no visible edge. */
   -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,.03) 6%, rgba(0,0,0,.1) 12%, rgba(0,0,0,.22) 18%, rgba(0,0,0,.36) 24%, rgba(0,0,0,.52) 30%, rgba(0,0,0,.68) 36%, rgba(0,0,0,.81) 42%, rgba(0,0,0,.91) 48%, rgba(0,0,0,.97) 54%, #000 60%), linear-gradient(0deg, transparent 0%, rgba(0,0,0,.1) 6%, rgba(0,0,0,.3) 11%, rgba(0,0,0,.55) 16%, rgba(0,0,0,.78) 21%, rgba(0,0,0,.93) 26%, #000 31%);
@@ -79,7 +79,7 @@ ul, ol { padding: 0; }
 .hero-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .blue-square { position: absolute; left: 53.5%; top: 16.7%; width: 35.5%; height: 30.1%; background: var(--accent); mix-blend-mode: multiply; will-change: transform; }
 .hero-content { position: relative; padding: 0 var(--gutter) clamp(32px, 5vw, 72px); display: flex; flex-direction: column; gap: 22px; }
-.hero-name { font-size: clamp(120px, min(26vw, calc((clamp(640px, 100svh, 960px) - 330px) / 1.8)), 390px); line-height: .9; }
+.hero-name { font-size: clamp(120px, min(26vw, calc((clamp(640px, 100vh, 960px) - 330px) / 1.8)), 390px); font-size: clamp(120px, min(26vw, calc((clamp(640px, 100svh, 960px) - 330px) / 1.8)), 390px); line-height: .9; }
 .hero-name .line { display: block; }
 .hero-sub { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px 48px; }
 .tagline { font-size: clamp(22px, 2.4vw, 34px); font-weight: 500; line-height: 1.15; max-width: 13ch; text-wrap: balance; }
@@ -160,15 +160,14 @@ ul, ol { padding: 0; }
 .strip { padding-bottom: clamp(72px, 9vw, 128px); }
 .strip .label { padding-inline: var(--gutter); margin-bottom: 20px; }
 .film-viewport { overflow: hidden; }
-.film { display: flex; gap: 12px; list-style: none; width: max-content; }
-.film li { flex: none; height: clamp(160px, 20vw, 260px); aspect-ratio: var(--r); overflow: hidden; background: var(--surface); }
+/* Static layout: a wrapped collage where each photo keeps its own shape. */
+.film { display: flex; flex-wrap: wrap; gap: 12px; list-style: none; padding-inline: var(--gutter); }
+.film li { flex: var(--r) 1 calc(var(--r) * 150px); aspect-ratio: var(--r); min-width: 0; overflow: hidden; background: var(--surface); }
 .film img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--ease-out); }
 .film li:hover img { transform: scale(1.05); }
-.film:not(.is-marquee) { flex-wrap: wrap; width: auto; padding-inline: var(--gutter); }
-.film.is-marquee { animation: marquee var(--marquee-duration, 40s) linear infinite; }
-.film-viewport:hover .film.is-marquee, .film-viewport:focus-within .film:not(.is-marquee) { flex-wrap: wrap; width: auto; padding-inline: var(--gutter); }
-.film.is-marquee { animation-play-state: paused; }
-@keyframes marquee { to { transform: translateX(calc(-50% - 6px)); } }
+/* With motion: one long row that slides sideways as the section scrolls past (driven by scroll, so it never moves on its own). */
+.motion .film { flex-wrap: nowrap; width: max-content; will-change: transform; }
+.motion .film li { flex: none; height: clamp(160px, 20vw, 260px); }
 
 /* Contact */
 .contact { position: relative; overflow: hidden; isolation: isolate; min-height: 680px; display: flex; align-items: flex-end; }
@@ -197,6 +196,11 @@ ul, ol { padding: 0; }
 .motion .split-line > span, .motion [data-split='chars'] .split-char { transform: translateY(105%); transition: transform 1.1s var(--ease-out); transition-delay: calc(var(--i, 0) * 45ms + var(--d, 0ms)); }
 .motion .split-chars { overflow: hidden; vertical-align: top; padding-bottom: .04em; margin-bottom: -.04em; }
 .motion .is-in .split-line > span, .motion .is-in.split-line > span, .motion [data-split].is-in .split-char { transform: none; }
+
+/* Mask only top and bottom where supported, so wider letter-spacing (user text settings) never cuts letters off at the sides. */
+@supports (overflow: clip) {
+  .split-line, .motion .split-chars { overflow-x: visible; overflow-y: clip; }
+}
 
 /* Generic reveal */
 .motion .reveal { opacity: 0; transform: translateY(32px); transition: opacity 1s ease, transform 1.2s var(--ease-out); transition-delay: var(--d, 0ms); }
@@ -255,6 +259,11 @@ ul, ol { padding: 0; }
   .scroll-cue { display: none; }
   .values-wave { width: 120%; right: -30%; opacity: .3; }
   .contact { min-height: 560px; }
+}
+@media (max-width: 679px) {
+  .film { display: grid; grid-template-columns: .667fr .934fr; }
+  .film li:nth-child(1), .film li:nth-child(4) { grid-column: 1 / -1; }
+  .motion .film { display: flex; }
 }
 @media (max-width: 600px) {
   .project { grid-template-columns: minmax(0, 1fr); }

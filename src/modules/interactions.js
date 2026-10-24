@@ -1,5 +1,5 @@
-// Pointer-driven details: a "View" cursor over the work rows, a magnetic email link,
-// and the endless film strip.
+// Pointer-driven details: a "View" cursor over the work rows and a magnetic email link,
+// plus early loading for the sliding photo strip.
 import { finePointer } from './util.js';
 
 export function initCursor() {
@@ -61,21 +61,15 @@ export function initMagnetic() {
   });
 }
 
-export function initMarquee() {
+export function initFilmStrip() {
+  // The strip slides sideways with the scroll, so photos further along the row are clipped
+  // when lazy loading decides what to fetch. Load them all once the strip is close.
   const film = document.querySelector('.film');
-  if (!film) return;
-  const items = [...film.children];
-  items.forEach((li) => {
-    const copy = li.cloneNode(true);
-    copy.setAttribute('aria-hidden', 'true');
-    copy.querySelectorAll('img').forEach((img) => { img.alt = ''; img.loading = 'eager'; });
-    film.appendChild(copy);
-  });
-  const setDuration = () => {
-    const half = film.scrollWidth / 2;
-    film.style.setProperty('--marquee-duration', `${Math.max(20, half / 45).toFixed(1)}s`);
-  };
-  film.classList.add('is-marquee');
-  setDuration();
-  new ResizeObserver(setDuration).observe(film);
+  if (!film || !('IntersectionObserver' in window)) return;
+  const io = new IntersectionObserver((entries) => {
+    if (!entries[0].isIntersecting) return;
+    io.disconnect();
+    film.querySelectorAll('img').forEach((img) => { img.loading = 'eager'; });
+  }, { rootMargin: '800px 0px' });
+  io.observe(film.parentElement || film);
 }

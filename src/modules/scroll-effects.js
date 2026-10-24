@@ -1,5 +1,5 @@
 // Scroll-linked motion, all driven from one requestAnimationFrame pass per scroll:
-// progress bar, header state, hero parallax, the panning value words, the approach panel
+// progress bar, header state, hero parallax, the panning value words and photo strip, the approach panel
 // opening up, and a slow zoom on the contact photo.
 import { clamp, lerp, enterProgress, passProgress } from './util.js';
 
@@ -13,23 +13,31 @@ export function initScrollEffects({ motion }) {
   const heroName = hero.querySelector('.hero-name');
   const valuesSection = document.querySelector('.values');
   const valuesWords = valuesSection && valuesSection.querySelector('.values-words');
+  const strip = document.querySelector('.strip');
+  const film = strip && strip.querySelector('.film');
   const paper = document.querySelector('[data-clip]');
   const contactImg = document.querySelector('.contact-bg img');
   const contact = document.querySelector('.contact');
 
   // The value words sit on one long line that pans sideways with the scroll.
   // Measure how far it overflows its box; re-measure when fonts or the window change its size.
-  const pan = { max: 0, extra: 0 };
+  // The photo strip does the same in the opposite direction.
+  const pan = { max: 0, extra: 0, film: 0 };
   const measurePan = () => {
-    if (!valuesWords) return;
-    const cs = getComputedStyle(valuesSection);
-    const box = valuesSection.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
-    pan.max = Math.max(0, valuesWords.scrollWidth - box);
-    pan.extra = box * 0.05;
+    if (valuesWords) {
+      const cs = getComputedStyle(valuesSection);
+      const box = valuesSection.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+      pan.max = Math.max(0, valuesWords.scrollWidth - box);
+      pan.extra = box * 0.05;
+    }
+    if (film) pan.film = Math.max(0, film.scrollWidth - film.parentElement.clientWidth);
   };
-  if (motion && valuesWords) {
+  if (motion) {
     measurePan();
-    if ('ResizeObserver' in window) new ResizeObserver(() => { measurePan(); request(); }).observe(valuesWords);
+    if ('ResizeObserver' in window) {
+      const ro = new ResizeObserver(() => { measurePan(); request(); });
+      [valuesWords, film].filter(Boolean).forEach((el) => ro.observe(el));
+    }
   }
 
   let lastY = window.scrollY;
@@ -71,6 +79,13 @@ export function initScrollEffects({ motion }) {
       const t = clamp((p + 0.6) / 1.0, 0, 1);
       const x = lerp(pan.extra, -(pan.max + pan.extra), t);
       valuesWords.style.transform = `translate3d(${x.toFixed(1)}px, 0, 0)`;
+    }
+
+    // Photo strip slides left to right while the section passes through the screen.
+    if (film) {
+      const p = passProgress(strip.getBoundingClientRect(), vh);
+      const t = clamp((p + 0.6) / 1.0, 0, 1);
+      film.style.transform = `translate3d(${(-pan.film * (1 - t)).toFixed(1)}px, 0, 0)`;
     }
 
     // Approach panel opens from an inset rectangle to full size.

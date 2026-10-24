@@ -17,10 +17,16 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600&family=Six+Caps&display=swap">
+<!-- fonts:start (self-hosted Lexend and Six Caps, latin subset) -->
+<link rel="preload" as="font" href="assets/fonts/sixcaps-latin.woff2" type="font/woff2" crossorigin>
+<link rel="preload" as="font" href="assets/fonts/lexend-latin.woff2" type="font/woff2" crossorigin>
+<style>
+  @font-face { font-family: 'Lexend'; font-style: normal; font-weight: 300 600; font-display: swap; src: url(assets/fonts/lexend-latin.woff2) format('woff2'); }
+  @font-face { font-family: 'Six Caps'; font-style: normal; font-weight: 400; font-display: block; src: url(assets/fonts/sixcaps-latin.woff2) format('woff2'); }
+</style>
+<!-- fonts:end -->
 <link rel="preload" as="image" href="assets/portrait.webp" type="image/webp" fetchpriority="high">
 <script>
   // Set the animation classes before first paint so the page never flashes unstyled.
@@ -35,7 +41,8 @@
       try { seen = sessionStorage.getItem('bv-intro-seen'); } catch (e) {}
       if (!seen && location.hash.length < 2) d.classList.add('is-intro');
       setTimeout(function () {
-        if (!d.classList.contains('js-live')) d.classList.remove('motion', 'is-intro');
+        // Too late for the animations: show the static page and keep it static even if the script arrives later.
+        if (!d.classList.contains('js-live')) { d.classList.remove('motion', 'is-intro'); d.classList.add('no-motion'); }
       }, 4000);
     } catch (e) {}
   })();
@@ -90,7 +97,7 @@
 
   <section class="values" id="values" aria-labelledby="values-title">
     <div class="values-wave" aria-hidden="true">
-      <img src="assets/wave.png" alt="" width="1262" height="797" loading="lazy" decoding="async">
+      <noscript><img src="assets/wave.png" alt="" width="1262" height="797" decoding="async"></noscript>
     </div>
     <h2 class="label" id="values-title" data-scramble>Your brand deserves</h2>
     <ul class="values-words display">
@@ -219,7 +226,7 @@
     <div class="film-viewport">
       <ul class="film">
         <li style="--r: 2.261"><picture><source srcset="assets/cactus.webp" type="image/webp"><img src="assets/cactus.jpg" alt="Film photo of a cactus and a lit cigarette" width="502" height="222" loading="lazy" decoding="async"></picture></li>
-        <li style="--r: 0.667"><picture><source srcset="assets/cowboy.webp" type="image/webp"><img src="assets/cowboy.jpg" alt="Branch in a cowboy hat by a waterfall" width="1024" height="1536" loading="lazy" decoding="async"></picture></li>
+        <li style="--r: 0.667"><picture><source srcset="assets/cowboy.webp" type="image/webp"><img src="assets/cowboy.jpg" alt="Branch in a cowboy hat by a waterfall" width="520" height="780" loading="lazy" decoding="async"></picture></li>
         <li style="--r: 0.934"><picture><source srcset="assets/road.webp" type="image/webp"><img src="assets/road.jpg" alt="A mountain road seen through a car windshield" width="226" height="242" loading="lazy" decoding="async"></picture></li>
         <li style="--r: 3.505"><picture><source srcset="assets/moto.webp" type="image/webp"><img src="assets/moto.jpg" alt="Film photo of a classic motorcycle" width="743" height="212" loading="lazy" decoding="async"></picture></li>
       </ul>

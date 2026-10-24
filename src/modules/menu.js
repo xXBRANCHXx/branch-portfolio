@@ -16,7 +16,8 @@ export function initMenu() {
   };
 
   toggle.addEventListener('click', () => setOpen(!nav.classList.contains('is-open')));
-  nav.addEventListener('click', (e) => { if (e.target.closest('a')) setOpen(false); });
+  // Any link in the header (menu links and the wordmark) closes the menu.
+  header.addEventListener('click', (e) => { if (e.target.closest('a') && nav.classList.contains('is-open')) setOpen(false); });
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && nav.classList.contains('is-open')) {
       setOpen(false);
