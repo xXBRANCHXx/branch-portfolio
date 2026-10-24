@@ -220,9 +220,12 @@ ul, ol { padding: 0; }
 .motion .reveal { opacity: 0; transform: translateY(32px); transition: opacity 1s ease, transform 1.2s var(--ease-out); transition-delay: var(--d, 0ms); }
 .motion .reveal.is-in { opacity: 1; transform: none; }
 
-/* Image wipe */
-.motion .wipe { clip-path: inset(100% 0 0 0); transition: clip-path 1.3s var(--ease-in-out); transition-delay: var(--d, 0ms); }
-.motion .wipe.is-in { clip-path: inset(0 0 0 0); }
+/* Image wipe: a cover the colour of the page lifts off the image from the bottom up.
+   (Clipping the element itself would hide it from IntersectionObserver in current Chrome,
+   so the reveal would never fire.) */
+.motion .wipe { position: relative; }
+.motion .wipe::after { content: ''; position: absolute; inset: -1px; z-index: 3; background: var(--bg); transform-origin: 50% 0; transition: transform 1.3s var(--ease-in-out); transition-delay: var(--d, 0ms); pointer-events: none; }
+.motion .wipe.is-in::after { transform: scaleY(0); }
 
 /* Intro: hero pieces wait for the intro to finish */
 .motion.is-intro .hero .split-line > span { transform: translateY(105%); }
