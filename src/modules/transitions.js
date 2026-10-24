@@ -119,6 +119,9 @@ export function initTransitions() {
     // shrinks back into the image it came from (or zooms out on its own if that isn't on screen).
     const el = (link && link.querySelector('[data-vt-media]')) || document.querySelector('[data-vt-cover]');
     if (!el) return;
+    // Only an image that is on screen can move: one scrolled out of view would fly in from far away.
+    const r = el.getBoundingClientRect();
+    if (r.bottom <= 0 || r.top >= window.innerHeight) return;
     el.style.viewTransitionName = 'case-cover';
     const clear = () => { el.style.viewTransitionName = ''; };
     vt.finished.then(clear, clear);
