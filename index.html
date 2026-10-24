@@ -38,16 +38,17 @@
   (function () {
     var d = document.documentElement;
     d.classList.add('has-js');
+    setTimeout(function () {
+      // Too late for the animations: show the static page and keep it static even if the script arrives later.
+      // Dropping has-js too puts the nav back in the page, so the MENU button is never left without a script behind it.
+      if (!d.classList.contains('js-live')) { d.classList.remove('has-js', 'motion', 'is-intro'); d.classList.add('no-motion'); }
+    }, 4000);
     try {
       if (matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window) || !('animate' in Element.prototype)) return;
       d.classList.add('motion');
       var seen = null;
       try { seen = sessionStorage.getItem('bv-intro-seen'); } catch (e) {}
       if (!seen && location.hash.length < 2) d.classList.add('is-intro');
-      setTimeout(function () {
-        // Too late for the animations: show the static page and keep it static even if the script arrives later.
-        if (!d.classList.contains('js-live')) { d.classList.remove('motion', 'is-intro'); d.classList.add('no-motion'); }
-      }, 4000);
     } catch (e) {}
   })();
 </script>
@@ -119,104 +120,89 @@
     </div>
     <ol class="work-list">
       <li>
-        <a class="project project-current reveal" href="https://zerofoods.id" target="_blank" rel="noopener" aria-labelledby="p1-name p1-new" aria-describedby="p1-desc">
+        <a class="project project-current reveal" href="work/zero/" aria-labelledby="p1-name p1-cs" aria-describedby="p1-desc" data-cursor="VIEW" data-vt-link>
           <span class="project-num" aria-hidden="true">01</span>
           <div class="project-body">
             <div class="project-title">
-              <h3 id="p1-name">zerofoods.id <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></h3>
+              <h3 id="p1-name">zerofoods.id <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"/></svg></h3>
               <span class="badge">MOST RECENT</span>
             </div>
             <p class="project-desc" id="p1-desc">Brand direction, product visuals, and the website for ZERO, a zero-calorie syrup brand recently rebuilt with a sharper, more premium identity.</p>
             <p class="project-scope" data-scramble>BRAND · PRODUCT VISUALS · WEBSITE</p>
           </div>
-          <div class="project-media wipe">
-            <picture>
-              <source srcset="assets/zero.webp" type="image/webp">
-              <img src="assets/zero.jpg" alt="ZERO syrup bottles on a concrete bar top" width="380" height="708" loading="lazy" decoding="async">
-            </picture>
+          <div class="project-media wipe" data-vt-media>
+            <img src="assets/work/zero/cover.webp" srcset="assets/work/zero/cover-480.webp 480w, assets/work/zero/cover.webp 864w" sizes="(max-width: 600px) min(420px, 92vw), 300px" alt="ZERO syrup bottles in Hazelnut, Salted Caramel and Plain on a concrete bar top, in black and white" width="864" height="1080" loading="lazy" decoding="async">
             <div class="tint" aria-hidden="true"></div>
           </div>
-          <span class="visually-hidden" id="p1-new">(opens in a new tab)</span>
+          <span class="visually-hidden" id="p1-cs">case study</span>
         </a>
       </li>
       <li>
-        <a class="project reveal" href="https://ezkart.id" target="_blank" rel="noopener" aria-labelledby="p2-name p2-new" aria-describedby="p2-desc">
+        <a class="project reveal" href="work/ezkart/" aria-labelledby="p2-name p2-cs" aria-describedby="p2-desc" data-cursor="VIEW" data-vt-link>
           <span class="project-num" aria-hidden="true">02</span>
           <div class="project-body">
             <div class="project-title">
-              <h3 id="p2-name">ezkart.id <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></h3>
+              <h3 id="p2-name">ezkart.id <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"/></svg></h3>
             </div>
             <p class="project-desc" id="p2-desc">Ezkart, a commerce platform I built as its solo developer. Sellers add their products, design a branded page without code, and share one link that takes customers straight to checkout.</p>
             <p class="project-scope" data-scramble>COMMERCE PLATFORM · SOLO BUILD</p>
           </div>
-          <div class="project-media dim wipe">
-            <picture>
-              <source srcset="assets/ezkart.webp" type="image/webp">
-              <img src="assets/ezkart.jpg" alt="The Ezkart page editor showing a storefront hero, &quot;A little less ordinary.&quot;, with a product photo of a bottle" width="600" height="750" loading="lazy" decoding="async">
-            </picture>
+          <div class="project-media dim wipe" data-vt-media>
+            <img src="assets/work/ezkart/cover.webp" srcset="assets/work/ezkart/cover-480.webp 480w, assets/work/ezkart/cover.webp 819w" sizes="(max-width: 600px) min(420px, 92vw), 300px" alt="Two “form.” bottles, the demo brand used across Ezkart, in black and white" width="819" height="1024" loading="lazy" decoding="async">
             <div class="tint on-hover" aria-hidden="true"></div>
           </div>
-          <span class="visually-hidden" id="p2-new">(opens in a new tab)</span>
+          <span class="visually-hidden" id="p2-cs">case study</span>
         </a>
       </li>
       <li>
-        <a class="project reveal" href="https://easysolutions.id" target="_blank" rel="noopener" aria-labelledby="p3-name p3-new" aria-describedby="p3-desc">
+        <a class="project reveal" href="work/easy-solutions/" aria-labelledby="p3-name p3-cs" aria-describedby="p3-desc" data-cursor="VIEW" data-vt-link>
           <span class="project-num" aria-hidden="true">03</span>
           <div class="project-body">
             <div class="project-title">
-              <h3 id="p3-name">easysolutions.id <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></h3>
+              <h3 id="p3-name">easysolutions.id <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"/></svg></h3>
             </div>
             <p class="project-desc" id="p3-desc">The company site for Easy Solutions Indonesia, the technology company behind Ezkart, Ezpay, and an ERP with AI agents.</p>
             <p class="project-scope" data-scramble>WEBSITE</p>
           </div>
-          <div class="project-media dim wipe">
-            <picture>
-              <source srcset="assets/easysolutions.webp" type="image/webp">
-              <img src="assets/easysolutions.jpg" alt="Jakarta skyline at dusk, from the Easy Solutions Indonesia website" width="600" height="750" loading="lazy" decoding="async">
-            </picture>
+          <div class="project-media dim wipe" data-vt-media>
+            <img src="assets/work/easy-solutions/cover.webp" srcset="assets/work/easy-solutions/cover-480.webp 480w, assets/work/easy-solutions/cover.webp 819w" sizes="(max-width: 600px) min(420px, 92vw), 300px" alt="A city skyline at dusk with a tall glass tower, in black and white" width="819" height="1024" loading="lazy" decoding="async">
             <div class="tint on-hover" aria-hidden="true"></div>
           </div>
-          <span class="visually-hidden" id="p3-new">(opens in a new tab)</span>
+          <span class="visually-hidden" id="p3-cs">case study</span>
         </a>
       </li>
       <li>
-        <a class="project reveal" href="https://jenanggemi.com" target="_blank" rel="noopener" aria-labelledby="p4-name p4-new" aria-describedby="p4-desc">
+        <a class="project reveal" href="work/jenang-gemi/" aria-labelledby="p4-name p4-cs" aria-describedby="p4-desc" data-cursor="VIEW" data-vt-link>
           <span class="project-num" aria-hidden="true">04</span>
           <div class="project-body">
             <div class="project-title">
-              <h3 id="p4-name">jenanggemi.com <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></h3>
+              <h3 id="p4-name">jenanggemi.com <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"/></svg></h3>
             </div>
             <p class="project-desc" id="p4-desc">A modern website for Jenang Gemi, an Indonesian functional-food brand building a stronger online presence.</p>
             <p class="project-scope" data-scramble>WEBSITE</p>
           </div>
-          <div class="project-media dim wipe">
-            <picture>
-              <source srcset="assets/jenang.webp" type="image/webp">
-              <img src="assets/jenang.jpg" alt="Jenang Gemi porridge product box" width="380" height="708" loading="lazy" decoding="async">
-            </picture>
+          <div class="project-media dim wipe" data-vt-media>
+            <img src="assets/work/jenang-gemi/cover.webp" srcset="assets/work/jenang-gemi/cover-480.webp 480w, assets/work/jenang-gemi/cover.webp 864w" sizes="(max-width: 600px) min(420px, 92vw), 300px" alt="An open Jenang Gemi Bubur box with its sachets on a wooden board, in black and white" width="864" height="1080" loading="lazy" decoding="async">
             <div class="tint on-hover" aria-hidden="true"></div>
           </div>
-          <span class="visually-hidden" id="p4-new">(opens in a new tab)</span>
+          <span class="visually-hidden" id="p4-cs">case study</span>
         </a>
       </li>
       <li>
-        <a class="project reveal" href="https://royalsyrup.id" target="_blank" rel="noopener" aria-labelledby="p5-name p5-new" aria-describedby="p5-desc">
+        <a class="project reveal" href="work/royal-syrup/" aria-labelledby="p5-name p5-cs" aria-describedby="p5-desc" data-cursor="VIEW" data-vt-link>
           <span class="project-num" aria-hidden="true">05</span>
           <div class="project-body">
             <div class="project-title">
-              <h3 id="p5-name">royalsyrup.id <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></h3>
+              <h3 id="p5-name">royalsyrup.id <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"/></svg></h3>
             </div>
             <p class="project-desc" id="p5-desc">Website and positioning for Royal Syrup, focused on local coffee shops, product clarity, and a stronger market presence.</p>
             <p class="project-scope" data-scramble>POSITIONING · WEBSITE</p>
           </div>
-          <div class="project-media dim wipe">
-            <picture>
-              <source srcset="assets/royal.webp" type="image/webp">
-              <img src="assets/royal.jpg" alt="Gloved bartender holding a bottle of Royal mint syrup and a jigger" width="380" height="708" loading="lazy" decoding="async">
-            </picture>
+          <div class="project-media dim wipe" data-vt-media>
+            <img src="assets/work/royal-syrup/cover.webp" srcset="assets/work/royal-syrup/cover-480.webp 480w, assets/work/royal-syrup/cover.webp 960w" sizes="(max-width: 600px) min(420px, 92vw), 300px" alt="A one-liter bottle of Royal Butterscotch syrup with a caramel splash, in black and white" width="960" height="1200" loading="lazy" decoding="async">
             <div class="tint on-hover" aria-hidden="true"></div>
           </div>
-          <span class="visually-hidden" id="p5-new">(opens in a new tab)</span>
+          <span class="visually-hidden" id="p5-cs">case study</span>
         </a>
       </li>
     </ol>

@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Royal Syrup case study · Branch Vincent</title>
+<meta name="description" content="Positioning and a website for a Yogyakarta syrup supplier, plus a phone ordering app for the coffee shops it supplies.">
+<meta name="author" content="Branch Vincent">
+<meta name="theme-color" content="#0a0a0b">
+<meta name="color-scheme" content="dark">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Royal Syrup case study · Branch Vincent">
+<meta property="og:description" content="Positioning and a website for a Yogyakarta syrup supplier, plus a phone ordering app for the coffee shops it supplies.">
+<meta property="og:url" content="https://branch-portfolio.vercel.app/work/royal-syrup/">
+<meta property="og:image" content="https://branch-portfolio.vercel.app/assets/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Branch Vincent · Websites, built with intent.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://branch-portfolio.vercel.app/assets/og-image.jpg">
+<link rel="canonical" href="https://branch-portfolio.vercel.app/work/royal-syrup/">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+<!-- fonts:start (self-hosted Lexend and Six Caps, latin subset) -->
+<link rel="preload" as="font" href="../../assets/fonts/sixcaps-latin.woff2" type="font/woff2" crossorigin>
+<link rel="preload" as="font" href="../../assets/fonts/lexend-latin.woff2" type="font/woff2" crossorigin>
+<style>
+  @font-face { font-family: 'Lexend'; font-style: normal; font-weight: 300 600; font-display: swap; src: url(../../assets/fonts/lexend-latin.woff2) format('woff2'); }
+  @font-face { font-family: 'Six Caps'; font-style: normal; font-weight: 400; font-display: block; src: url(../../assets/fonts/sixcaps-latin.woff2) format('woff2'); }
+</style>
+<!-- fonts:end -->
+<link rel="expect" href="#case-cover" blocking="render">
+<script>
+  // Set the animation classes before first paint so the page never flashes unstyled.
+  // If the main script has not started within 4s, drop them and keep the page static.
+  (function () {
+    var d = document.documentElement;
+    d.classList.add('has-js');
+    setTimeout(function () {
+      if (!d.classList.contains('js-live')) { d.classList.remove('has-js', 'motion'); d.classList.add('no-motion'); }
+    }, 4000);
+    try {
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window && 'animate' in Element.prototype) d.classList.add('motion');
+    } catch (e) {}
+    // Page-to-page transition: the image of the link that was clicked grows into this page's cover.
+    addEventListener('pagereveal', function (e) {
+      var el = e.viewTransition && document.querySelector('[data-vt-cover]');
+      if (!el) return;
+      el.style.viewTransitionName = 'case-cover';
+      d.classList.add('vt-in');
+      var clear = function () { el.style.viewTransitionName = ''; };
+      e.viewTransition.finished.then(clear, clear);
+    });
+  })();
+</script>
+<link rel="stylesheet" href="../../src/style.css">
+<link rel="stylesheet" href="../../src/case.css">
+</head>
+<body class="page-case">
+<a class="skip" href="#main">Skip to content</a>
+<div class="progress" aria-hidden="true"></div>
+
+<header class="site-header" id="site-header">
+  <a class="wordmark" href="../../" aria-label="Branch Vincent, home">BRANCH VINCENT</a>
+  <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">MENU</button>
+  <nav class="site-nav" id="site-nav" aria-label="Main">
+    <ul class="nav-links">
+      <li><a href="../../#work" style="--i: 0" aria-current="true">Work</a></li>
+      <li><a href="../../#approach" style="--i: 1">Approach</a></li>
+      <li><a href="../../#about" style="--i: 2">About</a></li>
+      <li><a class="pill" href="#contact" style="--i: 3">Let<span class="apos">’</span>s talk</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main">
+  <article class="case" aria-labelledby="case-title">
+  <section class="case-hero" id="top">
+    <div class="case-hero-text">
+      <p class="case-kicker label"><a class="back" href="../../#work"><span aria-hidden="true">←</span> All work</a><span>Case study 05 / 05</span></p>
+      <h1 class="case-title display" id="case-title" data-split="chars">ROYAL SYRUP</h1>
+      <p class="case-lede reveal" style="--d: 200ms">Positioning and a website for a Yogyakarta syrup supplier, plus a phone ordering app for the coffee shops it supplies.</p>
+      <dl class="case-meta reveal" style="--d: 320ms">
+        <div><dt>Role</dt><dd>Design and development</dd></div>
+        <div><dt>Scope</dt><dd>Positioning · Website · Order app</dd></div>
+        <div><dt>Year</dt><dd>2026</dd></div>
+        <div><dt>Live site</dt><dd><a class="visit" href="https://royalsyrup.id" target="_blank" rel="noopener" data-magnetic>royalsyrup.id <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg><span class="visually-hidden"> (opens in a new tab)</span></a></dd></div>
+      </dl>
+    </div>
+    <figure class="case-cover" id="case-cover">
+      <div class="case-cover-media" data-vt-cover>
+        <div class="case-cover-inner" data-speed="0.04">
+          <img src="../../assets/work/royal-syrup/cover.webp" alt="A one-liter bottle of Royal Butterscotch syrup with a caramel splash, in black and white" width="960" height="1200" decoding="async" fetchpriority="high">
+          <div class="blue-square" style="left: 36%; top: 40%; width: 30%; height: 26%" aria-hidden="true"></div>
+        </div>
+      </div>
+    </figure>
+  </section>
+
+  <section class="case-section container" aria-labelledby="brief-title">
+    <h2 class="label case-side" id="brief-title" data-scramble>The brief</h2>
+    <div class="case-body">
+      <p class="case-big reveal">Royal Syrup supplies flavored syrups and drink powders to coffee shops, restaurants and hotels. The positioning fits in one line: imported quality at a local price, with a flavor for almost anything.</p>
+      <p class="case-text reveal">Coffee shops already order over WhatsApp, so the order app keeps that habit and tidies it up: browse, build a cart, pick a delivery slot and send one clear message.</p>
+    </div>
+  </section>
+
+  <section class="tour tour-phone" aria-labelledby="tour-title" style="--n: 4">
+    <div class="tour-sticky">
+      <div class="tour-head">
+        <h2 class="label" id="tour-title" data-scramble>The order app</h2>
+        <ol class="tour-captions" aria-hidden="true">
+          <li class="is-active"><span>01</span>Featured flavors</li>
+          <li><span>02</span>Powder series</li>
+          <li><span>03</span>Catalog</li>
+          <li><span>04</span>Specials</li>
+        </ol>
+      </div>
+      <div class="tour-stage">
+      <div class="frame frame-phone">
+        <div class="frame-screen" role="group" aria-label="The order app, 4 screens" tabindex="0">
+          <img class="tour-slide" src="../../assets/work/royal-syrup/screen-m1.webp" alt="The order app opening screen: “Explore Our Syrups” with a Hazelnut best seller" width="780" height="1688" loading="lazy" decoding="async">
+          <img class="tour-slide" src="../../assets/work/royal-syrup/screen-m2.webp" alt="The powder series banner and the delivery schedule card" width="780" height="1688" loading="lazy" decoding="async" style="--a: 17%; --b: 33%">
+          <img class="tour-slide" src="../../assets/work/royal-syrup/screen-m3.webp" alt="The syrup catalog with category tabs and add buttons" width="780" height="1688" loading="lazy" decoding="async" style="--a: 42%; --b: 58%">
+          <img class="tour-slide" src="../../assets/work/royal-syrup/screen-m4.webp" alt="The end of the catalog with specials such as Blue Agave and Maple Topping" width="780" height="1688" loading="lazy" decoding="async" style="--a: 67%; --b: 83%">
+        </div>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="case-section container case-built" aria-labelledby="built-title">
+    <h2 class="display case-side" id="built-title" data-split="chars">WHAT I BUILT</h2>
+    <ol class="built-list">
+      <li class="reveal" style="--d: 0ms"><span class="built-num" aria-hidden="true">01</span><div><h3>royalsyrup.id</h3><p>The brand site leads with one line, “Harga lokal, kualitas impor” (local prices, imported quality), then makes the case with flavor range, concentration and a sugar-free series.</p></div></li>
+      <li class="reveal" style="--d: 120ms"><span class="built-num" aria-hidden="true">02</span><div><h3>A phone-first catalog</h3><p>More than 80 syrup flavors, sugar-free options and powders, with live search across every tab and swipeable best-seller carousels.</p></div></li>
+      <li class="reveal" style="--d: 0ms"><span class="built-num" aria-hidden="true">03</span><div><h3>Real delivery rules</h3><p>Weekday and Saturday delivery windows, the daily cutoff, Sundays and Independence Day are built in, so the app only offers slots the team can actually make.</p></div></li>
+      <li class="reveal" style="--d: 120ms"><span class="built-num" aria-hidden="true">04</span><div><h3>Checkout in one message</h3><p>The cart becomes one structured WhatsApp message: items, sizes, quantities, the coffee shop and the delivery date.</p></div></li>
+      <li class="reveal" style="--d: 0ms"><span class="built-num" aria-hidden="true">05</span><div><h3>An order log in Google Sheets</h3><p>Each order’s coffee shop name is saved to a Google Sheet through a small serverless proxy that keeps the secret off the page and reports clear errors.</p></div></li>
+      <li class="reveal" style="--d: 120ms"><span class="built-num" aria-hidden="true">06</span><div><h3>A darker, premium look</h3><p>Black, cream and gold to match Royal’s black bottle labels.</p></div></li>
+    </ol>
+  </section>
+
+  <section class="case-quote" aria-label="In the site’s words">
+    <figure class="container">
+      <blockquote>
+        <p class="display" data-split="chars" lang="id">HARGA LOKAL, KUALITAS IMPOR.</p>
+      </blockquote>
+      <figcaption class="reveal"><span class="quote-gloss">“Local prices, imported quality.”</span><span class="label">Headline, royalsyrup.id</span></figcaption>
+    </figure>
+  </section>
+
+  <section class="case-stats container" aria-labelledby="stats-title">
+    <h2 class="visually-hidden" id="stats-title">By the numbers</h2>
+    <ul class="stats">
+      <li class="reveal" style="--d: 0ms"><span class="stat-value display" data-count="82">82</span><span class="stat-label">Syrup flavors</span></li>
+      <li class="reveal" style="--d: 90ms"><span class="stat-value display" data-count="17">17</span><span class="stat-label">Sugar-free flavors</span></li>
+      <li class="reveal" style="--d: 180ms"><span class="stat-value display" data-count="5">5</span><span class="stat-label">Powders</span></li>
+      <li class="reveal" style="--d: 270ms"><span class="stat-value display" data-count="227">227</span><span class="stat-label">Items in the order catalog</span></li>
+    </ul>
+  </section>
+
+  <section class="case-gallery container" aria-label="Gallery">
+    <div class="gallery-grid">
+      <figure class="g-item g-half wipe">
+        <img src="../../assets/work/royal-syrup/strawberry.webp" alt="A one-liter bottle of Royal Strawberry syrup with strawberries and a milk splash" width="900" height="1213" loading="lazy" decoding="async">
+      </figure>
+      <figure class="g-item g-half wipe">
+        <img src="../../assets/work/royal-syrup/hazelnut.webp" alt="A one-liter bottle of Royal Hazelnut syrup with a chocolate splash and hazelnuts" width="900" height="1135" loading="lazy" decoding="async">
+      </figure>
+      <figure class="g-item g-half wipe">
+        <img src="../../assets/work/royal-syrup/choco.webp" alt="The Choco Powder Series banner with two chocolate powder pouches" width="1100" height="806" loading="lazy" decoding="async">
+      </figure>
+      <figure class="g-item g-half wipe">
+        <img src="../../assets/work/royal-syrup/matcha.webp" alt="The Matcha Powder Series banner with two matcha powder pouches" width="1100" height="796" loading="lazy" decoding="async">
+      </figure>
+    </div>
+    <p class="gallery-caption reveal">Product imagery from the order app.</p>
+  </section>
+
+  <section class="case-section container case-stack" aria-labelledby="stack-title">
+    <h2 class="label case-side" id="stack-title" data-scramble>Built with</h2>
+    <ul class="skills reveal">
+      <li>HTML and CSS</li>
+      <li>Vanilla JavaScript</li>
+      <li>Vercel Functions</li>
+      <li>Google Apps Script</li>
+      <li>Google Sheets</li>
+      <li>WhatsApp ordering</li>
+    </ul>
+  </section>
+  </article>
+
+  <nav class="next" aria-label="Next case study">
+    <a class="next-link" href="../zero/" data-cursor="NEXT" data-vt-link>
+      <span class="next-label label">Next project · 01</span>
+      <span class="next-name display">ZERO <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"/></svg></span>
+      <span class="next-domain">zerofoods.id</span>
+      <span class="next-media" aria-hidden="true" data-vt-media><img src="../../assets/work/zero/cover-480.webp" alt="" width="864" height="1080" loading="lazy" decoding="async"></span>
+    </a>
+  </nav>
+
+  <section class="case-contact" id="contact" aria-labelledby="contact-title">
+    <h2 class="display" id="contact-title" data-split="chars">HAVE A PROJECT?</h2>
+    <p class="case-contact-lede reveal">Tell me what you’re building. I’ll tell you how I’d approach it.</p>
+    <a class="contact-email" href="mailto:vincentbranch23@gmail.com" data-magnetic>vincentbranch23@gmail.com</a>
+    <ul class="contact-meta">
+      <li><a href="https://wa.me/62895710860502" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 20.5l1.4-4.2A8.4 8.4 0 1 1 8 19.3z"/><path d="M9 9.5c.3 2 2.2 4.2 4.6 4.9l1.2-1.1 1.7.9-.4 1.6c-3.6.2-7.6-3.6-7.5-7.3l1.6-.4.8 1.7z"/></svg>
+        WhatsApp +62 895-7108-60502<span class="visually-hidden"> (opens in a new tab)</span></a></li>
+      <li><a href="https://www.instagram.com/vincentbranch23/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".6" fill="currentColor"/></svg>
+        Instagram @vincentbranch23<span class="visually-hidden"> (opens in a new tab)</span></a></li>
+      <li><span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5a7 7 0 1 0-14 0C5 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+        Yogyakarta, Indonesia</span></li>
+    </ul>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <span>© <span id="year">2026</span> Branch Vincent</span>
+  <a href="../../">Websites, built with intent.</a>
+  <a href="#top">Back to top <span aria-hidden="true">↑</span></a>
+</footer>
+
+<script type="module" src="../../src/page.js"></script>
+</body>
+</html>

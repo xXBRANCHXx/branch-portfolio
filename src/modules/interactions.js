@@ -1,15 +1,14 @@
-// Pointer-driven details: a "View" cursor over the work rows and a magnetic email link,
-// plus early loading for the sliding photo strip.
+// Pointer-driven details: a labelled cursor over links that ask for one (data-cursor, e.g. the
+// work rows), a magnetic email link, plus early loading for the sliding photo strip.
 import { finePointer } from './util.js';
 
 export function initCursor() {
   if (!finePointer()) return;
-  const rows = document.querySelectorAll('.project');
+  const rows = document.querySelectorAll('[data-cursor]');
   if (!rows.length) return;
   const cursor = document.createElement('div');
   cursor.className = 'cursor';
   cursor.setAttribute('aria-hidden', 'true');
-  cursor.textContent = 'VIEW ↗';
   document.body.appendChild(cursor);
 
   const state = { x: -200, y: -200, tx: -200, ty: -200, s: 0, ts: 0 };
@@ -32,14 +31,17 @@ export function initCursor() {
     if (state.s < 0.01 && state.ts === 0) { state.x = e.clientX; state.y = e.clientY; }
     kick();
   }, { passive: true });
+  // Escape hides the circle until the pointer leaves the row, so it never has to sit over text.
+  let dismissed = false;
+  window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && state.ts) { dismissed = true; state.ts = 0; kick(); } });
   rows.forEach((row) => {
-    row.addEventListener('pointerenter', () => { state.ts = 1; kick(); });
-    row.addEventListener('pointerleave', () => { state.ts = 0; kick(); });
+    row.addEventListener('pointerenter', () => { if (dismissed) return; cursor.textContent = row.dataset.cursor; state.ts = 1; kick(); });
+    row.addEventListener('pointerleave', () => { dismissed = false; state.ts = 0; kick(); });
   });
   window.addEventListener('scroll', () => {
     // Hide the cursor if the row scrolls out from under it.
     const el = document.elementFromPoint(state.tx, state.ty);
-    if (!el || !el.closest('.project')) { state.ts = 0; kick(); }
+    if (!el || !el.closest('[data-cursor]')) { state.ts = 0; kick(); }
   }, { passive: true });
 }
 
