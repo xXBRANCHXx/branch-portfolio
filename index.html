@@ -1,163 +1,261 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Branch Vincent | AI-Native Web Designer</title>
-  <meta name="description" content="AI-native web designer and creative strategist building modern websites, brand visuals, and digital experiences for ambitious small businesses.">
-  <meta name="theme-color" content="#0a0a0a">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Branch Vincent · Websites, built with intent.</title>
+<meta name="description" content="Yogyakarta-based web designer and developer Branch Vincent builds websites for brands. Strategy first, AI-accelerated, design-directed.">
+<meta name="author" content="Branch Vincent">
+<meta name="theme-color" content="#0a0a0b">
+<meta name="color-scheme" content="dark">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Branch Vincent · Websites, built with intent.">
+<meta property="og:description" content="Web design and engineering from Yogyakarta, Indonesia. Selected work: zerofoods.id, jenanggemi.com, royalsyrup.id.">
+<!-- After the first deploy, make this an absolute URL (https://your-site.vercel.app/assets/og-image.jpg) so link previews show the image. -->
+<meta property="og:image" content="assets/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600&family=Six+Caps&display=swap">
+<link rel="preload" as="image" href="assets/portrait.webp" type="image/webp" fetchpriority="high">
+<script>
+  // Set the animation classes before first paint so the page never flashes unstyled.
+  // If the main script has not started within 4s, drop them and show the static page.
+  (function () {
+    var d = document.documentElement;
+    d.classList.add('has-js');
+    try {
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window) || !('animate' in Element.prototype)) return;
+      d.classList.add('motion');
+      var seen = null;
+      try { seen = sessionStorage.getItem('bv-intro-seen'); } catch (e) {}
+      if (!seen && location.hash.length < 2) d.classList.add('is-intro');
+      setTimeout(function () {
+        if (!d.classList.contains('js-live')) d.classList.remove('motion', 'is-intro');
+      }, 4000);
+    } catch (e) {}
+  })();
+</script>
+<link rel="stylesheet" href="./src/style.css">
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="progress" aria-hidden="true"></div>
 
-  <!-- LOADING SCREEN -->
-  <div id="loader">
-    <div class="loader-text">INITIALIZING CONSTRUCT</div>
-    <div class="loader-bar"><div class="loader-progress"></div></div>
-  </div>
+<header class="site-header" id="site-header">
+  <a class="wordmark" href="#top" aria-label="Branch Vincent, back to top">BRANCH VINCENT</a>
+  <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">MENU</button>
+  <nav class="site-nav" id="site-nav" aria-label="Main">
+    <ul class="nav-links">
+      <li><a href="#work" style="--i: 0">Work</a></li>
+      <li><a href="#approach" style="--i: 1">Approach</a></li>
+      <li><a href="#about" style="--i: 2">About</a></li>
+      <li><a class="pill" href="#contact" style="--i: 3">Let<span class="apos">’</span>s talk</a></li>
+    </ul>
+  </nav>
+</header>
 
-  <!-- WEBGL BACKGROUND -->
-  <canvas id="webgl-canvas"></canvas>
-  <div class="vignette" aria-hidden="true"></div>
-  <div class="scanlines" aria-hidden="true"></div>
-
-  <!-- FIXED SLIDES CONTAINER -->
-  <main id="slider">
-
-    <!-- SLIDE 0: ASCII PORTRAIT -->
-    <section class="slide" id="slide-0" data-theme="dark">
-      <canvas id="ascii-canvas"></canvas>
-      
-      <div id="hero-name-left" class="hero-name hero-name--left" aria-hidden="true">
-        <span>B</span><span>R</span><span>A</span><span>N</span><span>C</span><span>H</span>
+<main id="main">
+  <section class="hero" id="top" aria-labelledby="hero-title">
+    <div class="hero-photo">
+      <div class="parallax" data-parallax="0.12">
+        <picture>
+          <source srcset="assets/portrait.webp" type="image/webp">
+          <img src="assets/portrait.jpg" alt="Black and white portrait of Branch Vincent" width="1080" height="1350" fetchpriority="high">
+        </picture>
+        <div class="blue-square" aria-hidden="true"></div>
       </div>
-      <div id="hero-name-right" class="hero-name hero-name--right" aria-hidden="true">
-        <span>V</span><span>I</span><span>N</span><span>C</span><span>E</span><span>N</span><span>T</span>
+    </div>
+    <div class="hero-content">
+      <h1 class="hero-name display" id="hero-title" aria-label="Branch Vincent, web designer and developer">
+        <span class="split-line" aria-hidden="true"><span>BRANCH</span></span>
+        <span class="split-line" aria-hidden="true"><span style="--i: 2">VINCENT</span></span>
+      </h1>
+      <div class="hero-sub">
+        <p class="tagline">Websites, built with intent.</p>
+        <p class="intro">Design, development, and structure working together, so your site looks right and performs quietly in the background.</p>
       </div>
+      <ul class="tags" aria-label="Disciplines">
+        <li style="--i: 0" data-scramble>MARKETING</li>
+        <li style="--i: 1" data-scramble>DESIGN</li>
+        <li style="--i: 2" class="accent" data-scramble>ENGINEERING</li>
+      </ul>
+    </div>
+    <a class="scroll-cue" href="#values" aria-label="Scroll to the next section">SCROLL</a>
+  </section>
 
-      <div class="scroll-cta">
-        <span class="scroll-cta__text">scroll</span>
-        <div class="scroll-cta__line"></div>
+  <section class="values" id="values" aria-labelledby="values-title">
+    <div class="values-wave" aria-hidden="true">
+      <img src="assets/wave.png" alt="" width="1262" height="797" loading="lazy" decoding="async">
+    </div>
+    <h2 class="label" id="values-title" data-scramble>Your brand deserves</h2>
+    <ul class="values-words display">
+      <li>TASTE</li>
+      <li class="outline">STRATEGY</li>
+      <li>SPEED</li>
+      <li class="accent">FLEXIBILITY</li>
+    </ul>
+  </section>
+
+  <section class="container section" id="work" aria-labelledby="work-title">
+    <div class="work-head">
+      <h2 class="display" id="work-title" data-split="chars">SELECTED WORK</h2>
+      <p class="reveal">Websites, web concepts, and brand work for Indonesian food and beverage brands.</p>
+    </div>
+    <ol class="work-list">
+      <li>
+        <a class="project project-current reveal" href="https://zerofoods.id" target="_blank" rel="noopener" aria-labelledby="p1-name p1-new" aria-describedby="p1-desc">
+          <span class="project-num" aria-hidden="true">01</span>
+          <div class="project-body">
+            <div class="project-title">
+              <h3 id="p1-name">zerofoods.id <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></h3>
+              <span class="badge">MOST RECENT</span>
+            </div>
+            <p class="project-desc" id="p1-desc">Brand direction, product visuals, and website work for ZERO, a zero-calorie syrup brand recently rebuilt with a sharper, more premium identity.</p>
+            <p class="project-scope" data-scramble>BRAND · PRODUCT VISUALS · WEBSITE</p>
+          </div>
+          <div class="project-media wipe">
+            <picture>
+              <source srcset="assets/zero.webp" type="image/webp">
+              <img src="assets/zero.jpg" alt="ZERO syrup bottles on a concrete bar top" width="380" height="708" loading="lazy" decoding="async">
+            </picture>
+            <div class="tint" aria-hidden="true"></div>
+          </div>
+          <span class="visually-hidden" id="p1-new">(opens in a new tab)</span>
+        </a>
+      </li>
+      <li>
+        <a class="project reveal" href="https://jenanggemi.com" target="_blank" rel="noopener" aria-labelledby="p2-name p2-new" aria-describedby="p2-desc">
+          <span class="project-num" aria-hidden="true">02</span>
+          <div class="project-body">
+            <div class="project-title">
+              <h3 id="p2-name">jenanggemi.com <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></h3>
+            </div>
+            <p class="project-desc" id="p2-desc">A modern website direction for Jenang Gemi, an Indonesian functional-food brand building a stronger online presence.</p>
+            <p class="project-scope" data-scramble>WEBSITE DIRECTION</p>
+          </div>
+          <div class="project-media dim wipe">
+            <picture>
+              <source srcset="assets/jenang.webp" type="image/webp">
+              <img src="assets/jenang.jpg" alt="Jenang Gemi porridge product box" width="380" height="708" loading="lazy" decoding="async">
+            </picture>
+            <div class="tint on-hover" aria-hidden="true"></div>
+          </div>
+          <span class="visually-hidden" id="p2-new">(opens in a new tab)</span>
+        </a>
+      </li>
+      <li>
+        <a class="project reveal" href="https://royalsyrup.id" target="_blank" rel="noopener" aria-labelledby="p3-name p3-new" aria-describedby="p3-desc">
+          <span class="project-num" aria-hidden="true">03</span>
+          <div class="project-body">
+            <div class="project-title">
+              <h3 id="p3-name">royalsyrup.id <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></h3>
+            </div>
+            <p class="project-desc" id="p3-desc">A web and positioning concept for Royal Syrup, focused on local coffee shops, product clarity, and stronger market presence.</p>
+            <p class="project-scope" data-scramble>POSITIONING · WEB CONCEPT</p>
+          </div>
+          <div class="project-media dim wipe">
+            <picture>
+              <source srcset="assets/royal.webp" type="image/webp">
+              <img src="assets/royal.jpg" alt="Gloved bartender holding a bottle of Royal mint syrup and a jigger" width="380" height="708" loading="lazy" decoding="async">
+            </picture>
+            <div class="tint on-hover" aria-hidden="true"></div>
+          </div>
+          <span class="visually-hidden" id="p3-new">(opens in a new tab)</span>
+        </a>
+      </li>
+    </ol>
+  </section>
+
+  <section class="approach" id="approach" aria-labelledby="approach-title">
+    <div class="paper" data-clip>
+      <div class="paper-media reveal">
+        <picture>
+          <source srcset="assets/origami.webp" type="image/webp">
+          <img src="assets/origami.jpg" alt="Portrait of Branch drawn half as folded-paper origami and half as a line sketch" width="1162" height="1135" loading="lazy" decoding="async">
+        </picture>
       </div>
-    </section>
-
-    <!-- SLIDE 1: ABOUT -->
-    <section class="slide" id="slide-1" data-theme="premium">
-      <div class="slide__inner">
-        <h1 class="premium-heading">I am Branch Vincent.</h1>
-        <p class="premium-tagline">AI-Native Web Designer &bull; Creative Strategist</p>
-        <div class="premium-body">
-          <p>I build websites that make small brands look impossible to ignore.</p>
-          <p>By combining design taste, AI-assisted development, and practical marketing strategy, I create modern websites, brand visuals, and digital assets that turn raw ideas into polished online realities.</p>
-        </div>
+      <div class="paper-body">
+        <h2 class="display" id="approach-title" data-split="chars">MY APPROACH</h2>
+        <ol class="steps">
+          <li class="reveal" style="--d: 0ms"><span class="step-num" aria-hidden="true">1</span><div><h3>Strategy first.</h3><p>Define the message, audience, goal, and direction before touching the design.</p></div></li>
+          <li class="reveal" style="--d: 120ms"><span class="step-num" aria-hidden="true">2</span><div><h3>AI-accelerated.</h3><p>Use AI to generate, test, compare, write, build, and refine faster than traditional workflows.</p></div></li>
+          <li class="reveal" style="--d: 240ms"><span class="step-num" aria-hidden="true">3</span><div><h3>Design-directed.</h3><p>Control the visual identity with taste, hierarchy, spacing, typography, and brand feeling.</p></div></li>
+        </ol>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- SLIDE 2: CAPABILITIES -->
-    <section class="slide" id="slide-2" data-theme="premium">
-      <div class="slide__inner">
-        <h2 class="premium-heading-sm">Capabilities</h2>
-        <div class="premium-grid">
-          <div class="premium-card">
-            <i data-lucide="layout-template"></i>
-            <h3>Website Design</h3>
-            <p>Clean, modern websites that build immediate credibility.</p>
-          </div>
-          <div class="premium-card">
-            <i data-lucide="mouse-pointer-click"></i>
-            <h3>Landing Pages</h3>
-            <p>Focused, high-conversion pages for products and campaigns.</p>
-          </div>
-          <div class="premium-card">
-            <i data-lucide="cpu"></i>
-            <h3>AI-Assisted Builds</h3>
-            <p>Rapid prototyping, code acceleration, and smart refinement.</p>
-          </div>
-          <div class="premium-card">
-            <i data-lucide="gem"></i>
-            <h3>Brand Visuals</h3>
-            <p>Premium layouts and graphics that elevate brand perception.</p>
-          </div>
-          <div class="premium-card">
-            <i data-lucide="trending-up"></i>
-            <h3>Marketing Insight</h3>
-            <p>Messaging shaped by real-world product business experience.</p>
-          </div>
-          <div class="premium-card">
-            <i data-lucide="palette"></i>
-            <h3>AI Creative Art</h3>
-            <p>Experimental visual direction and concept generation.</p>
-          </div>
-        </div>
+  <section class="container about" id="about" aria-labelledby="about-title">
+    <div class="about-media wipe">
+      <picture>
+        <source srcset="assets/laptop.webp" type="image/webp">
+        <img src="assets/laptop.jpg" alt="Branch typing code on a laptop" width="712" height="872" loading="lazy" decoding="async">
+      </picture>
+    </div>
+    <div class="about-body">
+      <h2 class="display" id="about-title" data-split="chars">ABOUT ME</h2>
+      <p class="about-lead reveal">Two years in marketing taught me what makes people stop, read, and buy. I’ve done successful rebrands and pushed small names onto the big stage. Now I build websites that drive conversions.</p>
+      <div class="reveal" style="--d: 120ms">
+        <h3 class="label" style="margin-bottom: 14px;" data-scramble>All-in-one web development</h3>
+        <ul class="skills">
+          <li>Vibe coding</li>
+          <li>Back-end systems</li>
+          <li>API calls and webhooks</li>
+          <li>UI and UX design</li>
+          <li>DNS and site management</li>
+          <li>3D skills</li>
+        </ul>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- SLIDE 3: EXPERIENCE -->
-    <section class="slide" id="slide-3" data-theme="premium">
-      <div class="slide__inner exp-layout">
-        <div class="exp-left">
-          <h2 class="premium-heading-sm">Experience</h2>
-          <div class="exp-block">
-            <h3>CMO &mdash; Zero Foods Indonesia</h3>
-            <p>Directing digital design, website architecture, and online growth strategy.</p>
-            <p>I blend visual direction, marketing messaging, and AI-assisted development to make the brand look premium, credible, and competitive in Indonesia's health food market.</p>
-          </div>
-        </div>
-        <div class="exp-right">
-          <div class="glass-stat">
-            <span class="stat-num">6</span>
-            <span class="stat-label">Website Projects</span>
-          </div>
-          <div class="glass-stat">
-            <span class="stat-num">2+</span>
-            <span class="stat-label">Years Hands-on</span>
-          </div>
-        </div>
-      </div>
-    </section>
+  <section class="strip" aria-labelledby="strip-title">
+    <h2 class="label" id="strip-title" data-scramble>Off screen</h2>
+    <div class="film-viewport">
+      <ul class="film">
+        <li style="--r: 2.261"><picture><source srcset="assets/cactus.webp" type="image/webp"><img src="assets/cactus.jpg" alt="Film photo of a cactus and a lit cigarette" width="502" height="222" loading="lazy" decoding="async"></picture></li>
+        <li style="--r: 0.667"><picture><source srcset="assets/cowboy.webp" type="image/webp"><img src="assets/cowboy.jpg" alt="Branch in a cowboy hat by a waterfall" width="1024" height="1536" loading="lazy" decoding="async"></picture></li>
+        <li style="--r: 0.934"><picture><source srcset="assets/road.webp" type="image/webp"><img src="assets/road.jpg" alt="A mountain road seen through a car windshield" width="226" height="242" loading="lazy" decoding="async"></picture></li>
+        <li style="--r: 3.505"><picture><source srcset="assets/moto.webp" type="image/webp"><img src="assets/moto.jpg" alt="Film photo of a classic motorcycle" width="743" height="212" loading="lazy" decoding="async"></picture></li>
+      </ul>
+    </div>
+  </section>
 
-    <!-- SLIDE 4: WORKFLOW -->
-    <section class="slide" id="slide-4" data-theme="premium">
-      <div class="slide__inner">
-        <h2 class="premium-heading-sm">Workflow</h2>
-        <p class="premium-sub">Human taste plus AI leverage.</p>
-        <div class="sleek-pipeline">
-          <div class="pipe-node">Ideation</div>
-          <div class="pipe-line"></div>
-          <div class="pipe-node">AI Acceleration</div>
-          <div class="pipe-line"></div>
-          <div class="pipe-node">Refinement</div>
-          <div class="pipe-line"></div>
-          <div class="pipe-node">Production</div>
-        </div>
-      </div>
-    </section>
+  <section class="contact" id="contact" aria-labelledby="contact-title">
+    <div class="contact-bg">
+      <picture>
+        <source srcset="assets/beach.webp" type="image/webp">
+        <img src="assets/beach.jpg" alt="" width="1242" height="965" loading="lazy" decoding="async">
+      </picture>
+    </div>
+    <div class="contact-inner">
+      <h2 class="display" id="contact-title" data-split="chars">GET IN TOUCH</h2>
+      <a class="contact-email" href="mailto:vincentbranch23@gmail.com" data-magnetic>vincentbranch23@gmail.com</a>
+      <ul class="contact-meta">
+        <li><a href="https://wa.me/62895710860502" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 20.5l1.4-4.2A8.4 8.4 0 1 1 8 19.3z"/><path d="M9 9.5c.3 2 2.2 4.2 4.6 4.9l1.2-1.1 1.7.9-.4 1.6c-3.6.2-7.6-3.6-7.5-7.3l1.6-.4.8 1.7z"/></svg>
+          WhatsApp +62 895-7108-60502<span class="visually-hidden"> (opens in a new tab)</span></a></li>
+        <!-- Add Instagram here once the handle is confirmed:
+        <li><a href="https://instagram.com/HANDLE" target="_blank" rel="noopener">Instagram</a></li> -->
+        <li><span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5a7 7 0 1 0-14 0C5 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+          Yogyakarta, Indonesia</span></li>
+      </ul>
+    </div>
+  </section>
+</main>
 
-    <!-- SLIDE 5: CONTACT -->
-    <section class="slide" id="slide-5" data-theme="premium">
-      <div class="slide__inner align-center">
-        <h2 class="premium-heading-lg">Let's Build.</h2>
-        <p class="premium-body mb-lg">Better design. Faster execution. Sharper presence.</p>
-        
-        <div class="contact-links">
-          <a href="mailto:vincentbranch23@gmail.com" class="btn-premium">
-            <i data-lucide="mail"></i> Email
-          </a>
-          <a href="https://wa.me/628957108605022" class="btn-premium">
-            <i data-lucide="message-circle"></i> WhatsApp
-          </a>
-          <a href="https://tiktok.com/@branch.vincent" class="btn-premium" target="_blank">
-            <i data-lucide="video"></i> TikTok
-          </a>
-        </div>
-      </div>
-    </section>
+<footer class="site-footer">
+  <span>© <span id="year">2026</span> Branch Vincent</span>
+  <span>Websites, built with intent.</span>
+  <a href="#top">Back to top <span aria-hidden="true">↑</span></a>
+</footer>
 
-  </main>
-
-  <script type="module" src="/src/main.js"></script>
+<script type="module" src="./src/main.js"></script>
 </body>
 </html>
