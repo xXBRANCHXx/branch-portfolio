@@ -54,7 +54,8 @@ ${canonical ? `<link rel="canonical" href="${canonical}">\n` : ''}<link rel="ico
 </style>
 <!-- fonts:end -->
 <!-- The next case study loads ahead of the click, so the cover morph plays on the first visit too (Chrome and Edge).
-     Prefetch only: prerendering it as well made Chrome drop the next page-to-page zoom now and then. -->
+     Prefetch only: prerendering is left out because it can't be tested here, and with the image warm-up in
+     transitions.js the morph already plays on the first click. -->
 <script type="speculationrules">
   {"prefetch": [{"where": {"selector_matches": "a[data-vt-link]"}, "eagerness": "eager"}]}
 </script>
@@ -98,6 +99,9 @@ ${extra}<script>
     });
   })();
 </script>
+<!-- Opt in to page-to-page transitions here, not only in the stylesheet: Chrome decides when it reaches
+     <body>, and a stylesheet still loading at that moment made it skip the transition now and then. -->
+<style>@view-transition { navigation: auto; }</style>
 <link rel="stylesheet" href="${P}src/style.css">
 <link rel="stylesheet" href="${P}src/case.css">
 </head>`;
