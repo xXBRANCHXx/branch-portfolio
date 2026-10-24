@@ -124,7 +124,7 @@ html:not(.has-js) .site-header { position: absolute; } /* without the script not
 .project-media { position: relative; aspect-ratio: 4 / 5; overflow: hidden; background: var(--surface); }
 .project-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .9s var(--ease-out), filter .6s ease; }
 .project:hover .project-media img { transform: scale(1.06); }
-.project-media .tint { position: absolute; inset: 0; background: var(--accent); opacity: .6; transform-origin: 50% 100%; transition: transform .7s var(--ease-out); }
+.project-media .tint { position: absolute; inset: 0; background: var(--accent); mix-blend-mode: multiply; transform-origin: 50% 100%; transition: transform .7s var(--ease-out); }
 .project-media .tint.on-hover { transform: scaleY(0); }
 .project:hover .project-media .tint.on-hover, .project:focus-visible .project-media .tint.on-hover { transform: scaleY(1); }
 .project-media.dim img { filter: brightness(.85); }
