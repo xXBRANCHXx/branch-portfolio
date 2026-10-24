@@ -233,7 +233,7 @@ ${header(P, { here: 'work' })}
     </div>
   </section>
 
-${tour(P, p)}
+${p.tour ? tour(P, p) : ''}
 
   <section class="case-section container case-built" aria-labelledby="built-title">
     <h2 class="display case-side" id="built-title" data-split="chars">WHAT I BUILT</h2>
@@ -251,13 +251,13 @@ ${tour(P, p)}
     </figure>
   </section>
 
-  <section class="case-stats container" aria-labelledby="stats-title">
+${p.stats ? `  <section class="case-stats container" aria-labelledby="stats-title">
     <h2 class="visually-hidden" id="stats-title">By the numbers</h2>
     <ul class="stats">
       ${p.stats.map((s, k) => `<li class="reveal" style="--d: ${k * 90}ms"><span class="stat-value display" data-count="${s.value}">${s.value}</span><span class="stat-label">${esc(s.label)}</span></li>`).join('\n      ')}
     </ul>
   </section>
-
+` : ''}
 ${gallery(P, p)}
 
   <section class="case-section container case-stack" aria-labelledby="stack-title">
