@@ -28,13 +28,19 @@ try {
 
   if (motion) {
     document.querySelectorAll('[data-split="chars"]').forEach(splitChars);
-    initReveal();
     root.classList.add('motion');
     initCursor();
     initMagnetic();
     initFilm();
-    // Bring in the header and the cover once the display font is ready.
-    fontsReady(600).then(() => requestAnimationFrame(() => root.classList.add('is-ready')));
+    // A page loaded ahead of the click (prerendered) waits until it is opened before it reveals
+    // anything, so its entrance plays when the visitor arrives rather than off screen.
+    const enter = () => {
+      initReveal();
+      // Bring in the header and the cover once the display font is ready.
+      fontsReady(600).then(() => requestAnimationFrame(() => root.classList.add('is-ready')));
+    };
+    if (document.prerendering) document.addEventListener('prerenderingchange', enter, { once: true });
+    else enter();
   } else {
     root.classList.remove('motion');
   }

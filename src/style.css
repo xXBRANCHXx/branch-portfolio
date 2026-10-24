@@ -96,6 +96,12 @@ html:not(.has-js) .site-header { position: absolute; } /* without the script not
 .values-wave { position: absolute; right: -4%; top: 50%; width: min(820px, 70%); aspect-ratio: 1262 / 797; transform: translateY(-50%); opacity: .45; pointer-events: none; }
 .values-wave img { width: 100%; height: 100%; display: block; }
 .values-wave canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+/* On the home page the ribbon fills the whole band behind the words and fades out towards every edge. */
+.values > .values-wave { inset: 0; width: auto; aspect-ratio: auto; transform: none; opacity: .4;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 14%, #000 88%, transparent), linear-gradient(180deg, transparent, #000 22%, #000 74%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 14%, #000 88%, transparent), linear-gradient(180deg, transparent, #000 22%, #000 74%, transparent);
+  -webkit-mask-composite: source-in; mask-composite: intersect; }
+.values > .values-wave img { object-fit: contain; object-position: right center; }
 .values .label { position: relative; margin-bottom: 16px; }
 .values-words { position: relative; display: flex; flex-wrap: wrap; gap: 0 .22em; list-style: none; font-size: clamp(88px, 13vw, 186px); }
 /* With motion, the words run on one long line that pans sideways with the scroll. */
@@ -225,6 +231,10 @@ html:not(.has-js) .site-header { position: absolute; } /* without the script not
 /* Generic reveal */
 .motion .reveal { opacity: 0; transform: translateY(32px); transition: opacity 1s ease, transform 1.2s var(--ease-out); transition-delay: var(--d, 0ms); }
 .motion .reveal.is-in { opacity: 1; transform: none; }
+/* Selected Work: each project slides in from the side, alternating left and right down the list. */
+.motion .work-list li:nth-child(even) { --from: 1; }
+.motion .work-list .project.reveal { transform: translateX(calc(var(--from, -1) * min(22vw, 240px))); transition: opacity 1s ease, transform 1.3s var(--ease-out); }
+.motion .work-list .project.reveal.is-in { transform: none; }
 
 /* Image wipe: a cover the colour of the page lifts off the image from the bottom up.
    (Clipping the element itself would hide it from IntersectionObserver in current Chrome,
