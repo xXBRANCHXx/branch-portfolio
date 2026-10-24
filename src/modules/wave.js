@@ -4,6 +4,30 @@ import { clamp, lerp } from './util.js';
 
 const COLS = 44;
 const ROWS = 15;
+const GLYPH_PX = 40; // size the 0 and 1 sprites are drawn at; each glyph is scaled from these
+
+// Draw "0" and "1" once per colour into small canvases. Copying a bitmap is much cheaper than
+// laying out text 660 times a frame, which keeps the main thread free while the page scrolls.
+function makeSprites(dpr) {
+  const px = Math.round(GLYPH_PX * dpr);
+  const w = Math.ceil(px * 0.8);
+  const h = Math.ceil(px * 1.3);
+  const baseline = Math.round(px * 1.05);
+  const out = {};
+  for (const [key, colour] of [['base', '#f2f1ee'], ['hot', '#8fa9ff']]) {
+    for (const bit of ['0', '1']) {
+      const c = document.createElement('canvas');
+      c.width = w;
+      c.height = h;
+      const g = c.getContext('2d');
+      g.font = `500 ${px}px ui-monospace, Menlo, Consolas, monospace`;
+      g.fillStyle = colour;
+      g.fillText(bit, Math.round(px * 0.1), baseline);
+      out[key + bit] = c;
+    }
+  }
+  return { sprites: out, ox: Math.round(px * 0.1), oy: baseline, px };
+}
 
 export function initWave(container, { animate = true } = {}) {
   const img = container.querySelector('img');
@@ -19,6 +43,7 @@ export function initWave(container, { animate = true } = {}) {
   let width = 0;
   let height = 0;
   let dpr = 1;
+  let glyphs = null;
   let running = false;
   let visible = false;
   let raf = 0;
@@ -26,7 +51,9 @@ export function initWave(container, { animate = true } = {}) {
 
   const resize = () => {
     const rect = container.getBoundingClientRect();
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const nextDpr = Math.min(window.devicePixelRatio || 1, 2);
+    if (!glyphs || nextDpr !== dpr) glyphs = makeSprites(nextDpr);
+    dpr = nextDpr;
     width = rect.width;
     height = rect.height;
     // The canvas is absolutely positioned over its box (see CSS), so sizing it never feeds back into the box size.
@@ -50,9 +77,7 @@ export function initWave(container, { animate = true } = {}) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     if (!width || !height) return;
     const radius = Math.max(70, width * 0.12);
-    // Set the font once per frame and scale each glyph with the transform: changing ctx.font
-    // and building a new colour string for every one of the 660 glyphs is the expensive part.
-    ctx.font = '500 20px ui-monospace, Menlo, Consolas, monospace';
+    const { sprites, ox, oy, px } = glyphs;
 
     for (let c = 0; c < COLS; c++) {
       const u = c / (COLS - 1);
@@ -88,12 +113,14 @@ export function initWave(container, { animate = true } = {}) {
         const alpha = clamp((0.18 + 0.7 * edge) * (0.55 + 0.45 * (1 - u)) + heat[idx] * 0.8, 0, 1);
         const s = size * (0.8 + 0.4 * v) * (1 + heat[idx] * 0.35);
 
-        const k = (dpr * s) / 20;
-        ctx.setTransform(k, 0, 0, k, x * dpr, y * dpr);
-        ctx.rotate(slope + 0.35);
+        // Scale the sprite to this glyph's size and rotate it along the ribbon, in one transform.
+        const k = (dpr * s) / px;
+        const a = slope + 0.35;
+        const cos = Math.cos(a) * k;
+        const sin = Math.sin(a) * k;
+        ctx.setTransform(cos, sin, -sin, cos, x * dpr, y * dpr);
         ctx.globalAlpha = alpha;
-        ctx.fillStyle = heat[idx] > 0.05 ? '#8fa9ff' : '#f2f1ee';
-        ctx.fillText(bits[idx], 0, 0);
+        ctx.drawImage(sprites[(heat[idx] > 0.05 ? 'hot' : 'base') + bits[idx]], -ox, -oy);
       }
     }
   }
