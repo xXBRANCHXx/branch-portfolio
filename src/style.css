@@ -116,7 +116,7 @@ ul, ol { padding: 0; }
 .project-title { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
 .project-title h3 { font-size: clamp(32px, 4vw, 56px); font-weight: 600; letter-spacing: -.01em; line-height: 1.05; display: inline-flex; align-items: center; gap: .3em; overflow-wrap: anywhere; }
 .project-title svg { width: .55em; height: .55em; flex: none; transition: transform .4s var(--ease-out), color .4s ease; }
-.project:hover .project-title svg, .project:focus-visible .project-title svg { transform: translate(4px, -4px); color: var(--accent); }
+.project:hover .project-title svg, .project:focus-visible .project-title svg { transform: translateX(6px); color: var(--accent); }
 .badge { font-size: 12px; letter-spacing: .14em; font-weight: 600; padding: 7px 12px; background: var(--accent-strong); color: var(--accent-ink); }
 .project-desc { font-size: 17px; line-height: 1.6; color: var(--soft); max-width: 52ch; }
 .project-scope { font-size: 13px; letter-spacing: .12em; color: var(--muted); }
@@ -290,7 +290,17 @@ ul, ol { padding: 0; }
 @media (max-width: 420px) {
   .tags li { font-size: 11px; letter-spacing: .12em; padding: 8px 10px; }
 }
+/* Page-to-page transitions (Chrome, Edge, Safari 18+). Pages cross-fade; a case study's cover grows
+   out of the image on the link that was clicked (named in transitions.js and the case page's head). */
+@view-transition { navigation: auto; }
+::view-transition-old(root) { animation: vt-out .4s cubic-bezier(.65, 0, .35, 1) both; }
+::view-transition-new(root) { animation: vt-in .7s cubic-bezier(.16, 1, .3, 1) .08s both; }
+::view-transition-group(case-cover) { animation-duration: .85s; animation-timing-function: cubic-bezier(.65, 0, .35, 1); }
+@keyframes vt-out { to { opacity: 0; } }
+@keyframes vt-in { from { opacity: 0; transform: translateY(28px); } }
+
 @media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
 }

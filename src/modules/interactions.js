@@ -1,15 +1,14 @@
-// Pointer-driven details: a "View" cursor over the work rows and a magnetic email link,
-// plus early loading for the sliding photo strip.
+// Pointer-driven details: a labelled cursor over links that ask for one (data-cursor, e.g. the
+// work rows), a magnetic email link, plus early loading for the sliding photo strip.
 import { finePointer } from './util.js';
 
 export function initCursor() {
   if (!finePointer()) return;
-  const rows = document.querySelectorAll('.project');
+  const rows = document.querySelectorAll('[data-cursor]');
   if (!rows.length) return;
   const cursor = document.createElement('div');
   cursor.className = 'cursor';
   cursor.setAttribute('aria-hidden', 'true');
-  cursor.textContent = 'VIEW ↗';
   document.body.appendChild(cursor);
 
   const state = { x: -200, y: -200, tx: -200, ty: -200, s: 0, ts: 0 };
@@ -33,13 +32,13 @@ export function initCursor() {
     kick();
   }, { passive: true });
   rows.forEach((row) => {
-    row.addEventListener('pointerenter', () => { state.ts = 1; kick(); });
+    row.addEventListener('pointerenter', () => { cursor.textContent = row.dataset.cursor; state.ts = 1; kick(); });
     row.addEventListener('pointerleave', () => { state.ts = 0; kick(); });
   });
   window.addEventListener('scroll', () => {
     // Hide the cursor if the row scrolls out from under it.
     const el = document.elementFromPoint(state.tx, state.ty);
-    if (!el || !el.closest('.project')) { state.ts = 0; kick(); }
+    if (!el || !el.closest('[data-cursor]')) { state.ts = 0; kick(); }
   }, { passive: true });
 }
 

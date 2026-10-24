@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ezkart case study · Branch Vincent</title>
+<meta name="description" content="A commerce platform for Indonesian sellers: one branded page and one link that goes straight to checkout. I designed and built it on my own.">
+<meta name="author" content="Branch Vincent">
+<meta name="theme-color" content="#0a0a0b">
+<meta name="color-scheme" content="dark">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Ezkart case study · Branch Vincent">
+<meta property="og:description" content="A commerce platform for Indonesian sellers: one branded page and one link that goes straight to checkout. I designed and built it on my own.">
+<meta property="og:url" content="https://branch-portfolio.vercel.app/work/ezkart/">
+<meta property="og:image" content="https://branch-portfolio.vercel.app/assets/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://branch-portfolio.vercel.app/assets/og-image.jpg">
+<link rel="canonical" href="https://branch-portfolio.vercel.app/work/ezkart/">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+<!-- fonts:start (self-hosted Lexend and Six Caps, latin subset) -->
+<link rel="preload" as="font" href="../../assets/fonts/sixcaps-latin.woff2" type="font/woff2" crossorigin>
+<link rel="preload" as="font" href="../../assets/fonts/lexend-latin.woff2" type="font/woff2" crossorigin>
+<style>
+  @font-face { font-family: 'Lexend'; font-style: normal; font-weight: 300 600; font-display: swap; src: url(../../assets/fonts/lexend-latin.woff2) format('woff2'); }
+  @font-face { font-family: 'Six Caps'; font-style: normal; font-weight: 400; font-display: block; src: url(../../assets/fonts/sixcaps-latin.woff2) format('woff2'); }
+</style>
+<!-- fonts:end -->
+<link rel="expect" href="#case-cover" blocking="render">
+<script>
+  // Set the animation classes before first paint so the page never flashes unstyled.
+  // If the main script has not started within 4s, drop them and keep the page static.
+  (function () {
+    var d = document.documentElement;
+    d.classList.add('has-js');
+    setTimeout(function () {
+      if (!d.classList.contains('js-live')) { d.classList.remove('motion'); d.classList.add('no-motion'); }
+    }, 4000);
+    try {
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window && 'animate' in Element.prototype) d.classList.add('motion');
+    } catch (e) {}
+    // Page-to-page transition: the image of the link that was clicked grows into this page's cover.
+    addEventListener('pagereveal', function (e) {
+      var el = e.viewTransition && document.querySelector('[data-vt-cover]');
+      if (!el) return;
+      el.style.viewTransitionName = 'case-cover';
+      d.classList.add('vt-in');
+      var clear = function () { el.style.viewTransitionName = ''; };
+      e.viewTransition.finished.then(clear, clear);
+    });
+  })();
+</script>
+<link rel="stylesheet" href="../../src/style.css">
+<link rel="stylesheet" href="../../src/case.css">
+</head>
+<body class="page-case">
+<a class="skip" href="#main">Skip to content</a>
+<div class="progress" aria-hidden="true"></div>
+
+<header class="site-header" id="site-header">
+  <a class="wordmark" href="../../" aria-label="Branch Vincent, home">BRANCH VINCENT</a>
+  <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">MENU</button>
+  <nav class="site-nav" id="site-nav" aria-label="Main">
+    <ul class="nav-links">
+      <li><a href="../../#work" style="--i: 0" aria-current="true">Work</a></li>
+      <li><a href="../../#approach" style="--i: 1">Approach</a></li>
+      <li><a href="../../#about" style="--i: 2">About</a></li>
+      <li><a class="pill" href="#contact" style="--i: 3">Let<span class="apos">’</span>s talk</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main">
+  <article class="case" aria-labelledby="case-title">
+  <section class="case-hero" id="top">
+    <div class="case-hero-text">
+      <p class="case-kicker label"><a class="back" href="../../#work"><span aria-hidden="true">←</span> All work</a><span>Case study 02 / 05</span></p>
+      <h1 class="case-title display" id="case-title" data-split="chars">EZKART</h1>
+      <p class="case-lede reveal" style="--d: 200ms">A commerce platform for Indonesian sellers: one branded page and one link that goes straight to checkout. I designed and built it on my own.</p>
+      <dl class="case-meta reveal" style="--d: 320ms">
+        <div><dt>Role</dt><dd>Solo developer</dd></div>
+        <div><dt>Scope</dt><dd>Commerce platform · Solo build</dd></div>
+        <div><dt>Year</dt><dd>2026</dd></div>
+        <div><dt>Live site</dt><dd><a class="visit" href="https://ezkart.id" target="_blank" rel="noopener" data-magnetic>ezkart.id <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg><span class="visually-hidden"> (opens in a new tab)</span></a></dd></div>
+      </dl>
+    </div>
+    <figure class="case-cover" id="case-cover">
+      <div class="case-cover-media" data-vt-cover>
+        <div class="case-cover-inner" data-speed="0.04">
+          <img src="../../assets/work/ezkart/cover.webp" alt="Two “form.” bottles, the demo brand used across Ezkart, in black and white" width="819" height="1024" decoding="async" fetchpriority="high">
+          <div class="blue-square" style="left: 50%; top: 39%; width: 34%; height: 23%" aria-hidden="true"></div>
+        </div>
+      </div>
+    </figure>
+  </section>
+
+  <section class="case-section container" aria-labelledby="brief-title">
+    <h2 class="label case-side" id="brief-title" data-scramble>The brief</h2>
+    <div class="case-body">
+      <p class="case-big reveal">Small Indonesian businesses sell through Instagram bios, ads and WhatsApp chats, and usually stitch together separate tools for their page, payments, orders and shipping. Ezkart puts that into one flow: add a product, design its page without code, share one link.</p>
+      <p class="case-text reveal">It’s in early access. The first landing page is free while live payments, payouts and connected shipping are prepared for launch.</p>
+    </div>
+  </section>
+
+  <section class="tour" aria-labelledby="tour-title" style="--n: 4">
+    <div class="tour-sticky">
+      <div class="tour-head">
+        <h2 class="label" id="tour-title" data-scramble>On screen</h2>
+        <ol class="tour-captions" aria-hidden="true">
+          <li class="is-active"><span>01</span>Home</li>
+          <li><span>02</span>Product builder</li>
+          <li><span>03</span>Landing page builder</li>
+          <li><span>04</span>From idea to page</li>
+        </ol>
+      </div>
+      <div class="tour-stage">
+      <div class="frame frame-browser">
+        <div class="frame-bar" aria-hidden="true"><span class="frame-dots"><i></i><i></i><i></i></span><span class="frame-url">ezkart.id</span></div>
+        <div class="frame-screen" role="group" aria-label="ezkart.id on a laptop, 4 screens" tabindex="0">
+          <img class="tour-slide" src="../../assets/work/ezkart/screen-d1.webp" alt="The ezkart.id home page: “Your products. Your own place to sell.”" width="1440" height="900" loading="lazy" decoding="async">
+          <img class="tour-slide" src="../../assets/work/ezkart/screen-d2.webp" alt="The product builder section: “Good products. Great first impressions.”" width="1440" height="900" loading="lazy" decoding="async" style="--a: 17%; --b: 33%">
+          <img class="tour-slide" src="../../assets/work/ezkart/screen-d3.webp" alt="The landing page builder section: “Looks like your brand. Works like a business.”" width="1440" height="900" loading="lazy" decoding="async" style="--a: 42%; --b: 58%">
+          <img class="tour-slide" src="../../assets/work/ezkart/screen-d4.webp" alt="A dark section showing a product page being built: “From an idea to it’s yours.”" width="1440" height="900" loading="lazy" decoding="async" style="--a: 67%; --b: 83%">
+        </div>
+      </div>
+      <div class="frame frame-phone">
+        <div class="frame-screen" role="group" aria-label="ezkart.id on a phone, 4 screens" tabindex="0">
+          <img class="tour-slide" src="../../assets/work/ezkart/screen-m1.webp" alt="The ezkart.id home page: “Your products. Your own place to sell.”, on a phone" width="780" height="1688" loading="lazy" decoding="async">
+          <img class="tour-slide" src="../../assets/work/ezkart/screen-m2.webp" alt="The product builder section: “Good products. Great first impressions.”, on a phone" width="780" height="1688" loading="lazy" decoding="async" style="--a: 17%; --b: 33%">
+          <img class="tour-slide" src="../../assets/work/ezkart/screen-m3.webp" alt="The landing page builder section: “Looks like your brand. Works like a business.”, on a phone" width="780" height="1688" loading="lazy" decoding="async" style="--a: 42%; --b: 58%">
+          <img class="tour-slide" src="../../assets/work/ezkart/screen-m4.webp" alt="A dark section showing a product page being built: “From an idea to it’s yours.”, on a phone" width="780" height="1688" loading="lazy" decoding="async" style="--a: 67%; --b: 83%">
+        </div>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="case-section container case-built" aria-labelledby="built-title">
+    <h2 class="display case-side" id="built-title" data-split="chars">WHAT I BUILT</h2>
+    <ol class="built-list">
+      <li class="reveal" style="--d: 0ms"><span class="built-num" aria-hidden="true">01</span><div><h3>A bilingual marketing site</h3><p>Indonesian by default, with a full English page. The product previews on the page are built in HTML and CSS rather than screenshots, so they stay sharp and light.</p></div></li>
+      <li class="reveal" style="--d: 120ms"><span class="built-num" aria-hidden="true">02</span><div><h3>A visual page builder</h3><p>A working front-end prototype: drag sections into order, undo and redo, drafts saved in the browser, desktop, tablet and phone previews, and 12 templates.</p></div></li>
+      <li class="reveal" style="--d: 0ms"><span class="built-num" aria-hidden="true">03</span><div><h3>A seller admin</h3><p>Twelve pages for orders, products, landing pages, customers and more, with a sales chart and a map of orders. It runs on sandbox data until launch.</p></div></li>
+      <li class="reveal" style="--d: 120ms"><span class="built-num" aria-hidden="true">04</span><div><h3>A safe checkout loop</h3><p>A four-step checkout with Midtrans payments and Biteship shipping quotes, in sandbox. The server owns the catalog so the browser can’t set prices, and every payment notice is signature-checked before an order counts as paid.</p></div></li>
+      <li class="reveal" style="--d: 0ms"><span class="built-num" aria-hidden="true">05</span><div><h3>A product film, rendered from code</h3><p>A 15-second film built as an HTML timeline and recorded with Playwright and FFmpeg, in both languages, with captions.</p></div></li>
+      <li class="reveal" style="--d: 120ms"><span class="built-num" aria-hidden="true">06</span><div><h3>Checked at every size</h3><p>Tested at 8 screen widths from 320 to 1920 px, with zero automated accessibility violations in either language.</p></div></li>
+    </ol>
+  </section>
+
+  <section class="case-quote" aria-label="In the site’s words">
+    <figure class="container">
+      <blockquote>
+        <p class="display" data-split="chars" lang="id">PRODUKMU. TEMPAT JUALAN MILIKMU.</p>
+      </blockquote>
+      <figcaption class="reveal"><span class="quote-gloss">“Your products. Your own place to sell.”</span><span class="label">Home page headline, ezkart.id</span></figcaption>
+    </figure>
+  </section>
+
+  <section class="case-stats container" aria-labelledby="stats-title">
+    <h2 class="visually-hidden" id="stats-title">By the numbers</h2>
+    <ul class="stats">
+      <li class="reveal" style="--d: 0ms"><span class="stat-value display" data-count="2">2</span><span class="stat-label">Languages</span></li>
+      <li class="reveal" style="--d: 90ms"><span class="stat-value display" data-count="12">12</span><span class="stat-label">Page templates</span></li>
+      <li class="reveal" style="--d: 180ms"><span class="stat-value display" data-count="12">12</span><span class="stat-label">Seller admin pages</span></li>
+      <li class="reveal" style="--d: 270ms"><span class="stat-value display" data-count="8">8</span><span class="stat-label">Screen widths tested</span></li>
+    </ul>
+  </section>
+
+  <section class="case-gallery container" aria-label="Gallery">
+    <div class="gallery-grid">
+      <figure class="g-item g-wide wipe">
+        <video class="g-video" src="../../assets/work/ezkart/film.mp4" poster="../../assets/work/ezkart/poster.webp" width="1440" height="900" muted loop playsinline controls preload="none" aria-label="The Ezkart product film: building a product page, designing it and sharing the link"></video>
+      </figure>
+      <figure class="g-item g-half wipe">
+        <img src="../../assets/work/ezkart/bottles.webp" alt="Two red “form.” bottles on a pink background, the demo product used in Ezkart’s previews" width="1024" height="1024" loading="lazy" decoding="async">
+      </figure>
+      <figure class="g-item g-half wipe">
+        <img src="../../assets/work/ezkart/one-link.webp" alt="A frame from the film: “One link. All yours.” next to a published “form.” product page" width="1440" height="900" loading="lazy" decoding="async">
+      </figure>
+    </div>
+    <p class="gallery-caption reveal">The 15-second product film and its demo brand, “form.”</p>
+  </section>
+
+  <section class="case-section container case-stack" aria-labelledby="stack-title">
+    <h2 class="label case-side" id="stack-title" data-scramble>Built with</h2>
+    <ul class="skills reveal">
+      <li>HTML and CSS</li>
+      <li>Vanilla JavaScript</li>
+      <li>PHP 8</li>
+      <li>Midtrans</li>
+      <li>Biteship</li>
+      <li>Leaflet</li>
+      <li>Playwright</li>
+      <li>FFmpeg</li>
+      <li>axe</li>
+    </ul>
+  </section>
+  </article>
+
+  <nav class="next" aria-label="Next case study">
+    <a class="next-link" href="../easy-solutions/" data-cursor="NEXT" data-vt-link>
+      <span class="next-label label">Next project · 03</span>
+      <span class="next-name display">EASY SOLUTIONS <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"/></svg></span>
+      <span class="next-domain">easysolutions.id</span>
+      <span class="next-media" aria-hidden="true" data-vt-media><img src="../../assets/work/easy-solutions/cover.webp" alt="" width="819" height="1024" loading="lazy" decoding="async"></span>
+    </a>
+  </nav>
+
+  <section class="case-contact" id="contact" aria-labelledby="contact-title">
+    <h2 class="display" id="contact-title" data-split="chars">HAVE A PROJECT?</h2>
+    <p class="case-contact-lede reveal">Tell me what you’re building. I’ll tell you how I’d approach it.</p>
+    <a class="contact-email" href="mailto:vincentbranch23@gmail.com" data-magnetic>vincentbranch23@gmail.com</a>
+    <ul class="contact-meta">
+      <li><a href="https://wa.me/62895710860502" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 20.5l1.4-4.2A8.4 8.4 0 1 1 8 19.3z"/><path d="M9 9.5c.3 2 2.2 4.2 4.6 4.9l1.2-1.1 1.7.9-.4 1.6c-3.6.2-7.6-3.6-7.5-7.3l1.6-.4.8 1.7z"/></svg>
+        WhatsApp +62 895-7108-60502<span class="visually-hidden"> (opens in a new tab)</span></a></li>
+      <li><a href="https://www.instagram.com/vincentbranch23/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".6" fill="currentColor"/></svg>
+        Instagram @vincentbranch23<span class="visually-hidden"> (opens in a new tab)</span></a></li>
+      <li><span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5a7 7 0 1 0-14 0C5 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+        Yogyakarta, Indonesia</span></li>
+    </ul>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <span>© <span id="year">2026</span> Branch Vincent</span>
+  <a href="../../">Websites, built with intent.</a>
+  <a href="#top">Back to top <span aria-hidden="true">↑</span></a>
+</footer>
+
+<script type="module" src="../../src/page.js"></script>
+</body>
+</html>

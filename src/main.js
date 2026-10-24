@@ -1,10 +1,11 @@
 import { initMenu } from './modules/menu.js';
 import { splitChars } from './modules/split.js';
-import { scramble } from './modules/scramble.js';
 import { initWave } from './modules/wave.js';
 import { runIntro } from './modules/intro.js';
+import { initReveal } from './modules/reveal.js';
 import { initScrollEffects } from './modules/scroll-effects.js';
 import { initCursor, initMagnetic, initFilmStrip } from './modules/interactions.js';
+import { initTransitions } from './modules/transitions.js';
 import { reducedMotion } from './modules/util.js';
 
 const root = document.documentElement;
@@ -22,23 +23,8 @@ try {
 
   if (motion) {
     document.querySelectorAll('[data-split="chars"]').forEach(splitChars);
-
-    // Reveal things as they scroll into view. Anything already on screen reveals at once.
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        const el = entry.target;
-        el.classList.add('is-in');
-        if (el.hasAttribute('data-scramble')) scramble(el);
-        io.unobserve(el);
-      });
-    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
-
-    const hero = document.querySelector('.hero');
-    document.querySelectorAll('.reveal, .wipe, [data-split="chars"], [data-scramble]').forEach((el) => {
-      if (!hero.contains(el)) io.observe(el);
-    });
-
+    // The hero has its own entrance (see intro.js), so leave it out of the scroll reveals.
+    initReveal({ skip: document.querySelector('.hero') });
     root.classList.add('motion');
     initFilmStrip();
     initCursor();
@@ -55,3 +41,4 @@ try {
 }
 
 initScrollEffects({ motion: root.classList.contains('motion') });
+initTransitions();

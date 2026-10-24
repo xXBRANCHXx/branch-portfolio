@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Page not found · Branch Vincent</title>
+<meta name="description" content="This page doesn’t exist. The work is still here.">
+<meta name="author" content="Branch Vincent">
+<meta name="theme-color" content="#0a0a0b">
+<meta name="color-scheme" content="dark">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Page not found · Branch Vincent">
+<meta property="og:description" content="This page doesn’t exist. The work is still here.">
+<meta property="og:image" content="https://branch-portfolio.vercel.app/assets/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://branch-portfolio.vercel.app/assets/og-image.jpg">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<!-- fonts:start (self-hosted Lexend and Six Caps, latin subset) -->
+<link rel="preload" as="font" href="/assets/fonts/sixcaps-latin.woff2" type="font/woff2" crossorigin>
+<link rel="preload" as="font" href="/assets/fonts/lexend-latin.woff2" type="font/woff2" crossorigin>
+<style>
+  @font-face { font-family: 'Lexend'; font-style: normal; font-weight: 300 600; font-display: swap; src: url(/assets/fonts/lexend-latin.woff2) format('woff2'); }
+  @font-face { font-family: 'Six Caps'; font-style: normal; font-weight: 400; font-display: block; src: url(/assets/fonts/sixcaps-latin.woff2) format('woff2'); }
+</style>
+<!-- fonts:end -->
+<script>
+  // Set the animation classes before first paint so the page never flashes unstyled.
+  // If the main script has not started within 4s, drop them and keep the page static.
+  (function () {
+    var d = document.documentElement;
+    d.classList.add('has-js');
+    setTimeout(function () {
+      if (!d.classList.contains('js-live')) { d.classList.remove('motion'); d.classList.add('no-motion'); }
+    }, 4000);
+    try {
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window && 'animate' in Element.prototype) d.classList.add('motion');
+    } catch (e) {}
+    // Page-to-page transition: the image of the link that was clicked grows into this page's cover.
+    addEventListener('pagereveal', function (e) {
+      var el = e.viewTransition && document.querySelector('[data-vt-cover]');
+      if (!el) return;
+      el.style.viewTransitionName = 'case-cover';
+      d.classList.add('vt-in');
+      var clear = function () { el.style.viewTransitionName = ''; };
+      e.viewTransition.finished.then(clear, clear);
+    });
+  })();
+</script>
+<link rel="stylesheet" href="/src/style.css">
+<link rel="stylesheet" href="/src/case.css">
+</head>
+<body class="page-lost">
+<a class="skip" href="#main">Skip to content</a>
+<div class="progress" aria-hidden="true"></div>
+
+<header class="site-header" id="site-header">
+  <a class="wordmark" href="/" aria-label="Branch Vincent, home">BRANCH VINCENT</a>
+  <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">MENU</button>
+  <nav class="site-nav" id="site-nav" aria-label="Main">
+    <ul class="nav-links">
+      <li><a href="/#work" style="--i: 0">Work</a></li>
+      <li><a href="/#approach" style="--i: 1">Approach</a></li>
+      <li><a href="/#about" style="--i: 2">About</a></li>
+      <li><a class="pill" href="/#contact" style="--i: 3">Let<span class="apos">’</span>s talk</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main">
+  <section class="lost" aria-labelledby="lost-title" id="top">
+    <div class="values-wave lost-wave" aria-hidden="true"></div>
+    <div class="lost-inner">
+      <p class="label" data-scramble>Error 404</p>
+      <h1 class="lost-title display" id="lost-title" aria-label="404, page not found"><span aria-hidden="true">4</span><span class="lost-zero" aria-hidden="true">0<span class="blue-square"></span></span><span aria-hidden="true">4</span></h1>
+      <p class="lost-lede reveal">This page doesn’t exist, or it moved. The work is still here.</p>
+      <ul class="lost-links reveal" style="--d: 120ms">
+        <li><a class="pill-link pill-solid" href="/">Back to home</a></li>
+        <li><a class="pill-link" href="/work/zero/">ZERO</a></li>
+        <li><a class="pill-link" href="/work/ezkart/">Ezkart</a></li>
+        <li><a class="pill-link" href="/work/easy-solutions/">Easy Solutions</a></li>
+        <li><a class="pill-link" href="/work/jenang-gemi/">Jenang Gemi</a></li>
+        <li><a class="pill-link" href="/work/royal-syrup/">Royal Syrup</a></li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <span>© <span id="year">2026</span> Branch Vincent</span>
+  <a href="/">Websites, built with intent.</a>
+  <a href="#top">Back to top <span aria-hidden="true">↑</span></a>
+</footer>
+
+<script type="module" src="/src/page.js"></script>
+</body>
+</html>

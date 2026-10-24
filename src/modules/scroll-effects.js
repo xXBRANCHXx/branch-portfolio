@@ -1,6 +1,7 @@
 // Scroll-linked motion, all driven from one requestAnimationFrame pass per scroll:
 // progress bar, header state, hero parallax, the panning value words and photo strip, the approach panel
-// opening up, and a slow zoom on the contact photo.
+// opening up, a slow zoom on the contact photo, and gentle parallax on anything marked data-speed.
+// Every piece is optional, so the case study and 404 pages use the same code.
 import { clamp, lerp, enterProgress, passProgress } from './util.js';
 
 export function initScrollEffects({ motion }) {
@@ -8,9 +9,10 @@ export function initScrollEffects({ motion }) {
   const header = document.getElementById('site-header');
   const progress = document.querySelector('.progress');
   const hero = document.querySelector('.hero');
-  const heroLayer = hero.querySelector('[data-parallax]');
-  const heroSquare = hero.querySelector('.blue-square');
-  const heroName = hero.querySelector('.hero-name');
+  const heroLayer = hero && hero.querySelector('[data-parallax]');
+  const heroSquare = hero && hero.querySelector('.blue-square');
+  const heroName = hero && hero.querySelector('.hero-name');
+  const drifters = Array.from(document.querySelectorAll('[data-speed]'));
   const valuesSection = document.querySelector('.values');
   const valuesWords = valuesSection && valuesSection.querySelector('.values-words');
   const strip = document.querySelector('.strip');
@@ -80,7 +82,7 @@ export function initScrollEffects({ motion }) {
     if (!motion) return;
 
     // Hero depth: photo drifts slower than the page, the square and name move at their own pace.
-    if (y < vh * 1.2) {
+    if (hero && y < vh * 1.2) {
       const f = parseFloat(heroLayer.dataset.parallax) || 0.12;
       heroLayer.style.transform = `translate3d(0, ${(y * f).toFixed(1)}px, 0)`;
       heroSquare.style.transform = `translate3d(${pointer.x.toFixed(1)}px, ${(y * 0.1 + pointer.y).toFixed(1)}px, 0)`;
@@ -108,6 +110,14 @@ export function initScrollEffects({ motion }) {
       paper.style.setProperty('--clip', `${((1 - e) * 7).toFixed(2)}%`);
     }
 
+    // Images that drift slower than the page, inside a box that clips them.
+    drifters.forEach((el) => {
+      const box = el.parentElement.getBoundingClientRect();
+      if (box.bottom < -100 || box.top > vh + 100) return;
+      const p = passProgress(box, vh);
+      el.style.transform = `translate3d(0, ${(p * (parseFloat(el.dataset.speed) || 0.05) * 100).toFixed(2)}%, 0)`;
+    });
+
     // Contact photo settles from a slight zoom.
     if (contact && contactImg) {
       const e = enterProgress(contact.getBoundingClientRect(), vh, 0.2);
@@ -127,7 +137,7 @@ export function initScrollEffects({ motion }) {
   document.addEventListener('focusin', request);
 
   // The hero's blue square leans gently toward the pointer.
-  if (motion && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+  if (hero && motion && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
     let raf = 0;
     const ease = () => {
       pointer.x += (pointer.tx - pointer.x) * 0.08;
