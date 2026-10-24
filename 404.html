@@ -28,6 +28,11 @@
   @font-face { font-family: 'Six Caps'; font-style: normal; font-weight: 400; font-display: block; src: url(/assets/fonts/sixcaps-latin.woff2) format('woff2'); }
 </style>
 <!-- fonts:end -->
+<!-- The next case study loads ahead of the click, so the cover morph plays on the first visit too (Chrome and Edge). -->
+<script type="speculationrules">
+  {"prerender": [{"where": {"selector_matches": "a[data-vt-link]"}, "eagerness": "moderate"}],
+   "prefetch": [{"where": {"selector_matches": "a[data-vt-link]"}, "eagerness": "eager"}]}
+</script>
 <script>
   // Set the animation classes before first paint so the page never flashes unstyled.
   // If the main script has not started within 4s, drop them and keep the page static.

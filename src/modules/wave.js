@@ -2,7 +2,11 @@
 // and ripples slowly. Glyphs near the pointer are pushed aside, brighten and flip.
 import { clamp, lerp } from './util.js';
 
-const COLS = 44;
+// The ribbon was drawn for an 820 × 518 box with 44 columns. A wider box (the full-width band
+// on the home page) gets more columns rather than ever bigger glyphs.
+const BASE_W = 820;
+const BASE_H = 518;
+const BASE_COLS = 44;
 const ROWS = 15;
 const GLYPH_PX = 40; // size the 0 and 1 sprites are drawn at; each glyph is scaled from these
 
@@ -38,8 +42,10 @@ export function initWave(container, { animate = true } = {}) {
   container.appendChild(canvas);
   if (img) img.hidden = true;
 
-  const bits = Array.from({ length: COLS * ROWS }, () => (Math.random() < 0.5 ? '0' : '1'));
-  const heat = new Float32Array(COLS * ROWS);
+  let cols = 0;
+  let bits = [];
+  let heat = new Float32Array(0);
+  let scale = 1;
   let width = 0;
   let height = 0;
   let dpr = 1;
@@ -56,6 +62,15 @@ export function initWave(container, { animate = true } = {}) {
     dpr = nextDpr;
     width = rect.width;
     height = rect.height;
+    const sx = width / BASE_W;
+    const sy = height / BASE_H || sx;
+    scale = Math.sqrt(sx * sy) || 1;
+    const nextCols = Math.round(clamp(BASE_COLS * Math.sqrt(sx / (sy || 1)), 24, 120));
+    if (nextCols !== cols) {
+      cols = nextCols;
+      bits = Array.from({ length: cols * ROWS }, () => (Math.random() < 0.5 ? '0' : '1'));
+      heat = new Float32Array(cols * ROWS);
+    }
     // The canvas is absolutely positioned over its box (see CSS), so sizing it never feeds back into the box size.
     canvas.width = Math.round(width * dpr);
     canvas.height = Math.round(height * dpr);
@@ -79,17 +94,17 @@ export function initWave(container, { animate = true } = {}) {
     const radius = Math.max(70, width * 0.12);
     const { sprites, ox, oy, px } = glyphs;
 
-    for (let c = 0; c < COLS; c++) {
-      const u = c / (COLS - 1);
+    for (let c = 0; c < cols; c++) {
+      const u = c / (cols - 1);
       const p = centre(u, t);
       const q = centre(Math.min(1, u + 0.01), t);
       const slope = Math.atan2(q.y - p.y, q.x - p.x);
       const band = height * lerp(0.42, 0.12, u); // ribbon gets narrower as it rises
-      const size = lerp(22, 9, u) * (width / 820);
+      const size = lerp(22, 9, u) * scale;
 
       for (let r = 0; r < ROWS; r++) {
         const v = r / (ROWS - 1);
-        const idx = r * COLS + c;
+        const idx = r * cols + c;
         let x = p.x - Math.sin(slope) * (v - 0.5) * band * 0.35 + (v - 0.5) * width * 0.04 * (1 - u);
         let y = p.y + (v - 0.5) * band + Math.sin(v * 5 + t * 1.3 + u * 5) * height * 0.012;
 
