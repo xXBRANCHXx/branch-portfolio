@@ -33,6 +33,10 @@
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 88px; -webkit-text-size-adjust: 100%; }
 body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--sans); font-weight: 300; line-height: 1.5; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; overflow-x: clip; }
+/* Clip sideways overflow (e.g. work rows waiting to slide in from the right) inside the page itself:
+   on phones, overflow that reaches the body still widens the layout viewport and pushes fixed
+   elements such as the header and the intro off the screen. */
+main { overflow-x: clip; }
 img { display: block; max-width: 100%; height: auto; }
 picture { display: contents; }
 a { color: inherit; }

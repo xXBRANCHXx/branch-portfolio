@@ -52,7 +52,9 @@ function initWarmUp() {
     const link = e.target.closest && e.target.closest('a[data-vt-link]');
     if (!link || (link.target && link.target !== '_self')) return;
     const cover = warm(link);
-    if (!cover || cover.complete) return;
+    // Only worth waiting for when the morph can actually play.
+    const canMorph = 'onpagereveal' in window && matchMedia('(prefers-reduced-motion: no-preference)').matches;
+    if (!cover || cover.complete || !canMorph) return;
     e.preventDefault();
     let gone = false;
     const go = () => {
