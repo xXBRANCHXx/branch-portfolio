@@ -22,6 +22,10 @@ export function initScrollEffects({ motion }) {
   // The value words sit on one long line that pans sideways with the scroll.
   // Measure how far it overflows its box; re-measure when fonts or the window change its size.
   // The photo strip does the same in the opposite direction.
+  // Where the browser supports scroll-driven CSS animations, the pans run off the main thread
+  // (see .pan in style.css) and this only feeds them the distances, so they stay locked to the scroll.
+  const cssPan = motion && !!(window.CSS && CSS.supports && CSS.supports('animation-timeline: view()'));
+  if (cssPan) root.classList.add('css-pan');
   const pan = { max: 0, extra: 0, film: 0 };
   const measurePan = () => {
     if (valuesWords) {
@@ -29,8 +33,18 @@ export function initScrollEffects({ motion }) {
       const box = valuesSection.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
       pan.max = Math.max(0, valuesWords.scrollWidth - box);
       pan.extra = box * 0.05;
+      if (cssPan) {
+        valuesWords.style.setProperty('--pan-from', `${pan.extra.toFixed(1)}px`);
+        valuesWords.style.setProperty('--pan-to', `${(-(pan.max + pan.extra)).toFixed(1)}px`);
+      }
     }
-    if (film) pan.film = Math.max(0, film.scrollWidth - film.parentElement.clientWidth);
+    if (film) {
+      pan.film = Math.max(0, film.scrollWidth - film.parentElement.clientWidth);
+      if (cssPan) {
+        film.style.setProperty('--pan-from', `${(-pan.film).toFixed(1)}px`);
+        film.style.setProperty('--pan-to', '0px');
+      }
+    }
   };
   if (motion) {
     measurePan();
@@ -74,7 +88,7 @@ export function initScrollEffects({ motion }) {
     }
 
     // Value words pan from right to left as the band passes through the screen.
-    if (valuesWords) {
+    if (valuesWords && !cssPan) {
       const p = passProgress(valuesSection.getBoundingClientRect(), vh);
       const t = clamp((p + 0.6) / 1.0, 0, 1);
       const x = lerp(pan.extra, -(pan.max + pan.extra), t);
@@ -82,7 +96,7 @@ export function initScrollEffects({ motion }) {
     }
 
     // Photo strip slides left to right while the section passes through the screen.
-    if (film) {
+    if (film && !cssPan) {
       const p = passProgress(strip.getBoundingClientRect(), vh);
       const t = clamp((p + 0.6) / 1.0, 0, 1);
       film.style.transform = `translate3d(${(-pan.film * (1 - t)).toFixed(1)}px, 0, 0)`;

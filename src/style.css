@@ -169,6 +169,20 @@ ul, ol { padding: 0; }
 .motion .film { flex-wrap: nowrap; width: max-content; will-change: transform; }
 .motion .film li { flex: none; height: clamp(160px, 20vw, 260px); }
 
+/* Where supported, the two pans are scroll-driven CSS animations, so the compositor moves them in step
+   with the scroll instead of a frame behind it. JS sets --pan-from / --pan-to from the measured widths.
+   The timelines are named on the sections because .values clips its overflow (which would otherwise
+   become the scroller the words are measured against). The range matches the JS fallback. */
+@keyframes pan-x {
+  from { transform: translate3d(var(--pan-from, 0px), 0, 0); }
+  to { transform: translate3d(var(--pan-to, 0px), 0, 0); }
+}
+.css-pan .values { view-timeline-name: --values; }
+.css-pan .strip { view-timeline-name: --strip; }
+.css-pan .values-words, .css-pan .film { animation-name: pan-x; animation-duration: auto; animation-timing-function: linear; animation-fill-mode: both; animation-range: cover 20% cover 70%; }
+.css-pan .values-words { animation-timeline: --values; }
+.css-pan .film { animation-timeline: --strip; }
+
 /* Contact */
 .contact { position: relative; overflow: hidden; isolation: isolate; min-height: 680px; display: flex; align-items: flex-end; }
 .contact-bg { position: absolute; inset: 0; z-index: -1; overflow: hidden; }
