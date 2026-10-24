@@ -349,14 +349,27 @@ html:not(.has-js) .site-header { position: absolute; } /* without the script not
   .project-title h3 { font-size: 8.4vw; }
   .contact-email { font-size: 6.2vw; }
 }
-/* Page-to-page transitions (Chrome, Edge, Safari 18+). Pages cross-fade; a case study's cover grows
-   out of the image on the link that was clicked (named in transitions.js and the case page's head). */
+/* Page-to-page zoom (Chrome, Edge, Safari 18+). Going into a page zooms in: the old page grows as it
+   fades and the new one settles in from slightly smaller. Going back (or home) zooms out the other way.
+   A case study's cover grows out of the image on the link that was clicked, and shrinks back into it
+   on the way out (named in transitions.js and in each page's head, which also sets data-vt). */
 @view-transition { navigation: auto; }
-::view-transition-old(root) { animation: vt-out .4s cubic-bezier(.65, 0, .35, 1) both; }
-::view-transition-new(root) { animation: vt-in .7s cubic-bezier(.16, 1, .3, 1) .08s both; }
+::view-transition-old(root) { animation: vt-zoom-in-old .5s cubic-bezier(.65, 0, .35, 1) both; }
+::view-transition-new(root) { animation: vt-zoom-in-new .8s cubic-bezier(.16, 1, .3, 1) .05s both; }
+html[data-vt="out"]::view-transition-old(root) { animation-name: vt-zoom-out-old; }
+html[data-vt="out"]::view-transition-new(root) { animation-name: vt-zoom-out-new; }
 ::view-transition-group(case-cover) { animation-duration: .85s; animation-timing-function: cubic-bezier(.65, 0, .35, 1); }
-@keyframes vt-out { to { opacity: 0; } }
-@keyframes vt-in { from { opacity: 0; transform: translateY(28px); } }
+/* A cover with nothing to grow from or shrink into zooms with the page instead. */
+::view-transition-old(case-cover):only-child { animation: vt-zoom-in-old .5s cubic-bezier(.65, 0, .35, 1) both; }
+::view-transition-new(case-cover):only-child { animation: vt-zoom-in-new .8s cubic-bezier(.16, 1, .3, 1) .05s both; }
+html[data-vt="out"]::view-transition-old(case-cover):only-child { animation-name: vt-zoom-out-old; }
+html[data-vt="out"]::view-transition-new(case-cover):only-child { animation-name: vt-zoom-out-new; }
+@keyframes vt-zoom-in-old { to { opacity: 0; transform: scale(1.06); } }
+@keyframes vt-zoom-in-new { from { opacity: 0; transform: scale(.94); } }
+@keyframes vt-zoom-out-old { to { opacity: 0; transform: scale(.94); } }
+@keyframes vt-zoom-out-new { from { opacity: 0; transform: scale(1.06); } }
+/* The row a cover is shrinking back into shows at once, without its reveal animation. */
+.vt-now, .vt-now *, .vt-now *::after { transition: none !important; }
 
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }

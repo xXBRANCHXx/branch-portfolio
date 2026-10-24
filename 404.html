@@ -28,10 +28,10 @@
   @font-face { font-family: 'Six Caps'; font-style: normal; font-weight: 400; font-display: block; src: url(/assets/fonts/sixcaps-latin.woff2) format('woff2'); }
 </style>
 <!-- fonts:end -->
-<!-- The next case study loads ahead of the click, so the cover morph plays on the first visit too (Chrome and Edge). -->
+<!-- The next case study loads ahead of the click, so the cover morph plays on the first visit too (Chrome and Edge).
+     Prefetch only: prerendering it as well made Chrome drop the next page-to-page zoom now and then. -->
 <script type="speculationrules">
-  {"prerender": [{"where": {"selector_matches": "a[data-vt-link]"}, "eagerness": "moderate"}],
-   "prefetch": [{"where": {"selector_matches": "a[data-vt-link]"}, "eagerness": "eager"}]}
+  {"prefetch": [{"where": {"selector_matches": "a[data-vt-link]"}, "eagerness": "eager"}]}
 </script>
 <script>
   // Set the animation classes before first paint so the page never flashes unstyled.
@@ -45,14 +45,31 @@
     try {
       if (!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window && 'animate' in Element.prototype) d.classList.add('motion');
     } catch (e) {}
-    // Page-to-page transition: the image of the link that was clicked grows into this page's cover.
+    // Page-to-page zoom (see transitions.js). The image of the link that was clicked grows into this
+    // page's cover. Going forward zooms in; going back in history zooms out.
     addEventListener('pagereveal', function (e) {
-      var el = e.viewTransition && document.querySelector('[data-vt-cover]');
-      if (!el) return;
-      el.style.viewTransitionName = 'case-cover';
-      d.classList.add('vt-in');
-      var clear = function () { el.style.viewTransitionName = ''; };
-      e.viewTransition.finished.then(clear, clear);
+      var stored = '';
+      try { stored = sessionStorage.getItem('vt-from') || ''; sessionStorage.removeItem('vt-from'); } catch (err) {}
+      var vt = e.viewTransition;
+      if (!vt) return;
+      var act = window.navigation && navigation.activation;
+      var back = !!(act && act.navigationType === 'traverse' && act.from && act.entry && act.from.index > act.entry.index);
+      d.setAttribute('data-vt', back ? 'out' : 'in');
+      document.querySelectorAll('[data-vt-media]').forEach(function (m) { m.style.viewTransitionName = ''; });
+      var onScreen = function (x) { var r = x.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight; };
+      // Coming back from the next case study, its cover shrinks into the "Next project" image.
+      // Otherwise the image that was clicked grows into this page's cover.
+      var from = (act && act.from && act.from.url) || stored;
+      var el = null;
+      document.querySelectorAll('a[data-vt-link]').forEach(function (a) {
+        var m = a.querySelector('[data-vt-media]');
+        if (from && a.href.split('#')[0] === from.split('#')[0] && m && onScreen(m)) el = m;
+      });
+      var cover = document.querySelector('[data-vt-cover]');
+      if (!el && cover && onScreen(cover)) { el = cover; d.classList.add('vt-in'); }
+      if (el) el.style.viewTransitionName = 'case-cover';
+      var clear = function () { d.removeAttribute('data-vt'); if (el) el.style.viewTransitionName = ''; };
+      vt.finished.then(clear, clear);
     });
   })();
 </script>
