@@ -32,10 +32,10 @@
 </style>
 <!-- fonts:end -->
 <link rel="preload" as="image" href="assets/portrait.webp" type="image/webp" fetchpriority="high">
-<!-- Case studies load ahead of the click, so the cover morph plays on the first visit too (Chrome and Edge). -->
+<!-- Case studies load ahead of the click, so the cover morph plays on the first visit too (Chrome and Edge).
+     Prefetch only: prerendering them as well made Chrome drop the next page-to-page zoom now and then. -->
 <script type="speculationrules">
-  {"prerender": [{"where": {"selector_matches": "a[data-vt-link]"}, "eagerness": "moderate"}],
-   "prefetch": [{"where": {"selector_matches": "a[data-vt-link]"}, "eagerness": "eager"}]}
+  {"prefetch": [{"where": {"selector_matches": "a[data-vt-link]"}, "eagerness": "eager"}]}
 </script>
 <script>
   // Set the animation classes before first paint so the page never flashes unstyled.
@@ -43,6 +43,59 @@
   (function () {
     var d = document.documentElement;
     d.classList.add('has-js');
+
+    // The page this tab was on before, if it was one of ours (transitions.js notes it on the way out).
+    function fromPath() {
+      var url = '';
+      try { url = sessionStorage.getItem('vt-from') || ''; } catch (e) {}
+      var act = window.navigation && navigation.activation;
+      if (act && act.from && act.from.url) url = act.from.url;
+      try { return url ? new URL(url, location.href).pathname : ''; } catch (e) { return ''; }
+    }
+    var fromCase = /\/work\/[^/]+\/?$/.test(fromPath());
+    // Someone coming back from a case study has seen enough of the site to skip the opening sequence.
+    if (fromCase) { try { sessionStorage.setItem('bv-intro-seen', '1'); } catch (e) {} }
+
+    // Page-to-page zoom (Chrome, Edge, Safari 18+). Arriving here always zooms out. Coming back from a
+    // case study, its cover shrinks back into the image on its row: the row is shown at once (no reveal
+    // animation) and scrolled into view if the browser has not already put it there.
+    addEventListener('pagereveal', function (e) {
+      var from = fromPath();
+      try { sessionStorage.removeItem('vt-from'); } catch (err) {}
+      var vt = e.viewTransition;
+      if (!vt) return;
+      d.setAttribute('data-vt', 'out');
+      document.querySelectorAll('[data-vt-media]').forEach(function (m) { m.style.viewTransitionName = ''; });
+      var act = window.navigation && navigation.activation;
+      var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+      var back = act ? act.navigationType === 'traverse' : !!(nav && nav.type === 'back_forward');
+      // A link to a section (#work, #about) would only scroll there after this first frame, so scroll now.
+      var target = !back && location.hash.length > 1 && document.getElementById(location.hash.slice(1));
+      if (target) target.scrollIntoView({ behavior: 'instant' });
+      var row = null;
+      document.querySelectorAll('a[data-vt-link]').forEach(function (a) { if (from && a.pathname === from) row = a; });
+      var media = row && row.querySelector('[data-vt-media]');
+      if (media) {
+        var r = media.getBoundingClientRect();
+        var onScreen = function () { return r.bottom > 0 && r.top < innerHeight; };
+        if (!onScreen() && (back || location.hash === '#work')) {
+          row.scrollIntoView({ block: 'center', behavior: 'instant' });
+          r = media.getBoundingClientRect();
+        }
+        if (onScreen()) {
+          media.style.viewTransitionName = 'case-cover';
+          row.classList.add('is-in', 'vt-now');
+          media.classList.add('is-in');
+        } else {
+          media = null;
+        }
+      }
+      var done = function () {
+        d.removeAttribute('data-vt');
+        if (media) { media.style.viewTransitionName = ''; row.classList.remove('vt-now'); }
+      };
+      vt.finished.then(done, done);
+    });
     setTimeout(function () {
       // Too late for the animations: show the static page and keep it static even if the script arrives later.
       // Dropping has-js too puts the nav back in the page, so the MENU button is never left without a script behind it.
@@ -57,6 +110,8 @@
     } catch (e) {}
   })();
 </script>
+<!-- Arriving with a zoom, the first frame must already show the right place on the page (see the pagereveal handler above). -->
+<link rel="expect" href="#main" blocking="render">
 <link rel="stylesheet" href="./src/style.css">
 </head>
 <body>
