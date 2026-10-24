@@ -34,7 +34,7 @@
     var d = document.documentElement;
     d.classList.add('has-js');
     setTimeout(function () {
-      if (!d.classList.contains('js-live')) { d.classList.remove('motion'); d.classList.add('no-motion'); }
+      if (!d.classList.contains('js-live')) { d.classList.remove('has-js', 'motion'); d.classList.add('no-motion'); }
     }, 4000);
     try {
       if (!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window && 'animate' in Element.prototype) d.classList.add('motion');

@@ -16,7 +16,7 @@ if (year) year.textContent = String(new Date().getFullYear());
 initMenu();
 
 const motion = !root.classList.contains('no-motion') && !reducedMotion() && 'IntersectionObserver' in window && 'animate' in Element.prototype;
-root.classList.add('js-live');
+root.classList.add('js-live', 'has-js');
 
 const fontsReady = (maxWait) => (document.fonts && document.fonts.ready
   ? Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, maxWait))])

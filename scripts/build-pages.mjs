@@ -59,7 +59,7 @@ ${extra}<script>
     var d = document.documentElement;
     d.classList.add('has-js');
     setTimeout(function () {
-      if (!d.classList.contains('js-live')) { d.classList.remove('motion'); d.classList.add('no-motion'); }
+      if (!d.classList.contains('js-live')) { d.classList.remove('has-js', 'motion'); d.classList.add('no-motion'); }
     }, 4000);
     try {
       if (!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window && 'animate' in Element.prototype) d.classList.add('motion');
@@ -272,7 +272,7 @@ ${gallery(P, p)}
       <span class="next-label label">Next project · ${pad(projects.indexOf(next) + 1)}</span>
       <span class="next-name display">${esc(next.name.toUpperCase())} ${icons.next}</span>
       <span class="next-domain">${esc(next.domain)}</span>
-      <span class="next-media" aria-hidden="true" data-vt-media>${img(P, next, 'cover', { w: next.cover.w, h: next.cover.h })}</span>
+      <span class="next-media" aria-hidden="true" data-vt-media>${img(P, next, 'cover-480', { w: next.cover.w, h: next.cover.h })}</span>
     </a>
   </nav>
 

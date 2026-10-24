@@ -31,9 +31,12 @@ export function initCursor() {
     if (state.s < 0.01 && state.ts === 0) { state.x = e.clientX; state.y = e.clientY; }
     kick();
   }, { passive: true });
+  // Escape hides the circle until the pointer leaves the row, so it never has to sit over text.
+  let dismissed = false;
+  window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && state.ts) { dismissed = true; state.ts = 0; kick(); } });
   rows.forEach((row) => {
-    row.addEventListener('pointerenter', () => { cursor.textContent = row.dataset.cursor; state.ts = 1; kick(); });
-    row.addEventListener('pointerleave', () => { state.ts = 0; kick(); });
+    row.addEventListener('pointerenter', () => { if (dismissed) return; cursor.textContent = row.dataset.cursor; state.ts = 1; kick(); });
+    row.addEventListener('pointerleave', () => { dismissed = false; state.ts = 0; kick(); });
   });
   window.addEventListener('scroll', () => {
     // Hide the cursor if the row scrolls out from under it.

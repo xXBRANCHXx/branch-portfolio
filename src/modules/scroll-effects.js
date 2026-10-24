@@ -147,6 +147,8 @@ export function initScrollEffects({ motion }) {
       else raf = 0;
     };
     hero.addEventListener('pointermove', (e) => {
+      // Hold still while the intro square is landing on it, so the two squares line up.
+      if (document.querySelector('.intro-screen')) return;
       const r = hero.getBoundingClientRect();
       pointer.tx = clamp((e.clientX - r.left) / r.width - 0.5, -0.5, 0.5) * 28;
       pointer.ty = clamp((e.clientY - r.top) / r.height - 0.5, -0.5, 0.5) * 20;

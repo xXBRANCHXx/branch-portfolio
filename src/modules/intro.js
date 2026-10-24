@@ -64,8 +64,8 @@ export function runIntro() {
   const finish = () => {
     if (finished) return;
     finished = true;
-    window.removeEventListener('keydown', finish);
-    window.removeEventListener('pointerdown', finish);
+    window.removeEventListener('keydown', onKey);
+    window.removeEventListener('pointerdown', onPointer);
     window.removeEventListener('wheel', finish);
     window.removeEventListener('touchmove', finish);
     screen.getAnimations({ subtree: true }).forEach((a) => a.cancel());
@@ -73,8 +73,21 @@ export function runIntro() {
     revealHero(hero, { fast: true });
     hero.classList.add('square-in');
   };
-  window.addEventListener('keydown', finish);
-  window.addEventListener('pointerdown', finish);
+  // A key that skips the intro shouldn't also page the document down, out of sight of the hero.
+  const onKey = (e) => {
+    if ([' ', 'PageDown', 'ArrowDown', 'End'].includes(e.key)) e.preventDefault();
+    finish();
+  };
+  // The intro screen lets the pointer through, so swallow the click that ends a skip:
+  // otherwise it lands on an invisible link or the menu button underneath.
+  const onPointer = () => {
+    const swallow = (e) => { e.preventDefault(); e.stopPropagation(); };
+    window.addEventListener('click', swallow, { capture: true, once: true });
+    setTimeout(() => window.removeEventListener('click', swallow, true), 1000);
+    finish();
+  };
+  window.addEventListener('keydown', onKey);
+  window.addEventListener('pointerdown', onPointer);
   window.addEventListener('wheel', finish, { passive: true });
   window.addEventListener('touchmove', finish, { passive: true });
 
@@ -115,7 +128,8 @@ export function runIntro() {
       hero.classList.add('square-in');
       // Cross-fade the flat intro square into the real one, which multiplies over the photo.
       screen.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 450, easing: 'ease-out', fill: 'forwards' }).finished.then(() => screen.remove(), () => screen.remove());
-      ['keydown', 'pointerdown'].forEach((t) => window.removeEventListener(t, finish));
+      window.removeEventListener('keydown', onKey);
+      window.removeEventListener('pointerdown', onPointer);
       window.removeEventListener('wheel', finish);
       window.removeEventListener('touchmove', finish);
     }, duration + 30);
