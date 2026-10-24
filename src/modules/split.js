@@ -1,10 +1,14 @@
 // Splits a heading into per-character spans so each letter can rise out of a mask.
-// The heading keeps its text for assistive tech through aria-label; the spans are hidden from it.
+// Assistive tech reads a visually hidden copy of the text; the spans are hidden from it.
+// (Not aria-label: it isn't allowed on a paragraph, so a split quote would read as empty.)
 export function splitChars(el) {
   if (el.dataset.splitDone) return;
   const text = el.textContent.replace(/\s+/g, ' ').trim();
-  el.setAttribute('aria-label', text);
   el.textContent = '';
+  const real = document.createElement('span');
+  real.className = 'visually-hidden';
+  real.textContent = text;
+  el.appendChild(real);
   let i = 0;
   text.split(' ').forEach((word, index, words) => {
     const wordEl = document.createElement('span');

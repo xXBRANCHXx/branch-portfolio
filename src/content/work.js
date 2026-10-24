@@ -23,7 +23,7 @@ export const projects = [
     square: { left: 43, top: 27, width: 30, height: 24 },
     brief: [
       'ZERO makes sugar-free syrups, sweetener drops and a zero-calorie maple topping. The pitch is taste first, for people who want less sugar but won’t stick with a product that tastes like a compromise.',
-      'Orders used to come in through WhatsApp and the marketplaces. The new zerofoods.id had three jobs: help buyers choose a product by the drink they make, take orders on the site, and make ZERO’s health articles easy for search engines to find.',
+      'Customers ordered through WhatsApp and the marketplaces. The new zerofoods.id had three jobs: help buyers choose the right format for how they use it, build the order on the site so it reaches WhatsApp ready to confirm, and make ZERO’s health articles easy for search engines to find.',
     ],
     tour: {
       desktop: true,
@@ -150,7 +150,7 @@ export const projects = [
     year: '2026',
     role: 'Design and development',
     scope: ['Website'],
-    lede: 'A modern home and storefront for a traditional Indonesian stomach-health brand, with each order traced back to the campaign that brought it in.',
+    lede: 'A modern home and storefront for a traditional Indonesian stomach-health brand, with campaign orders traced back to the channel that brought them in.',
     cover: { w: 864, h: 1080, alt: 'An open Jenang Gemi Bubur box with its sachets on a wooden board, in black and white' },
     square: { left: 30, top: 42, width: 40, height: 20 },
     brief: [
@@ -163,12 +163,12 @@ export const projects = [
       alt: ['The jenanggemi.com home page: “Kesehatan Lambung Dimulai Dari Alam.”', 'The Bubur product page with flavor and pack choices', 'A green section explaining the benefits in four cards', 'Two product cards: Bubur Gemi and Jamu Gemi'],
     },
     built: [
-      { title: 'Fifteen pages', text: 'Home, two product pages, a partner program, about and FAQ, plus eight campaign landing pages: one per product for YouTube, Facebook, Instagram and TikTok.' },
+      { title: 'Fifteen pages', text: 'Home, two product pages, two partner-program pages, about and FAQ, plus eight campaign landing pages: one per product for YouTube, Facebook, Instagram and TikTok.' },
       { title: 'A product-match quiz', text: 'Four questions recommend Bubur or Jamu and explain why, then let you pick a flavor and pack and add it to the cart.' },
       { title: 'Cart to WhatsApp', text: 'A slide-out cart and an address step send a ready-made WhatsApp order. It checks live stock first and falls back to plain WhatsApp if the catalog is down.' },
-      { title: 'Orders traced to campaigns', text: 'Each checkout carries an order code such as YT+JGB+15+OR. A WhatsApp Business webhook spots the code in the customer’s message and logs the sale against its source.' },
+      { title: 'Orders traced to campaigns', text: 'Every order from a campaign page carries a code such as YTJGB15OR (YouTube, Bubur, 15 sachets, Original). A WhatsApp Business webhook spots the code in the customer’s message and logs the sale against its source.' },
       { title: 'Pages for every affiliate', text: 'Create an affiliate and the system generates a trackable landing page for each affiliate, product and platform.' },
-      { title: 'Ready for search', text: 'Structured data on every page, a sitemap, an llms.txt file, and a robots file that welcomes AI search crawlers.' },
+      { title: 'Ready for search', text: 'Structured data on every indexed page, a sitemap, an llms.txt file, and a robots file that welcomes AI search crawlers.' },
     ],
     quote: { text: 'Stomach health starts with nature.', original: 'Kesehatan Lambung Dimulai Dari Alam.', source: 'Home page headline, jenanggemi.com' },
     stats: [

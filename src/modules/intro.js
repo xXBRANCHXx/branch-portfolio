@@ -80,10 +80,15 @@ export function runIntro() {
   };
   // The intro screen lets the pointer through, so swallow the click that ends a skip:
   // otherwise it lands on an invisible link or the menu button underneath.
-  const onPointer = () => {
-    const swallow = (e) => { e.preventDefault(); e.stopPropagation(); };
-    window.addEventListener('click', swallow, { capture: true, once: true });
-    setTimeout(() => window.removeEventListener('click', swallow, true), 1000);
+  // Only a primary press ends in a click, and a touch that turns into a scroll never does.
+  const onPointer = (e) => {
+    if (e.button === 0) {
+      const swallow = (ev) => { ev.preventDefault(); ev.stopPropagation(); };
+      const drop = () => window.removeEventListener('click', swallow, true);
+      window.addEventListener('click', swallow, { capture: true, once: true });
+      window.addEventListener('pointercancel', drop, { once: true });
+      setTimeout(drop, 1000);
+    }
     finish();
   };
   window.addEventListener('keydown', onKey);

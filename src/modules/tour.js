@@ -15,11 +15,14 @@ export function initTour({ motion }) {
   const slideSets = screens.map((s) => Array.from(s.querySelectorAll('.tour-slide')));
 
   // Hidden screens sit outside their frame, where lazy loading would never fetch them in time.
+  // Only frames that are shown count (phones hide the laptop), and turning the phone can show more.
   if ('IntersectionObserver' in window) {
+    const eager = () => tour.querySelectorAll('img').forEach((img) => { if (img.getClientRects().length) img.loading = 'eager'; });
     const io = new IntersectionObserver((entries) => {
       if (!entries[0].isIntersecting) return;
       io.disconnect();
-      tour.querySelectorAll('img').forEach((img) => { img.loading = 'eager'; });
+      eager();
+      window.addEventListener('resize', eager, { passive: true });
     }, { rootMargin: '1200px 0px' });
     io.observe(tour);
   }

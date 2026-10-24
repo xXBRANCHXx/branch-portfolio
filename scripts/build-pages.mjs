@@ -1,7 +1,7 @@
 // Writes the case study pages (work/<slug>/index.html) and the 404 page from src/content/work.js.
 // Run with `npm run pages`; `npm run build` runs it first. The generated HTML is committed so the
 // pages also build with a plain `vite build`.
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { projects, site } from '../src/content/work.js';
@@ -39,6 +39,7 @@ function head({ P, title, description, canonical, extra = '' }) {
 ${canonical ? `<meta property="og:url" content="${canonical}">\n` : ''}<meta property="og:image" content="${site.url}assets/og-image.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Branch Vincent · Websites, built with intent.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="${site.url}assets/og-image.jpg">
 ${canonical ? `<link rel="canonical" href="${canonical}">\n` : ''}<link rel="icon" href="${P}assets/favicon.svg" type="image/svg+xml">
@@ -318,6 +319,17 @@ ${footer(P)}
 </body>
 </html>
 `;
+}
+
+// Remove pages for projects that were renamed or dropped from work.js, so they stop deploying.
+// The home rows are written by hand, so stop first if one still links to a slug that's gone.
+const slugs = new Set(projects.map((p) => p.slug));
+mkdirSync(join(root, 'work'), { recursive: true });
+for (const [, slug] of readFileSync(join(root, 'index.html'), 'utf8').matchAll(/href="work\/([^/"]+)\//g)) {
+  if (!slugs.has(slug)) throw new Error(`index.html links to work/${slug}/, which is not a project in src/content/work.js`);
+}
+for (const entry of readdirSync(join(root, 'work'), { withFileTypes: true })) {
+  if (entry.isDirectory() && !slugs.has(entry.name)) rmSync(join(root, 'work', entry.name), { recursive: true });
 }
 
 projects.forEach((p, i) => {

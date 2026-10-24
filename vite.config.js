@@ -18,12 +18,17 @@ const absolute404 = {
   generateBundle(_, bundle) {
     const page = bundle['404.html'];
     if (!page) return;
-    page.source = String(page.source).replace(/(href|src|srcset|url\()(=")?\.?\/?(app|assets)\//g, (m, attr, eq, dir) => `${attr}${eq || ''}/${dir}/`);
+    page.source = String(page.source)
+      .replace(/\b(href|src|poster)="\.?\/?(app|assets)\//g, '$1="/$2/')
+      .replace(/url\((['"]?)\.?\/?(app|assets)\//g, 'url($1/$2/')
+      .replace(/srcset="([^"]*)"/g, (m, list) => `srcset="${list.replace(/(^|,\s*)\.?\/?(app|assets)\//g, '$1/$2/')}"`);
   },
 };
 
 export default defineConfig({
   base: './',
+  // Unknown URLs get a 404 in dev and preview, as on Vercel, instead of the home page.
+  appType: 'mpa',
   plugins: [absolute404],
   build: {
     assetsDir: 'app',
