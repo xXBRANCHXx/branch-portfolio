@@ -174,7 +174,7 @@ html:not(.has-js) .site-header { position: absolute; } /* without the script not
 .path p { font-size: 16px; line-height: 1.6; color: var(--soft); max-width: 56ch; }
 .about-text { font-size: 17px; line-height: 1.65; color: var(--soft); max-width: 58ch; text-wrap: pretty; }
 .about-next { color: var(--text); font-weight: 400; }
-.facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 28px; margin: 0; padding-block: 22px; border-block: 1px solid var(--line); }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 18px 28px; margin: 0; padding-block: 22px; border-block: 1px solid var(--line); }
 .facts dt { font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
 .facts dd { margin: 0; font-size: 17px; }
 @media (min-width: 861px) {

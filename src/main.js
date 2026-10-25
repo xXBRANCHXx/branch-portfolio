@@ -7,12 +7,10 @@ import { initScrollEffects } from './modules/scroll-effects.js';
 import { initCursor, initMagnetic, initFilmStrip } from './modules/interactions.js';
 import { initTransitions } from './modules/transitions.js';
 import { reducedMotion } from './modules/util.js';
-import { initAge } from './modules/age.js';
 
 const root = document.documentElement;
 const year = document.getElementById('year');
 if (year) year.textContent = String(new Date().getFullYear());
-initAge();
 
 initMenu();
 
