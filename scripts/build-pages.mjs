@@ -127,8 +127,10 @@ function header(P, { here = '', talk = '#contact' } = {}) {
 </header>`;
 }
 
-// Gmail compose link: opens a new draft addressed to Branch in Gmail on the web.
-const gmailHref = (email) => `https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=${email}`;
+// Gmail compose link: opens a new draft to Branch in Gmail on the web, with the subject and message
+// from site.draft filled in. index.html carries the same link by hand.
+const gmailHref = (email) => `https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=${email}`
+  + `&amp;su=${encodeURIComponent(site.draft.subject)}&amp;body=${encodeURIComponent(site.draft.body)}`;
 
 // The "Email me" and LinkedIn buttons, with the address underneath and a copy button.
 // Shared by the case studies; index.html carries the same markup by hand.
