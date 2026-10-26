@@ -7,6 +7,7 @@ export const site = {
   email: 'vincentbranch23@gmail.com',
   whatsapp: { href: 'https://wa.me/62895710860502', label: '+62 895-7108-60502' },
   instagram: { href: 'https://www.instagram.com/vincentbranch23/', label: '@vincentbranch23' },
+  linkedin: 'https://www.linkedin.com/in/branch-vincent-121b1139a/',
 };
 
 export const projects = [
@@ -20,7 +21,6 @@ export const projects = [
     scope: ['Brand direction', 'Product visuals', 'Website'],
     lede: 'A storefront for an Indonesian sugar-free syrup brand, built to sell on taste and to take orders directly.',
     cover: { w: 864, h: 1080, alt: 'ZERO syrup bottles in Hazelnut, Salted Caramel and Plain on a concrete bar top, in black and white' },
-    square: { left: 43, top: 27, width: 30, height: 24 },
     brief: [
       'ZERO makes sugar-free syrups, sweetener drops and a zero-calorie maple topping. The pitch is taste first, for people who want less sugar but won’t stick with a product that tastes like a compromise.',
       'Customers ordered through WhatsApp and the marketplaces. The new zerofoods.id had three jobs: help buyers choose the right format for how they use it, build the order on the site so it reaches WhatsApp ready to confirm, and make ZERO’s health articles easy for search engines to find.',
@@ -63,7 +63,6 @@ export const projects = [
     scope: ['Commerce platform', 'Solo build'],
     lede: 'A commerce platform for Indonesian sellers: one branded page and one link that goes straight to checkout. I designed and built it on my own.',
     cover: { w: 819, h: 1024, alt: 'Two “form.” bottles, the demo brand used across Ezkart, in black and white' },
-    square: { left: 50, top: 39, width: 34, height: 23 },
     brief: [
       'Small Indonesian businesses sell through Instagram bios, ads and WhatsApp chats, and usually stitch together separate tools for their page, payments, orders and shipping. Ezkart puts that into one flow: add a product, design its page without code, share one link.',
       'It’s in early access. The first landing page is free while live payments, payouts and connected shipping are prepared for launch.',
@@ -106,7 +105,6 @@ export const projects = [
     scope: ['Website'],
     lede: 'A bilingual company site that introduces Easy Solutions Indonesia and shows how its three products fit together.',
     cover: { w: 819, h: 1024, alt: 'A city skyline at dusk with a tall glass tower, in black and white' },
-    square: { left: 47, top: 9, width: 28, height: 22 },
     brief: [
       'Easy Solutions Indonesia is the company behind Ezkart for selling, Ezpay for payments and Business, an ERP with an AI agent that carries out tasks when you ask. It needed one trustworthy home that shows how the three fit together.',
       'Part of the job was explaining an unfamiliar idea, an “agentic” ERP, without overclaiming. The site makes no claims about customers, numbers or launch dates.',
@@ -152,7 +150,6 @@ export const projects = [
     scope: ['Website'],
     lede: 'A modern home and storefront for a traditional Indonesian stomach-health brand, with campaign orders traced back to the channel that brought them in.',
     cover: { w: 864, h: 1080, alt: 'An open Jenang Gemi Bubur box with its sachets on a wooden board, in black and white' },
-    square: { left: 30, top: 42, width: 40, height: 20 },
     brief: [
       'Jenang Gemi makes arrowroot porridge and an herbal drink for sensitive stomachs. Founded in 2017 and acquired by Zero Foods Indonesia in 2024, it needed a more modern voice and a site that sells.',
       'The site had four jobs: explain two products and help people choose, turn visits into WhatsApp orders, recruit resellers and partners, and show which campaigns actually bring in sales.',
@@ -195,7 +192,6 @@ export const projects = [
     scope: ['Positioning', 'Website'],
     lede: 'Positioning and a website for a Yogyakarta syrup supplier that sells to cafés, restaurants and hotels.',
     cover: { w: 960, h: 1200, alt: 'A one-liter bottle of Royal Butterscotch syrup with a caramel splash, in black and white' },
-    square: { left: 36, top: 40, width: 30, height: 26 },
     brief: [
       'Royal Syrup supplies flavored syrups, drink powders and a maple topping to cafés, restaurants and hotels across Java. The positioning fits in one line: imported quality at a local price, with a flavor for almost anything.',
       'royalsyrup.id makes that case to café owners in their own language, then turns interest into a conversation: browse the catalog, ask a question on WhatsApp, or apply to become a reseller.',

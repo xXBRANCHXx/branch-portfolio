@@ -4,7 +4,7 @@ import { initWave } from './modules/wave.js';
 import { runIntro } from './modules/intro.js';
 import { initReveal } from './modules/reveal.js';
 import { initScrollEffects } from './modules/scroll-effects.js';
-import { initCursor, initMagnetic, initFilmStrip } from './modules/interactions.js';
+import { initCursor, initMagnetic, initCopy, initFilmStrip } from './modules/interactions.js';
 import { initTransitions } from './modules/transitions.js';
 import { reducedMotion } from './modules/util.js';
 
@@ -13,6 +13,7 @@ const year = document.getElementById('year');
 if (year) year.textContent = String(new Date().getFullYear());
 
 initMenu();
+initCopy();
 
 const motion = !root.classList.contains('no-motion') && !reducedMotion() && 'IntersectionObserver' in window && 'animate' in Element.prototype;
 root.classList.add('js-live', 'has-js');
