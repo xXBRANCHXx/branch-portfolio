@@ -75,3 +75,34 @@ export function initFilmStrip() {
   }, { rootMargin: '800px 0px' });
   io.observe(film.parentElement || film);
 }
+
+// Copy buttons next to the email address. Falls back to selecting the text if the clipboard is blocked.
+export function initCopy() {
+  document.querySelectorAll('[data-copy]').forEach((btn) => {
+    const label = btn.querySelector('.copy-label');
+    let timer;
+    btn.addEventListener('click', async () => {
+      const text = btn.dataset.copy;
+      let ok = false;
+      try {
+        await navigator.clipboard.writeText(text);
+        ok = true;
+      } catch {
+        const span = btn.previousElementSibling;
+        if (span) {
+          const range = document.createRange();
+          range.selectNodeContents(span);
+          const sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(range);
+          try { ok = document.execCommand('copy'); } catch { ok = false; }
+        }
+      }
+      if (!label) return;
+      label.textContent = ok ? 'Copied' : 'Press Ctrl+C to copy';
+      btn.classList.toggle('is-copied', ok);
+      clearTimeout(timer);
+      timer = setTimeout(() => { label.textContent = 'Copy'; btn.classList.remove('is-copied'); }, 2000);
+    });
+  });
+}

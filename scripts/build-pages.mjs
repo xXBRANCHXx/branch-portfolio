@@ -17,6 +17,8 @@ const icons = {
   instagram: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".6" fill="currentColor"/></svg>',
   pin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5a7 7 0 1 0-14 0C5 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>',
   out: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>',
+  linkedin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><path d="M8 10.5V16M8 7.6v.1M11.5 16v-5.5M11.5 13c0-1.6 1-2.6 2.4-2.6s2.1.9 2.1 2.6V16"/></svg>',
+  copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8.5" y="8.5" width="12" height="12" rx="2"/><path d="M15.5 8.5v-3a2 2 0 0 0-2-2h-8a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h3"/></svg>',
   next: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"/></svg>',
 };
 
@@ -125,11 +127,24 @@ function header(P, { here = '', talk = '#contact' } = {}) {
 </header>`;
 }
 
+// Gmail compose link: opens a new draft addressed to Branch in Gmail on the web.
+const gmailHref = (email) => `https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=${email}`;
+
+// The "Email me" and LinkedIn buttons, with the address underneath and a copy button.
+// Shared by the case studies; index.html carries the same markup by hand.
+function emailBlock(pad) {
+  return `${pad}<div class="contact-actions">
+${pad}  <a class="contact-btn contact-btn-solid" href="${gmailHref(site.email)}" target="_blank" rel="noopener">Email me ${icons.out}<span class="visually-hidden"> (opens Gmail in a new tab)</span></a>
+${pad}  <a class="contact-btn" href="${site.linkedin}" target="_blank" rel="noopener">${icons.linkedin} LinkedIn<span class="visually-hidden"> (opens in a new tab)</span></a>
+${pad}</div>
+${pad}<p class="contact-address"><span>${site.email}</span> <button class="copy-btn" type="button" data-copy="${site.email}">${icons.copy}<span class="copy-label" aria-live="polite">Copy</span></button></p>`;
+}
+
 function contact() {
   return `  <section class="case-contact" id="contact" aria-labelledby="contact-title">
     <h2 class="display" id="contact-title" data-split="chars">HAVE A PROJECT?</h2>
     <p class="case-contact-lede reveal">Tell me what you’re building. I’ll tell you how I’d approach it.</p>
-    <a class="contact-email" href="mailto:${site.email}" data-magnetic>${site.email}</a>
+${emailBlock('    ')}
     <ul class="contact-meta">
       <li><a href="${site.whatsapp.href}" target="_blank" rel="noopener">
         ${icons.whatsapp}
@@ -246,7 +261,6 @@ ${header(P, { here: 'work' })}
       <div class="case-cover-media" data-vt-cover>
         <div class="case-cover-inner" data-speed="0.04">
           ${img(P, p, 'cover', { w: p.cover.w, h: p.cover.h, alt: p.cover.alt, lazy: false, extra: ' fetchpriority="high"' })}
-          <div class="blue-square" style="left: ${p.square.left}%; top: ${p.square.top}%; width: ${p.square.width}%; height: ${p.square.height}%" aria-hidden="true"></div>
         </div>
       </div>
     </figure>
