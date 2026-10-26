@@ -17,9 +17,6 @@ export const site = {
       'I came across your portfolio and liked what I saw. I’m working on something and think you could help bring it to life.',
       '',
       'Would love to tell you a bit more about it and hear how you’d approach it.',
-      '',
-      'Talk soon,',
-      '',
     ].join('\n'),
   },
 };
