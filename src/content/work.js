@@ -10,21 +10,8 @@ export const site = {
   linkedin: 'https://www.linkedin.com/in/branch-vincent-121b1139a/',
   // Pre-filled Gmail draft behind the "Email me" button.
   draft: {
-    subject: 'Website project enquiry',
-    body: [
-      'Hi Branch,',
-      '',
-      'I came across your portfolio and would like to talk about a website.',
-      '',
-      'Name:',
-      'Business or brand:',
-      'What I need (new site, redesign, online store, other):',
-      'Timeline:',
-      'Budget:',
-      '',
-      'Thanks,',
-      '',
-    ].join('\n'),
+    subject: 'Hey Branch',
+    body: 'Hey Branch,\n\nSaw your site and wanted to reach out.\n\n',
   },
 };
 
