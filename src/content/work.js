@@ -8,6 +8,24 @@ export const site = {
   whatsapp: { href: 'https://wa.me/62895710860502', label: '+62 895-7108-60502' },
   instagram: { href: 'https://www.instagram.com/vincentbranch23/', label: '@vincentbranch23' },
   linkedin: 'https://www.linkedin.com/in/branch-vincent-121b1139a/',
+  // Pre-filled Gmail draft behind the "Email me" button.
+  draft: {
+    subject: 'Website project enquiry',
+    body: [
+      'Hi Branch,',
+      '',
+      'I came across your portfolio and would like to talk about a website.',
+      '',
+      'Name:',
+      'Business or brand:',
+      'What I need (new site, redesign, online store, other):',
+      'Timeline:',
+      'Budget:',
+      '',
+      'Thanks,',
+      '',
+    ].join('\n'),
+  },
 };
 
 export const projects = [
