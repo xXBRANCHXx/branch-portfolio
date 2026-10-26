@@ -219,22 +219,31 @@ html:not(.has-js) .site-header { position: absolute; } /* without the script not
 .contact-bg::after { content: ''; position: absolute; inset: 0; background: rgba(10, 10, 11, .62); }
 .contact-inner { width: 100%; padding: clamp(56px, 7vw, 96px) var(--gutter); display: flex; flex-direction: column; gap: 24px; }
 .contact h2 { font-size: clamp(110px, 17vw, 260px); }
-.contact-actions { display: flex; flex-wrap: wrap; gap: 14px; }
-.contact-btn { display: inline-flex; align-items: center; gap: 10px; padding: 16px 28px; border: 1px solid var(--text); border-radius: 999px; font-size: clamp(17px, 1.5vw, 20px); font-weight: 500; text-decoration: none; transition: background-color .3s ease, color .3s ease, border-color .3s ease; }
-.contact-btn svg { width: 20px; height: 20px; flex: none; }
-.contact-btn:hover { background: var(--text); color: var(--bg); }
-.contact-btn-solid { background: var(--text); color: var(--bg); }
-.contact-btn-solid:hover { background: var(--accent-strong); border-color: var(--accent-strong); color: var(--accent-ink); }
-.contact-address { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; font-size: clamp(17px, 1.6vw, 21px); font-weight: 300; overflow-wrap: anywhere; }
-.copy-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 2px; font: inherit; font-size: 15px; font-weight: 400; color: var(--soft); background: none; border: 0; cursor: pointer; }
+/* Contact links: one big row per channel. Hovering a row fills it with blue from the bottom,
+   like the work rows' photos; nothing in the row moves. */
+.contact { --rule: rgba(242, 241, 238, .26); }
+.channels { list-style: none; border-bottom: 1px solid var(--rule, var(--line)); margin-top: 8px; }
+.channel { position: relative; isolation: isolate; display: grid; grid-template-columns: minmax(0, 1fr) auto clamp(28px, 3vw, 44px); grid-template-areas: "name meta arrow"; align-items: center; gap: 6px clamp(16px, 3vw, 40px); padding: clamp(10px, 1.2vw, 16px) clamp(6px, 1vw, 14px); border-top: 1px solid var(--rule, var(--line)); }
+.channel::before { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--accent-strong); transform: scaleY(0); transform-origin: 50% 100%; transition: transform .6s var(--ease-out); }
+.channel:hover::before, .channel:focus-within::before { transform: scaleY(1); }
+.channel-link { grid-area: name; text-decoration: none; min-width: 0; }
+.channel-link:hover { color: inherit; }
+.channel-link::after { content: ''; position: absolute; inset: 0; z-index: 1; } /* the whole row is the link */
+.channel-link:focus-visible { outline: none; }
+.channel:has(.channel-link:focus-visible) { outline: 2px solid var(--focus); outline-offset: 2px; }
+.channel-name { display: block; font-size: clamp(64px, 8.5vw, 132px); line-height: .9; padding-top: .06em; }
+.channel-meta { grid-area: meta; display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 2px 16px; font-size: clamp(15px, 1.3vw, 18px); color: var(--soft); text-align: right; overflow-wrap: anywhere; transition: color .3s ease; }
+.channel:hover .channel-meta, .channel:focus-within .channel-meta { color: var(--accent-ink); }
+.channel-meta .selectable, .channel .copy-btn { position: relative; z-index: 2; } /* above the row link, so the address can be selected */
+.channel-arrow { grid-area: arrow; display: block; }
+.channel-arrow svg { display: block; width: 100%; height: auto; }
+.copy-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 2px; font: inherit; font-size: 15px; font-weight: 400; color: inherit; background: none; border: 0; cursor: pointer; }
 .copy-btn svg { width: 18px; height: 18px; flex: none; }
-.copy-btn:hover, .copy-btn.is-copied { color: var(--text); }
-.copy-btn:hover .copy-label { text-decoration: underline; text-underline-offset: 5px; }
-.contact-meta { display: flex; flex-wrap: wrap; gap: 8px 40px; font-size: 17px; color: #e0e0e0; list-style: none; }
-.contact-meta a { text-decoration: none; display: inline-flex; align-items: center; gap: 10px; padding-block: 10px; }
-.contact-meta a:hover { text-decoration: underline; text-underline-offset: 5px; }
-.contact-meta span { display: inline-flex; align-items: center; gap: 10px; padding-block: 10px; }
-.contact-meta svg { width: 20px; height: 20px; flex: none; }
+.copy-btn:hover .copy-label, .copy-btn.is-copied .copy-label { text-decoration: underline; text-underline-offset: 5px; }
+.contact-local { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; font-size: 17px; color: #e0e0e0; }
+.contact-local svg { width: 20px; height: 20px; flex: none; }
+.local-time { color: var(--muted); }
+.contact .local-time { color: #cfcfcf; }
 
 .site-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 32px; padding: 24px var(--gutter); padding-bottom: max(24px, env(safe-area-inset-bottom)); font-size: 13px; color: var(--muted); border-top: 1px solid var(--line-soft); }
 .site-footer a { text-decoration: none; display: inline-block; padding-block: 12px; margin-block: -12px; }
@@ -347,6 +356,8 @@ html:not(.has-js) .site-header { position: absolute; } /* without the script not
   .motion .film { display: flex; }
 }
 @media (max-width: 600px) {
+  .channel { grid-template-columns: minmax(0, 1fr) 28px; grid-template-areas: "name arrow" "meta meta"; padding-bottom: 14px; }
+  .channel-meta { justify-content: flex-start; text-align: left; }
   .project { grid-template-columns: minmax(0, 1fr); }
   .project-num { grid-column: auto; }
   .project-media { max-width: 420px; }
