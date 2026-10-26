@@ -1,6 +1,7 @@
-// Markup for the contact links: one big row per channel (email, LinkedIn, WhatsApp, Instagram)
-// and a line with where Branch is and his local time. Used by build-pages.mjs for the case studies;
-// index.html carries the same markup by hand (regenerate it with `node scripts/contact-markup.mjs`).
+// Markup for the contact links. Three main ways to reach Branch (email, WhatsApp, LinkedIn) sit side
+// by side as equal columns; Instagram is personal, so it gets a small line underneath with his
+// location and local time. Used by build-pages.mjs for the case studies; index.html carries the
+// same markup (regenerate it with `node scripts/contact-markup.mjs`).
 import { fileURLToPath } from 'node:url';
 import { site } from '../src/content/work.js';
 
@@ -11,34 +12,38 @@ const icons = {
   out: svg('<path d="M7 17 17 7M9 7h8v8"/>', 1.6),
   copy: svg('<rect x="8.5" y="8.5" width="12" height="12" rx="2"/><path d="M15.5 8.5v-3a2 2 0 0 0-2-2h-8a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h3"/>'),
   pin: svg('<path d="M12 21s7-6.1 7-11.5a7 7 0 1 0-14 0C5 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>'),
+  instagram: svg('<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".6" fill="currentColor"/>'),
 };
 
 // Gmail compose link: opens a new draft to Branch in Gmail on the web, with site.draft filled in.
 export const gmailHref = `https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=${site.email}`
   + `&amp;su=${encodeURIComponent(site.draft.subject)}&amp;body=${encodeURIComponent(site.draft.body)}`;
 
-const rows = [
-  { name: 'EMAIL', href: gmailHref, detail: site.email, copy: site.email, sr: ' (opens a Gmail draft in a new tab)' },
-  { name: 'LINKEDIN', href: site.linkedin, detail: 'Branch Vincent' },
-  { name: 'WHATSAPP', href: site.whatsapp.href, detail: site.whatsapp.label },
-  { name: 'INSTAGRAM', href: site.instagram.href, detail: site.instagram.label },
+const main = [
+  { name: 'EMAIL', href: gmailHref, value: site.email, note: 'For project details and briefs.', action: 'Write to me', copy: site.email, sr: ' (opens a Gmail draft in a new tab)' },
+  { name: 'WHATSAPP', href: site.whatsapp.href, value: site.whatsapp.label, note: 'For a quick chat.', action: 'Message me' },
+  { name: 'LINKEDIN', href: site.linkedin, value: 'Branch Vincent', note: 'For my work history.', action: 'Connect' },
 ];
 
 export function contactLinks(pad) {
-  const li = (r) => {
-    const copy = r.copy
-      ? ` <button class="copy-btn" type="button" data-copy="${esc(r.copy)}">${icons.copy}<span class="copy-label" aria-live="polite">Copy</span></button>`
-      : '';
-    return `${pad}  <li class="channel">
-${pad}    <a class="channel-link" href="${r.href}" target="_blank" rel="noopener"><span class="channel-name display">${r.name}</span><span class="visually-hidden">${r.sr || ' (opens in a new tab)'}</span></a>
-${pad}    <p class="channel-meta"><span${r.copy ? ' class="selectable"' : ''}>${esc(r.detail)}</span>${copy}</p>
-${pad}    <span class="channel-arrow">${icons.out}</span>
+  const col = (c) => {
+    const value = c.copy
+      ? `<span class="selectable">${esc(c.value)}</span> <button class="copy-btn" type="button" data-copy="${esc(c.copy)}">${icons.copy}<span class="copy-label" aria-live="polite">Copy</span></button>`
+      : `<span>${esc(c.value)}</span>`;
+    return `${pad}  <li class="reach">
+${pad}    <a class="reach-link" href="${c.href}" target="_blank" rel="noopener"><span class="reach-name display">${c.name}</span><span class="visually-hidden">${c.sr || ' (opens in a new tab)'}</span></a>
+${pad}    <p class="reach-value">${value}</p>
+${pad}    <p class="reach-note">${c.note}</p>
+${pad}    <span class="reach-action" aria-hidden="true">${c.action} ${icons.out}</span>
 ${pad}  </li>`;
   };
-  return `${pad}<ul class="channels">
-${rows.map(li).join('\n')}
+  return `${pad}<ul class="reach-list">
+${main.map(col).join('\n')}
 ${pad}</ul>
-${pad}<p class="contact-local">${icons.pin} Yogyakarta, Indonesia<span class="local-time" data-local-time="Asia/Jakarta" hidden></span></p>`;
+${pad}<p class="reach-more">
+${pad}  <a href="${site.instagram.href}" target="_blank" rel="noopener">${icons.instagram} Instagram ${esc(site.instagram.label)}<span class="visually-hidden"> (opens in a new tab)</span></a>
+${pad}  <span>${icons.pin} Yogyakarta, Indonesia<span class="local-time" data-local-time="Asia/Jakarta" hidden></span></span>
+${pad}</p>`;
 }
 
 // `node scripts/contact-markup.mjs` rewrites the contact links in index.html.

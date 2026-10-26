@@ -114,7 +114,7 @@ export function initLocalTime() {
   const tick = () => els.forEach((el) => {
     try {
       const time = new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', timeZone: el.dataset.localTime }).format(new Date());
-      el.textContent = `· ${time} here`;
+      el.textContent = ` · ${time} here`;
       el.hidden = false;
     } catch { /* unknown time zone: leave the location on its own */ }
   });
