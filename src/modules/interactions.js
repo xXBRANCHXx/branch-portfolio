@@ -106,18 +106,3 @@ export function initCopy() {
     });
   });
 }
-
-// "· 10:05 PM here" next to the location in the contact section, kept current while the page is open.
-export function initLocalTime() {
-  const els = document.querySelectorAll('[data-local-time]');
-  if (!els.length || !window.Intl) return;
-  const tick = () => els.forEach((el) => {
-    try {
-      const time = new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', timeZone: el.dataset.localTime }).format(new Date());
-      el.textContent = ` · ${time} here`;
-      el.hidden = false;
-    } catch { /* unknown time zone: leave the location on its own */ }
-  });
-  tick();
-  setInterval(tick, 30000);
-}

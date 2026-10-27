@@ -219,36 +219,29 @@ html:not(.has-js) .site-header { position: absolute; } /* without the script not
 .contact-bg::after { content: ''; position: absolute; inset: 0; background: rgba(10, 10, 11, .62); }
 .contact-inner { width: 100%; padding: clamp(56px, 7vw, 96px) var(--gutter); display: flex; flex-direction: column; gap: 24px; }
 .contact h2 { font-size: clamp(110px, 17vw, 260px); }
-/* Contact links. Email, WhatsApp and LinkedIn are the three main ways in: equal columns under a
-   hairline, each one a link as a whole. Hovering one turns its name and action blue; nothing moves.
-   Instagram is personal, so it sits in the small line underneath. */
-.contact { --rule: rgba(242, 241, 238, .3); }
-.reach-list { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 clamp(24px, 3vw, 48px); margin-top: 8px; }
-.reach { position: relative; display: flex; flex-direction: column; gap: 10px; padding-top: 22px; border-top: 1px solid var(--rule, var(--line)); }
-.reach-link { text-decoration: none; }
-.reach-link::after { content: ''; position: absolute; inset: 0; z-index: 1; } /* the whole column is the link */
-.reach-link:focus-visible { outline: none; }
-.reach:has(.reach-link:focus-visible) { outline: 2px solid var(--focus); outline-offset: 8px; }
-.reach-name { display: block; font-size: clamp(64px, 7vw, 112px); line-height: .88; transition: color .3s ease; }
-.reach-value { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 14px; font-size: clamp(15px, 1.45vw, 20px); font-weight: 400; }
-.reach-value .selectable { white-space: nowrap; }
-.reach-note { font-size: 15px; color: var(--soft); }
-.reach-action { display: inline-flex; align-items: center; gap: 8px; margin-top: 6px; font-size: 15px; font-weight: 500; transition: color .3s ease; }
-.reach-action svg { width: 16px; height: 16px; flex: none; }
-.reach:hover .reach-name, .reach:hover .reach-action, .reach:focus-within .reach-action { color: var(--focus); }
-.reach .selectable, .reach .copy-btn { position: relative; z-index: 2; } /* above the column link, so the address can be selected or copied */
-.reach .copy-btn { font-size: 14px; color: var(--soft); padding-block: 4px; }
-.reach .copy-btn:hover, .reach .copy-btn.is-copied { color: var(--text); }
-.reach-more { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 28px; margin-top: 12px; padding-top: 18px; border-top: 1px solid var(--rule, var(--line)); font-size: 15px; color: var(--soft); }
-.reach-more > a, .reach-more > span { display: inline-flex; align-items: center; gap: 8px; padding-block: 6px; }
-.reach-more a { text-decoration: none; }
-.reach-more a:hover { color: var(--text); text-decoration: underline; text-underline-offset: 5px; }
-.reach-more svg { width: 17px; height: 17px; flex: none; }
-.local-time { margin-left: -2px; }
-.copy-btn { position: relative; z-index: 2; } /* above the row link, so the address can be selected */
-.copy-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 2px; font: inherit; font-size: 15px; font-weight: 400; color: inherit; background: none; border: 0; cursor: pointer; }
-.copy-btn svg { width: 18px; height: 18px; flex: none; }
-.copy-btn:hover .copy-label, .copy-btn.is-copied .copy-label { text-decoration: underline; text-underline-offset: 5px; }
+/* Contact links: "Email me" and LinkedIn share one box (two halves). Hovering a half pours sand
+   into it (src/modules/sand.js) and its label flips from white to black where the sand is, through
+   mix-blend-mode: difference. Under it: the address with Copy, then WhatsApp, Instagram and place. */
+.duo { position: relative; isolation: isolate; display: grid; grid-template-columns: 1fr 1fr; width: min(420px, 100%); height: 74px; margin-top: 8px; background: var(--bg); border: 1px solid rgba(242, 241, 238, .85); }
+.duo::before { content: ''; position: absolute; left: var(--split, 50%); top: 14px; bottom: 14px; width: 1px; background: rgba(242, 241, 238, .25); } /* the divider; the sand covers it */
+.duo canvas { position: absolute; left: 0; top: 0; pointer-events: none; }
+.duo-half { position: relative; display: flex; align-items: center; justify-content: center; font-size: 19px; font-weight: 500; text-decoration: none; }
+.duo-half:hover { color: var(--text); }
+.duo-half:focus-visible { outline: 2px solid var(--focus); outline-offset: -6px; }
+.duo-label { position: relative; display: inline-flex; align-items: center; gap: 10px; color: var(--text); mix-blend-mode: difference; }
+.duo-label svg { width: 17px; height: 17px; flex: none; }
+.duo:not(.is-live) .duo-half:hover { background: var(--text); } /* without JavaScript the half still inverts, just without sand */
+.ghost { position: absolute; left: 0; top: 0; z-index: 1; width: 22px; height: 22px; margin: -2px 0 0 -3px; pointer-events: none; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .45)); transition: opacity .25s; }
+.ghost.is-off { opacity: 0; }
+.contact-address { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 18px; margin-top: 12px; font-size: 20px; font-weight: 300; }
+.copy-btn { display: inline-flex; align-items: center; gap: 8px; padding: 6px 4px; font: inherit; font-size: 15px; font-weight: 400; color: rgba(242, 241, 238, .74); background: none; border: 0; cursor: pointer; }
+.copy-btn svg { width: 15px; height: 15px; flex: none; }
+.copy-btn:hover, .copy-btn.is-copied { color: var(--text); }
+.contact-meta { display: flex; flex-wrap: wrap; gap: 8px 40px; margin-top: 12px; font-size: 17px; color: rgba(242, 241, 238, .86); list-style: none; }
+.contact-meta a { text-decoration: none; display: inline-flex; align-items: center; gap: 12px; padding-block: 8px; }
+.contact-meta a:hover { color: var(--text); text-decoration: underline; text-underline-offset: 5px; }
+.contact-meta span { display: inline-flex; align-items: center; gap: 12px; padding-block: 8px; }
+.contact-meta svg { width: 18px; height: 18px; flex: none; }
 
 .site-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 32px; padding: 24px var(--gutter); padding-bottom: max(24px, env(safe-area-inset-bottom)); font-size: 13px; color: var(--muted); border-top: 1px solid var(--line-soft); }
 .site-footer a { text-decoration: none; display: inline-block; padding-block: 12px; margin-block: -12px; }
@@ -348,8 +341,10 @@ html:not(.has-js) .site-header { position: absolute; } /* without the script not
   .scroll-cue { display: none; }
   .values-wave { width: 120%; right: -30%; opacity: .3; }
   .contact { min-height: 560px; }
-  .reach-list { grid-template-columns: minmax(0, 1fr); gap: 32px; }
-  .reach-value { font-size: 18px; }
+  .duo { height: 66px; }
+  .duo-half { font-size: 18px; }
+  .contact-address { font-size: 18px; gap: 4px 12px; }
+  .contact-meta { flex-direction: column; gap: 0; font-size: 16px; }
 }
 @media (max-width: 720px) and (max-height: 560px) {
   /* Landscape phones and high zoom: smaller menu type; if it still doesn't fit, the list scrolls under the header row. */

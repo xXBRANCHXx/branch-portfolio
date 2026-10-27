@@ -1,7 +1,7 @@
-// Markup for the contact links. Three main ways to reach Branch (email, WhatsApp, LinkedIn) sit side
-// by side as equal columns; Instagram is personal, so it gets a small line underneath with his
-// location and local time. Used by build-pages.mjs for the case studies; index.html carries the
-// same markup (regenerate it with `node scripts/contact-markup.mjs`).
+// Markup for the contact links: the "Email me" / LinkedIn button (two halves of one box that fill
+// with sand on hover, see src/modules/sand.js), the address with a copy button, and a small row
+// with WhatsApp, Instagram and the location. Used by build-pages.mjs for the case studies;
+// index.html carries the same markup (regenerate it with `node scripts/contact-markup.mjs`).
 import { fileURLToPath } from 'node:url';
 import { site } from '../src/content/work.js';
 
@@ -9,41 +9,32 @@ const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replac
 
 const svg = (body, w = 1.8) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
 const icons = {
-  out: svg('<path d="M7 17 17 7M9 7h8v8"/>', 1.6),
+  out: svg('<path d="M7 17 17 7"/><path d="M8 7h9v9"/>', 2.2),
+  linkedin: svg('<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10.5V16"/><path d="M8 7.6v.01"/><path d="M12 16v-5.5"/><path d="M12 13a2.5 2.5 0 0 1 5 0v3"/>'),
   copy: svg('<rect x="8.5" y="8.5" width="12" height="12" rx="2"/><path d="M15.5 8.5v-3a2 2 0 0 0-2-2h-8a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h3"/>'),
-  pin: svg('<path d="M12 21s7-6.1 7-11.5a7 7 0 1 0-14 0C5 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>'),
+  whatsapp: svg('<path d="M3.5 20.5l1.4-4.2A8.4 8.4 0 1 1 8 19.3z"/><path d="M9 9.5c.3 2 2.2 4.2 4.6 4.9l1.2-1.1 1.7.9-.4 1.6c-3.6.2-7.6-3.6-7.5-7.3l1.6-.4.8 1.7z"/>'),
   instagram: svg('<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".6" fill="currentColor"/>'),
+  pin: svg('<path d="M12 21s7-6.1 7-11.5a7 7 0 1 0-14 0C5 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>'),
 };
+const ghost = '<svg class="ghost is-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2v17l4.5-4.2 2.9 6.5 2.9-1.3-2.8-6.4h6z" fill="#fff" stroke="#0a0a0b" stroke-width="1.4" stroke-linejoin="round"/></svg>';
 
 // Gmail compose link: opens a new draft to Branch in Gmail on the web, with site.draft filled in.
 export const gmailHref = `https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=${site.email}`
   + `&amp;su=${encodeURIComponent(site.draft.subject)}&amp;body=${encodeURIComponent(site.draft.body)}`;
 
-const main = [
-  { name: 'EMAIL', href: gmailHref, value: site.email, note: 'For project details and briefs.', action: 'Write to me', copy: site.email, sr: ' (opens a Gmail draft in a new tab)' },
-  { name: 'WHATSAPP', href: site.whatsapp.href, value: site.whatsapp.label, note: 'For a quick chat.', action: 'Message me' },
-  { name: 'LINKEDIN', href: site.linkedin, value: 'Branch Vincent', note: 'For my work history.', action: 'Connect' },
-];
-
 export function contactLinks(pad) {
-  const col = (c) => {
-    const value = c.copy
-      ? `<span class="selectable">${esc(c.value)}</span> <button class="copy-btn" type="button" data-copy="${esc(c.copy)}">${icons.copy}<span class="copy-label" aria-live="polite">Copy</span></button>`
-      : `<span>${esc(c.value)}</span>`;
-    return `${pad}  <li class="reach">
-${pad}    <a class="reach-link" href="${c.href}" target="_blank" rel="noopener"><span class="reach-name display">${c.name}</span><span class="visually-hidden">${c.sr || ' (opens in a new tab)'}</span></a>
-${pad}    <p class="reach-value">${value}</p>
-${pad}    <p class="reach-note">${c.note}</p>
-${pad}    <span class="reach-action" aria-hidden="true">${c.action} ${icons.out}</span>
-${pad}  </li>`;
-  };
-  return `${pad}<ul class="reach-list">
-${main.map(col).join('\n')}
-${pad}</ul>
-${pad}<p class="reach-more">
-${pad}  <a href="${site.instagram.href}" target="_blank" rel="noopener">${icons.instagram} Instagram ${esc(site.instagram.label)}<span class="visually-hidden"> (opens in a new tab)</span></a>
-${pad}  <span>${icons.pin} Yogyakarta, Indonesia<span class="local-time" data-local-time="Asia/Jakarta" hidden></span></span>
-${pad}</p>`;
+  return `${pad}<div class="duo" data-sand>
+${pad}  <canvas aria-hidden="true"></canvas>
+${pad}  <a class="duo-half" data-half="0" href="${gmailHref}" target="_blank" rel="noopener"><span class="duo-label">Email me ${icons.out}</span><span class="visually-hidden"> (opens a Gmail draft in a new tab)</span></a>
+${pad}  <a class="duo-half" data-half="1" href="${site.linkedin}" target="_blank" rel="noopener"><span class="duo-label">${icons.linkedin} LinkedIn</span><span class="visually-hidden"> (opens in a new tab)</span></a>
+${pad}  ${ghost}
+${pad}</div>
+${pad}<p class="contact-address"><span>${site.email}</span> <button class="copy-btn" type="button" data-copy="${site.email}">${icons.copy}<span class="copy-label" aria-live="polite">Copy</span></button></p>
+${pad}<ul class="contact-meta">
+${pad}  <li><a href="${site.whatsapp.href}" target="_blank" rel="noopener">${icons.whatsapp} WhatsApp ${esc(site.whatsapp.label)}<span class="visually-hidden"> (opens in a new tab)</span></a></li>
+${pad}  <li><a href="${site.instagram.href}" target="_blank" rel="noopener">${icons.instagram} Instagram ${esc(site.instagram.label)}<span class="visually-hidden"> (opens in a new tab)</span></a></li>
+${pad}  <li><span>${icons.pin} Yogyakarta, Indonesia</span></li>
+${pad}</ul>`;
 }
 
 // `node scripts/contact-markup.mjs` rewrites the contact links in index.html.
