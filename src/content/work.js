@@ -202,7 +202,7 @@ export const projects = [
     role: 'Design and development',
     scope: ['Positioning', 'Website'],
     lede: 'Positioning and a website for a Yogyakarta syrup supplier that sells to cafés, restaurants and hotels.',
-    cover: { w: 960, h: 1200, alt: 'A one-liter bottle of Royal Butterscotch syrup with a caramel splash, in black and white' },
+    cover: { w: 960, h: 1200, alt: 'A bartender in black gloves holding a bottle of Royal Mint syrup and a jigger, in black and white' },
     brief: [
       'Royal Syrup supplies flavored syrups, drink powders and a maple topping to cafés, restaurants and hotels across Java. The positioning fits in one line: imported quality at a local price, with a flavor for almost anything.',
       'royalsyrup.id makes that case to café owners in their own language, then turns interest into a conversation: browse the catalog, ask a question on WhatsApp, or apply to become a reseller.',
