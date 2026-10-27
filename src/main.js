@@ -6,6 +6,7 @@ import { initReveal } from './modules/reveal.js';
 import { initScrollEffects } from './modules/scroll-effects.js';
 import { initCursor, initMagnetic, initCopy, initFilmStrip } from './modules/interactions.js';
 import { initTransitions } from './modules/transitions.js';
+import { initSand } from './modules/sand.js';
 import { reducedMotion } from './modules/util.js';
 
 const root = document.documentElement;
@@ -14,6 +15,7 @@ if (year) year.textContent = String(new Date().getFullYear());
 
 initMenu();
 initCopy();
+document.querySelectorAll('[data-sand]').forEach((el) => initSand(el));
 
 const motion = !root.classList.contains('no-motion') && !reducedMotion() && 'IntersectionObserver' in window && 'animate' in Element.prototype;
 root.classList.add('js-live', 'has-js');
