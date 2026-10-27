@@ -16,7 +16,6 @@ const icons = {
   instagram: svg('<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".6" fill="currentColor"/>'),
   pin: svg('<path d="M12 21s7-6.1 7-11.5a7 7 0 1 0-14 0C5 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>'),
 };
-const ghost = '<svg class="ghost is-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2v17l4.5-4.2 2.9 6.5 2.9-1.3-2.8-6.4h6z" fill="#fff" stroke="#0a0a0b" stroke-width="1.4" stroke-linejoin="round"/></svg>';
 
 // Gmail compose link: opens a new draft to Branch in Gmail on the web, with site.draft filled in.
 export const gmailHref = `https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=${site.email}`
@@ -27,7 +26,6 @@ export function contactLinks(pad) {
 ${pad}  <canvas aria-hidden="true"></canvas>
 ${pad}  <a class="duo-half" data-half="0" href="${gmailHref}" target="_blank" rel="noopener"><span class="duo-label">Email me ${icons.out}</span><span class="visually-hidden"> (opens a Gmail draft in a new tab)</span></a>
 ${pad}  <a class="duo-half" data-half="1" href="${site.linkedin}" target="_blank" rel="noopener"><span class="duo-label">${icons.linkedin} LinkedIn</span><span class="visually-hidden"> (opens in a new tab)</span></a>
-${pad}  ${ghost}
 ${pad}</div>
 ${pad}<p class="contact-address"><span>${site.email}</span> <button class="copy-btn" type="button" data-copy="${site.email}">${icons.copy}<span class="copy-label" aria-live="polite">Copy</span></button></p>
 ${pad}<ul class="contact-meta">

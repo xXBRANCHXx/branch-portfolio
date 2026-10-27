@@ -231,8 +231,6 @@ html:not(.has-js) .site-header { position: absolute; } /* without the script not
 .duo-label { position: relative; display: inline-flex; align-items: center; gap: 10px; color: var(--text); mix-blend-mode: difference; }
 .duo-label svg { width: 17px; height: 17px; flex: none; }
 .duo:not(.is-live) .duo-half:hover { background: var(--text); } /* without JavaScript the half still inverts, just without sand */
-.ghost { position: absolute; left: 0; top: 0; z-index: 1; width: 22px; height: 22px; margin: -2px 0 0 -3px; pointer-events: none; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .45)); transition: opacity .25s; }
-.ghost.is-off { opacity: 0; }
 .contact-address { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 18px; margin-top: 12px; font-size: 20px; font-weight: 300; }
 .copy-btn { display: inline-flex; align-items: center; gap: 8px; padding: 6px 4px; font: inherit; font-size: 15px; font-weight: 400; color: rgba(242, 241, 238, .74); background: none; border: 0; cursor: pointer; }
 .copy-btn svg { width: 15px; height: 15px; flex: none; }

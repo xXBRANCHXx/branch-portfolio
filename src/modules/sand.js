@@ -7,9 +7,7 @@
   the box lets the sand fall out of the bottom. The labels use mix-blend-mode: difference, so each
   letter flips from white to black exactly where the sand touches it.
 
-  A pretend cursor plays this on a loop while the button is on screen, until a real pointer takes
-  over. With reduced motion the half fills at once and there is no demo. Keyboard focus fills the
-  focused half too.
+  With reduced motion the half fills at once. Keyboard focus fills the focused half too.
 */
 const GRAVITY = 2200;       // px/s², for sand falling out of the box
 const FILL_TIME = 0.3;      // seconds to start pouring a whole half
@@ -29,19 +27,7 @@ const SPAWN = 0, MOVE = 1, RELEASE = 2;          // scheduled jobs
 
 const easeOut = (u) => 1 - (1 - u) ** 3;
 const easeInOut = (u) => 0.5 - Math.cos(Math.PI * u) / 2;
-const glide = (u) => (u < 0.5 ? 4 * u * u * u : 1 - (-2 * u + 2) ** 3 / 2);
 const now = () => performance.now() / 1000;
-
-// The pretend cursor goes into "Email me", across to LinkedIn, back again, then out of the box so
-// the sand drains, and repeats. [seconds, x, y] as fractions of the box; y > 1 is below it.
-const PATH = [
-  [0.0, 0.62, 2.1], [0.6, 0.62, 2.1],
-  [1.1, 0.27, 0.62], [2.3, 0.27, 0.62],
-  [2.75, 0.73, 0.5], [4.0, 0.73, 0.5],
-  [4.45, 0.30, 0.45], [5.6, 0.30, 0.45],
-  [6.1, 0.50, 2.2], [7.1, 0.62, 2.1],
-];
-const LOOP = PATH[PATH.length - 1][0];
 
 function buffer(w, h) {
   const cv = document.createElement('canvas');
@@ -49,13 +35,12 @@ function buffer(w, h) {
   return { cv, cx: cv.getContext('2d'), img: new ImageData(w, h), w, h };
 }
 
-export function initSand(duo, { demo = true } = {}) {
+export function initSand(duo) {
   const canvas = duo.querySelector('canvas');
   const ctx = canvas && canvas.getContext('2d');
   if (!ctx || !('ImageData' in window)) return;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const halves = [...duo.querySelectorAll('[data-half]')];
-  const ghost = duo.querySelector('.ghost');
 
   let dpr = 1, cell = 2, W = 0, H = 0;
   let cols = 0, rows = 0, n = 0, split = 0; // grid; columns < split are the left half
@@ -354,74 +339,22 @@ export function initSand(duo, { demo = true } = {}) {
     pointAt(e.clientX - r.left - duo.clientLeft, e.clientY - r.top - duo.clientTop);
   }
 
-  // A real pointer takes over from the demo; the demo restarts shortly after it leaves.
-  let resume = 0, inside = false, onScreen = false;
-  duo.addEventListener('pointerenter', (e) => { inside = true; stopDemo(); point(e); });
+  let inside = false;
+  duo.addEventListener('pointerenter', (e) => { inside = true; point(e); });
   duo.addEventListener('pointermove', point);
   duo.addEventListener('pointerdown', point);
-  duo.addEventListener('pointerleave', () => {
-    inside = false;
-    drain();
-    clearTimeout(resume);
-    resume = setTimeout(startDemo, 1500);
-  });
+  duo.addEventListener('pointerleave', () => { inside = false; drain(); });
   // Keyboard: focusing a half fills it, as if the pointer were in its middle.
   halves.forEach((half, s) => {
-    half.addEventListener('focus', () => { stopDemo(); pointAt((s + 0.5) * (W / 2), H * 0.6); });
+    half.addEventListener('focus', () => pointAt((s + 0.5) * (W / 2), H * 0.6));
     half.addEventListener('blur', () => {
       requestAnimationFrame(() => {
-        if (duo.contains(document.activeElement) || inside) return;
-        drain();
-        clearTimeout(resume);
-        resume = setTimeout(startDemo, 1500);
+        if (!duo.contains(document.activeElement) && !inside) drain();
       });
     });
   });
 
-  // ---- demo -----------------------------------------------------------------
-
-  let demoRun = 0;
-  const canDemo = () => demo && ghost && onScreen && !inside && !reduceMotion.matches && !duo.contains(document.activeElement);
-
-  function startDemo() {
-    if (!canDemo()) return;
-    const run = ++demoRun, start = now();
-    let wasInside = false;
-    ghost.classList.remove('is-off');
-    const step = () => {
-      if (run !== demoRun) return;
-      const t = (now() - start) % LOOP;
-      let k = 1;
-      while (k < PATH.length - 1 && PATH[k][0] < t) k++;
-      const [t0, x0, y0] = PATH[k - 1], [t1, x1, y1] = PATH[k];
-      const u = glide(Math.min(1, Math.max(0, (t - t0) / (t1 - t0))));
-      const x = (x0 + (x1 - x0) * u) * W, y = (y0 + (y1 - y0) * u) * H;
-      ghost.style.transform = `translate(${x}px, ${y}px)`;
-      const isInside = x >= 0 && x < W && y >= 0 && y < H;
-      if (isInside) pointAt(x, y);
-      else if (wasInside) drain();
-      wasInside = isInside;
-      requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
-  }
-
-  function stopDemo() {
-    clearTimeout(resume);
-    demoRun++;
-    if (ghost) ghost.classList.add('is-off');
-  }
-
   setup();
   if ('ResizeObserver' in window) new ResizeObserver(setup).observe(duo);
   else window.addEventListener('resize', setup);
-
-  // Only run the demo while the button is on screen.
-  if ('IntersectionObserver' in window) {
-    new IntersectionObserver((entries) => {
-      onScreen = entries[entries.length - 1].isIntersecting;
-      if (onScreen) startDemo();
-      else { stopDemo(); if (!inside) drain(); }
-    }).observe(duo);
-  }
 }
