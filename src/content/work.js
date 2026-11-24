@@ -7,7 +7,7 @@ export const site = {
   email: 'vincentbranch23@gmail.com',
   whatsapp: { href: 'https://wa.me/62895710860502', label: '+62 895-7108-60502' },
   instagram: { href: 'https://www.instagram.com/vincentbranch23/', label: '@vincentbranch23' },
-  linkedin: 'https://www.linkedin.com/in/branch-vincent-121b1139a/',
+  linkedin: 'https://www.linkedin.com/in/branch-vincent/',
   // Pre-filled Gmail draft behind the "Email me" button.
   draft: {
     subject: 'Hey Branch',

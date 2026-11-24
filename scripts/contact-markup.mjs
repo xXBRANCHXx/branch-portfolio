@@ -25,12 +25,12 @@ export function contactLinks(pad) {
   return `${pad}<div class="duo" data-sand>
 ${pad}  <canvas aria-hidden="true"></canvas>
 ${pad}  <a class="duo-half" data-half="0" href="${gmailHref}" target="_blank" rel="noopener"><span class="duo-label">Email me ${icons.out}</span><span class="visually-hidden"> (opens a Gmail draft in a new tab)</span></a>
-${pad}  <a class="duo-half" data-half="1" href="${site.linkedin}" target="_blank" rel="noopener"><span class="duo-label">${icons.linkedin} LinkedIn</span><span class="visually-hidden"> (opens in a new tab)</span></a>
+${pad}  <a class="duo-half" data-half="1" href="${site.linkedin}" target="_blank" rel="me noopener"><span class="duo-label">${icons.linkedin} LinkedIn</span><span class="visually-hidden"> (opens in a new tab)</span></a>
 ${pad}</div>
 ${pad}<p class="contact-address"><span>${site.email}</span> <button class="copy-btn" type="button" data-copy="${site.email}">${icons.copy}<span class="copy-label" aria-live="polite">Copy</span></button></p>
 ${pad}<ul class="contact-meta">
 ${pad}  <li><a href="${site.whatsapp.href}" target="_blank" rel="noopener">${icons.whatsapp} WhatsApp ${esc(site.whatsapp.label)}<span class="visually-hidden"> (opens in a new tab)</span></a></li>
-${pad}  <li><a href="${site.instagram.href}" target="_blank" rel="noopener">${icons.instagram} Instagram ${esc(site.instagram.label)}<span class="visually-hidden"> (opens in a new tab)</span></a></li>
+${pad}  <li><a href="${site.instagram.href}" target="_blank" rel="me noopener">${icons.instagram} Instagram ${esc(site.instagram.label)}<span class="visually-hidden"> (opens in a new tab)</span></a></li>
 ${pad}  <li><span>${icons.pin} Yogyakarta, Indonesia</span></li>
 ${pad}</ul>`;
 }

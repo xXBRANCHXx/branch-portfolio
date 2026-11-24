@@ -33,7 +33,7 @@ const caseSchema = (p) => ({
       '@type': 'WebPage',
       '@id': `${site.url}work/${p.slug}/`,
       url: `${site.url}work/${p.slug}/`,
-      name: `${p.name} case study`,
+      name: `${p.name} case study by Branch Vincent`,
       description: p.lede,
       inLanguage: 'en',
       isPartOf: { '@id': `${site.url}#website` },
@@ -242,7 +242,8 @@ function casePage(p, i) {
   return `${head({
     P,
     title: `${p.name} (${p.domain}) case study · Branch Vincent`,
-    description: p.lede,
+    // The full name goes in the search snippet too: people search "Branch Vincent", not "Branch".
+    description: `${p.lede} A case study by Branch Vincent.`,
     canonical: `${site.url}work/${p.slug}/`,
     schema: caseSchema(p),
     extra: '<link rel="expect" href="#case-cover" blocking="render">\n',
@@ -389,10 +390,14 @@ writeFileSync(join(root, '404.html'), notFound());
 
 // The list of pages for search engines, and the robots file that points to it. Both follow site.url,
 // so a move to a custom domain only needs that one value changed.
-const urls = [site.url, ...projects.map((p) => `${site.url}work/${p.slug}/`)];
+// Each page also names its main image, so the portrait can show up for an image search of the name.
+const urls = [
+  { loc: site.url, image: `${site.url}assets/portrait.jpg` },
+  ...projects.map((p) => ({ loc: `${site.url}work/${p.slug}/`, image: `${site.url}assets/work/${p.slug}/cover.webp` })),
+];
 writeFileSync(join(root, 'public', 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls.map((u) => `  <url><loc>${esc(u)}</loc></url>`).join('\n')}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+${urls.map((u) => `  <url><loc>${esc(u.loc)}</loc><image:image><image:loc>${esc(u.image)}</image:loc></image:image></url>`).join('\n')}
 </urlset>
 `);
 writeFileSync(join(root, 'public', 'robots.txt'), `User-agent: *
