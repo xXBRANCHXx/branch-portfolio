@@ -3,12 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Branch Vincent · Websites, built with intent.</title>
-<meta name="description" content="Yogyakarta-based web designer and developer Branch Vincent builds websites for brands. Strategy first, AI-accelerated, design-directed.">
+<title>Branch Vincent · Web designer and developer in Yogyakarta, Indonesia</title>
+<meta name="description" content="Branch Vincent is a web designer and developer in Yogyakarta, Indonesia. Websites, built with intent: see the work for ZERO, Ezkart, Easy Solutions, Jenang Gemi and Royal Syrup.">
 <meta name="author" content="Branch Vincent">
 <meta name="theme-color" content="#0a0a0b">
 <meta name="color-scheme" content="dark">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="Branch Vincent">
 <meta property="og:title" content="Branch Vincent · Websites, built with intent.">
 <meta property="og:description" content="Web design and engineering from Yogyakarta, Indonesia. Selected work: zerofoods.id, ezkart.id, easysolutions.id, jenanggemi.com, royalsyrup.id.">
 <meta property="og:url" content="https://branch-portfolio.vercel.app/">
@@ -20,6 +21,50 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://branch-portfolio.vercel.app/assets/og-image.jpg">
 <link rel="canonical" href="https://branch-portfolio.vercel.app/">
+<!-- Structured data: tells search engines who this site is about, so a search for the name can show it.
+     Keep the name and links in step with src/content/work.js. Never add a birth date or age here. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://branch-portfolio.vercel.app/#website",
+      "url": "https://branch-portfolio.vercel.app/",
+      "name": "Branch Vincent",
+      "alternateName": "Branch Vincent Portfolio",
+      "description": "Portfolio of Branch Vincent, web designer and developer in Yogyakarta, Indonesia.",
+      "inLanguage": "en",
+      "publisher": { "@id": "https://branch-portfolio.vercel.app/#person" }
+    },
+    {
+      "@type": "ProfilePage",
+      "@id": "https://branch-portfolio.vercel.app/",
+      "url": "https://branch-portfolio.vercel.app/",
+      "name": "Branch Vincent · Web designer and developer in Yogyakarta, Indonesia",
+      "isPartOf": { "@id": "https://branch-portfolio.vercel.app/#website" },
+      "mainEntity": { "@id": "https://branch-portfolio.vercel.app/#person" }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://branch-portfolio.vercel.app/#person",
+      "name": "Branch Vincent",
+      "url": "https://branch-portfolio.vercel.app/",
+      "image": "https://branch-portfolio.vercel.app/assets/portrait.jpg",
+      "jobTitle": "Web designer and developer",
+      "description": "Web designer and developer in Yogyakarta, Indonesia, building websites, back ends and admin panels for brands.",
+      "email": "mailto:vincentbranch23@gmail.com",
+      "address": { "@type": "PostalAddress", "addressLocality": "Yogyakarta", "addressCountry": "ID" },
+      "knowsLanguage": ["en", "id"],
+      "knowsAbout": ["Web design", "Web development", "Software engineering", "UI and UX design", "Back-end systems", "3D"],
+      "sameAs": [
+        "https://www.linkedin.com/in/branch-vincent-121b1139a/",
+        "https://www.instagram.com/vincentbranch23/"
+      ]
+    }
+  ]
+}
+</script>
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
