@@ -18,9 +18,42 @@ const icons = {
   next: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"/></svg>',
 };
 
+// Structured data for search engines. "<" is escaped so no string in it can close the script tag.
+const jsonLd = (data) => `<script type="application/ld+json">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`;
+
+// Who made the work, as search engines read it. Keep in step with the Person block in index.html.
+const person = { '@type': 'Person', '@id': `${site.url}#person`, name: 'Branch Vincent', url: site.url };
+
+// What a case study page tells search engines: the site that was built, who built it, and where
+// the page sits under the home page.
+const caseSchema = (p) => ({
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebPage',
+      '@id': `${site.url}work/${p.slug}/`,
+      url: `${site.url}work/${p.slug}/`,
+      name: `${p.name} case study`,
+      description: p.lede,
+      inLanguage: 'en',
+      isPartOf: { '@id': `${site.url}#website` },
+      author: person,
+      primaryImageOfPage: `${site.url}assets/work/${p.slug}/cover.webp`,
+      about: { '@type': 'WebSite', name: p.name, url: p.url, creator: { '@id': person['@id'] } },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Branch Vincent', item: site.url },
+        { '@type': 'ListItem', position: 2, name: p.name },
+      ],
+    },
+  ],
+});
+
 // P is the path back to the site root: '../../' from a case study, '/' from the 404 page
 // (which Vercel serves at whatever URL was missing, so it needs absolute paths).
-function head({ P, title, description, canonical, extra = '' }) {
+function head({ P, title, description, canonical, extra = '', noindex = false, schema = null }) {
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -29,9 +62,10 @@ function head({ P, title, description, canonical, extra = '' }) {
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
 <meta name="author" content="Branch Vincent">
-<meta name="theme-color" content="#0a0a0b">
+${noindex ? '<meta name="robots" content="noindex">\n' : ''}<meta name="theme-color" content="#0a0a0b">
 <meta name="color-scheme" content="dark">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="Branch Vincent">
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(description)}">
 ${canonical ? `<meta property="og:url" content="${canonical}">\n` : ''}<meta property="og:image" content="${site.url}assets/og-image.jpg">
@@ -57,7 +91,7 @@ ${canonical ? `<link rel="canonical" href="${canonical}">\n` : ''}<link rel="ico
 <script type="speculationrules">
   {"prefetch": [{"where": {"selector_matches": "a[data-vt-link]"}, "eagerness": "eager"}]}
 </script>
-${extra}<script>
+${schema ? `${jsonLd(schema)}\n` : ''}${extra}<script>
   // Set the animation classes before first paint so the page never flashes unstyled.
   // If the main script has not started within 4s, drop them and keep the page static.
   (function () {
@@ -207,9 +241,10 @@ function casePage(p, i) {
   const q = p.quote;
   return `${head({
     P,
-    title: `${p.name} case study · Branch Vincent`,
+    title: `${p.name} (${p.domain}) case study · Branch Vincent`,
     description: p.lede,
     canonical: `${site.url}work/${p.slug}/`,
+    schema: caseSchema(p),
     extra: '<link rel="expect" href="#case-cover" blocking="render">\n',
   })}
 <body class="page-case">
@@ -306,6 +341,7 @@ function notFound() {
     P,
     title: 'Page not found · Branch Vincent',
     description: 'This page doesn’t exist. The work is still here.',
+    noindex: true,
   })}
 <body class="page-lost">
 ${header(P, { talk: `${P}#contact` })}
@@ -350,4 +386,18 @@ projects.forEach((p, i) => {
   writeFileSync(join(dir, 'index.html'), casePage(p, i));
 });
 writeFileSync(join(root, '404.html'), notFound());
-console.log(`Wrote ${projects.length} case studies and 404.html`);
+
+// The list of pages for search engines, and the robots file that points to it. Both follow site.url,
+// so a move to a custom domain only needs that one value changed.
+const urls = [site.url, ...projects.map((p) => `${site.url}work/${p.slug}/`)];
+writeFileSync(join(root, 'public', 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls.map((u) => `  <url><loc>${esc(u)}</loc></url>`).join('\n')}
+</urlset>
+`);
+writeFileSync(join(root, 'public', 'robots.txt'), `User-agent: *
+Allow: /
+
+Sitemap: ${site.url}sitemap.xml
+`);
+console.log(`Wrote ${projects.length} case studies, 404.html, sitemap.xml and robots.txt`);
