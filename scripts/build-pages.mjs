@@ -374,7 +374,14 @@ ${footer(P)}
 // The home rows are written by hand, so stop first if one still links to a slug that's gone.
 const slugs = new Set(projects.map((p) => p.slug));
 mkdirSync(join(root, 'work'), { recursive: true });
-for (const [, slug] of readFileSync(join(root, 'index.html'), 'utf8').matchAll(/href="work\/([^/"]+)\//g)) {
+// The home page's addresses are written by hand too. Stop if any of them points at a different
+// site than site.url, so a move to a new domain can't leave the home page behind.
+const home = readFileSync(join(root, 'index.html'), 'utf8');
+if (!home.includes(`<link rel="canonical" href="${site.url}">`)) throw new Error(`index.html's canonical link is not ${site.url}`);
+for (const [url] of home.matchAll(/https:\/\/[^"\s]+\/(?:assets\/[^"\s]+|#(?:person|website))/g)) {
+  if (!url.startsWith(site.url)) throw new Error(`index.html has ${url}, which is not on ${site.url}`);
+}
+for (const [, slug] of home.matchAll(/href="work\/([^/"]+)\//g)) {
   if (!slugs.has(slug)) throw new Error(`index.html links to work/${slug}/, which is not a project in src/content/work.js`);
 }
 for (const entry of readdirSync(join(root, 'work'), { withFileTypes: true })) {
@@ -389,7 +396,7 @@ projects.forEach((p, i) => {
 writeFileSync(join(root, '404.html'), notFound());
 
 // The list of pages for search engines, and the robots file that points to it. Both follow site.url,
-// so a move to a custom domain only needs that one value changed.
+// so a move to another domain only needs that value and the addresses in index.html changed.
 // Each page also names its main image, so the portrait can show up for an image search of the name.
 const urls = [
   { loc: site.url, image: `${site.url}assets/portrait.jpg` },

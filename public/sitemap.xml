@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-  <url><loc>https://branch-portfolio.vercel.app/</loc><image:image><image:loc>https://branch-portfolio.vercel.app/assets/portrait.jpg</image:loc></image:image></url>
-  <url><loc>https://branch-portfolio.vercel.app/work/zero/</loc><image:image><image:loc>https://branch-portfolio.vercel.app/assets/work/zero/cover.webp</image:loc></image:image></url>
-  <url><loc>https://branch-portfolio.vercel.app/work/ezkart/</loc><image:image><image:loc>https://branch-portfolio.vercel.app/assets/work/ezkart/cover.webp</image:loc></image:image></url>
-  <url><loc>https://branch-portfolio.vercel.app/work/easy-solutions/</loc><image:image><image:loc>https://branch-portfolio.vercel.app/assets/work/easy-solutions/cover.webp</image:loc></image:image></url>
-  <url><loc>https://branch-portfolio.vercel.app/work/jenang-gemi/</loc><image:image><image:loc>https://branch-portfolio.vercel.app/assets/work/jenang-gemi/cover.webp</image:loc></image:image></url>
-  <url><loc>https://branch-portfolio.vercel.app/work/royal-syrup/</loc><image:image><image:loc>https://branch-portfolio.vercel.app/assets/work/royal-syrup/cover.webp</image:loc></image:image></url>
+  <url><loc>https://branchvincent.radishlabs.id/</loc><image:image><image:loc>https://branchvincent.radishlabs.id/assets/portrait.jpg</image:loc></image:image></url>
+  <url><loc>https://branchvincent.radishlabs.id/work/zero/</loc><image:image><image:loc>https://branchvincent.radishlabs.id/assets/work/zero/cover.webp</image:loc></image:image></url>
+  <url><loc>https://branchvincent.radishlabs.id/work/ezkart/</loc><image:image><image:loc>https://branchvincent.radishlabs.id/assets/work/ezkart/cover.webp</image:loc></image:image></url>
+  <url><loc>https://branchvincent.radishlabs.id/work/easy-solutions/</loc><image:image><image:loc>https://branchvincent.radishlabs.id/assets/work/easy-solutions/cover.webp</image:loc></image:image></url>
+  <url><loc>https://branchvincent.radishlabs.id/work/jenang-gemi/</loc><image:image><image:loc>https://branchvincent.radishlabs.id/assets/work/jenang-gemi/cover.webp</image:loc></image:image></url>
+  <url><loc>https://branchvincent.radishlabs.id/work/royal-syrup/</loc><image:image><image:loc>https://branchvincent.radishlabs.id/assets/work/royal-syrup/cover.webp</image:loc></image:image></url>
 </urlset>

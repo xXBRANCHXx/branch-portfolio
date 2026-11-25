@@ -3,7 +3,7 @@
 // no client sales figures, rankings or lab results.
 
 export const site = {
-  url: 'https://branch-portfolio.vercel.app/',
+  url: 'https://branchvincent.radishlabs.id/',
   email: 'vincentbranch23@gmail.com',
   whatsapp: { href: 'https://wa.me/62895710860502', label: '+62 895-7108-60502' },
   instagram: { href: 'https://www.instagram.com/vincentbranch23/', label: '@vincentbranch23' },
