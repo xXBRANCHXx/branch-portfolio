@@ -1,5 +1,18 @@
 {
   "trailingSlash": true,
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "branch-portfolio.vercel.app"
+        }
+      ],
+      "destination": "https://branchvincent.radishlabs.id/$1",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/app/(.*)",

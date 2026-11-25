@@ -33,7 +33,7 @@ const caseSchema = (p) => ({
       '@type': 'WebPage',
       '@id': `${site.url}work/${p.slug}/`,
       url: `${site.url}work/${p.slug}/`,
-      name: `${p.name} case study`,
+      name: `${p.name} case study by Branch Vincent`,
       description: p.lede,
       inLanguage: 'en',
       isPartOf: { '@id': `${site.url}#website` },
@@ -242,7 +242,8 @@ function casePage(p, i) {
   return `${head({
     P,
     title: `${p.name} (${p.domain}) case study · Branch Vincent`,
-    description: p.lede,
+    // The full name goes in the search snippet too: people search "Branch Vincent", not "Branch".
+    description: `${p.lede} A case study by Branch Vincent.`,
     canonical: `${site.url}work/${p.slug}/`,
     schema: caseSchema(p),
     extra: '<link rel="expect" href="#case-cover" blocking="render">\n',
@@ -373,7 +374,14 @@ ${footer(P)}
 // The home rows are written by hand, so stop first if one still links to a slug that's gone.
 const slugs = new Set(projects.map((p) => p.slug));
 mkdirSync(join(root, 'work'), { recursive: true });
-for (const [, slug] of readFileSync(join(root, 'index.html'), 'utf8').matchAll(/href="work\/([^/"]+)\//g)) {
+// The home page's addresses are written by hand too. Stop if any of them points at a different
+// site than site.url, so a move to a new domain can't leave the home page behind.
+const home = readFileSync(join(root, 'index.html'), 'utf8');
+if (!home.includes(`<link rel="canonical" href="${site.url}">`)) throw new Error(`index.html's canonical link is not ${site.url}`);
+for (const [url] of home.matchAll(/https:\/\/[^"\s]+\/(?:assets\/[^"\s]+|#(?:person|website))/g)) {
+  if (!url.startsWith(site.url)) throw new Error(`index.html has ${url}, which is not on ${site.url}`);
+}
+for (const [, slug] of home.matchAll(/href="work\/([^/"]+)\//g)) {
   if (!slugs.has(slug)) throw new Error(`index.html links to work/${slug}/, which is not a project in src/content/work.js`);
 }
 for (const entry of readdirSync(join(root, 'work'), { withFileTypes: true })) {
@@ -388,11 +396,15 @@ projects.forEach((p, i) => {
 writeFileSync(join(root, '404.html'), notFound());
 
 // The list of pages for search engines, and the robots file that points to it. Both follow site.url,
-// so a move to a custom domain only needs that one value changed.
-const urls = [site.url, ...projects.map((p) => `${site.url}work/${p.slug}/`)];
+// so a move to another domain only needs that value and the addresses in index.html changed.
+// Each page also names its main image, so the portrait can show up for an image search of the name.
+const urls = [
+  { loc: site.url, image: `${site.url}assets/portrait.jpg` },
+  ...projects.map((p) => ({ loc: `${site.url}work/${p.slug}/`, image: `${site.url}assets/work/${p.slug}/cover.webp` })),
+];
 writeFileSync(join(root, 'public', 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls.map((u) => `  <url><loc>${esc(u)}</loc></url>`).join('\n')}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+${urls.map((u) => `  <url><loc>${esc(u.loc)}</loc><image:image><image:loc>${esc(u.image)}</image:loc></image:image></url>`).join('\n')}
 </urlset>
 `);
 writeFileSync(join(root, 'public', 'robots.txt'), `User-agent: *

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://branch-portfolio.vercel.app/sitemap.xml
+Sitemap: https://branchvincent.radishlabs.id/sitemap.xml
